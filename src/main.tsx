@@ -13,11 +13,13 @@ import TourMapPage from "./pages/tur/[tourId]/kart";
 import { appConfig } from "@/config";
 import AboutPage from "./pages/om";
 import NotFoundPage from "./pages/not-found";
+import { OnlineStatusBanner } from "@/components/OnlineStatusBanner";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <TourProvider>
       <BrowserRouter>
+        <OnlineStatusBanner />
         <Routes>
           <Route element={<App />}>
             <Route index element={<HomePage />} />
