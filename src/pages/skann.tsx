@@ -1,8 +1,9 @@
-import { useEffect, useRef, useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
+import QrScanner from "react-qr-scanner";
 import { useTour } from "@/context/TourContext";
-import { getAllTours, getTourById, uiText } from "@/data/tours";
+import { getTourById, uiText } from "@/data/tours";
 import { BottomNav } from "@/components/BottomNav";
 import { Button } from "@/components/ui/button";
 
@@ -11,88 +12,28 @@ type ScanStatus = "idle" | "scanning" | "success" | "error";
 export default function ScanPage() {
   const navigate = useNavigate();
   const { unlockStop, currentTourId, setCurrentTour } = useTour();
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [status, setStatus] = useState<ScanStatus>("idle");
+  const [status, setStatus] = useState<ScanStatus>("scanning");
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [hasCamera, setHasCamera] = useState(true);
-  const streamRef = useRef<MediaStream | null>(null);
 
-  useEffect(() => {
-    let animationId: number;
-    let barcodeDetector: BarcodeDetector | null = null;
+  const handleScan = (data: { text: string } | null) => {
+    if (data) {
+      handleQRCode(data.text);
+    }
+  };
 
-    const startCamera = async () => {
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({
-          video: { facingMode: "environment" },
-        });
-        streamRef.current = stream;
-        
-        if (videoRef.current) {
-          videoRef.current.srcObject = stream;
-          await videoRef.current.play();
-          setStatus("scanning");
-
-          // Check if BarcodeDetector is available
-          if ("BarcodeDetector" in window) {
-            barcodeDetector = new BarcodeDetector({ formats: ["qr_code"] });
-            scanFrame();
-          } else {
-            // Fallback: manual QR code input
-            setErrorMessage("QR-skanning er ikke stottet i denne nettleseren. Bruk manuell inndata.");
-          }
-        }
-      } catch (err) {
-        console.error("Camera error:", err);
-        setHasCamera(false);
-        setErrorMessage("Kunne ikke fa tilgang til kameraet. Sjekk tillatelser.");
-      }
-    };
-
-    const scanFrame = async () => {
-      if (!videoRef.current || !canvasRef.current || !barcodeDetector) return;
-
-      const video = videoRef.current;
-      const canvas = canvasRef.current;
-      const ctx = canvas.getContext("2d");
-
-      if (video.readyState === video.HAVE_ENOUGH_DATA && ctx) {
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
-        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-        try {
-          const barcodes = await barcodeDetector.detect(canvas);
-          if (barcodes.length > 0) {
-            const qrData = barcodes[0].rawValue;
-            handleQRCode(qrData);
-            return;
-          }
-        } catch (err) {
-          // Ignore detection errors, keep scanning
-        }
-      }
-
-      animationId = requestAnimationFrame(scanFrame);
-    };
-
-    startCamera();
-
-    return () => {
-      if (animationId) cancelAnimationFrame(animationId);
-      if (streamRef.current) {
-        streamRef.current.getTracks().forEach((track) => track.stop());
-      }
-    };
-  }, []);
+  const handleError = (err: any) => {
+    console.error(err);
+    setHasCamera(false);
+    setErrorMessage("Kunne ikke få tilgang til kameraet. Sjekk tillatelser og prøv på nytt.");
+    setStatus("error");
+  };
 
   const handleQRCode = (data: string) => {
-    // Expected format: kyststi://tour/{tourId}/stop/{stopId}
-    // or simpler: {tourId}/{stopId}
-    setStatus("success");
-    
+    if (status === "success") return; // Already handling a success
+
+    // Expected format: kyststi://tour/{tourId}/stop/{stopId} or simpler: {tourId}/{stopId}
     const match = data.match(/(?:kyststi:\/\/tour\/)?([^\/]+)\/(?:stop\/)?([^\/]+)/);
     
     if (match) {
@@ -102,6 +43,7 @@ export default function ScanPage() {
       if (tour) {
         const stop = tour.stops.find((s) => s.id === stopId);
         if (stop) {
+          setStatus("success");
           if (currentTourId !== tourId) {
             setCurrentTour(tourId);
           }
@@ -118,10 +60,10 @@ export default function ScanPage() {
 
     // Invalid QR code
     setStatus("error");
-    setErrorMessage("Ugyldig QR-kode. Proev igjen.");
+    setErrorMessage("Ugyldig QR-kode. Prøv igjen.");
     setTimeout(() => setStatus("scanning"), 2000);
   };
-
+  
   const handleManualInput = () => {
     const input = prompt("Skriv inn QR-kode data (format: turId/stoppId):");
     if (input) {
@@ -145,25 +87,23 @@ export default function ScanPage() {
       <div className="relative flex-1 flex items-center justify-center overflow-hidden">
         {hasCamera ? (
           <>
-            <video
-              ref={videoRef}
-              className="absolute inset-0 w-full h-full object-cover"
-              playsInline
-              muted
+            <QrScanner
+              delay={300}
+              onError={handleError}
+              onScan={handleScan}
+              style={{ width: "100%", height: "100%", objectFit: "cover" }}
+              constraints={{ video: { facingMode: "environment" } }}
             />
-            <canvas ref={canvasRef} className="hidden" />
 
             {/* Scan overlay */}
-            <div className="absolute inset-0 flex items-center justify-center">
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
               <div className="relative">
-                {/* Corners */}
                 <div className="w-64 h-64 relative">
                   <div className="absolute top-0 left-0 w-12 h-12 border-t-4 border-l-4 border-white rounded-tl-lg" />
                   <div className="absolute top-0 right-0 w-12 h-12 border-t-4 border-r-4 border-white rounded-tr-lg" />
                   <div className="absolute bottom-0 left-0 w-12 h-12 border-b-4 border-l-4 border-white rounded-bl-lg" />
                   <div className="absolute bottom-0 right-0 w-12 h-12 border-b-4 border-r-4 border-white rounded-br-lg" />
                   
-                  {/* Scanning line animation */}
                   {status === "scanning" && (
                     <motion.div
                       className="absolute left-2 right-2 h-0.5 bg-primary"
@@ -175,8 +115,7 @@ export default function ScanPage() {
                 </div>
               </div>
             </div>
-
-            {/* Dark overlay outside scan area */}
+            
             <div className="absolute inset-0 pointer-events-none">
               <div className="absolute inset-0 bg-black/60" style={{
                 clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%, 0 0, calc(50% - 128px) calc(50% - 128px), calc(50% - 128px) calc(50% + 128px), calc(50% + 128px) calc(50% + 128px), calc(50% + 128px) calc(50% - 128px), calc(50% - 128px) calc(50% - 128px))"
@@ -216,8 +155,8 @@ export default function ScanPage() {
             </motion.div>
           )}
 
-          {status === "error" && (
-            <motion.div
+          {status === "error" && !hasCamera && (
+             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 20 }}
@@ -232,7 +171,7 @@ export default function ScanPage() {
       {/* Instructions */}
       <div className="bg-black px-6 py-4 text-center text-white">
         <p className="text-sm opacity-80">
-          Hold telefonen over QR-koden ved stoppet for a lase opp innholdet
+          Hold telefonen over QR-koden ved stoppet for å låse opp innholdet.
         </p>
       </div>
 
@@ -241,16 +180,6 @@ export default function ScanPage() {
   );
 }
 
-// BarcodeDetector type declaration
-declare global {
-  interface Window {
-    BarcodeDetector: typeof BarcodeDetector;
-  }
-  class BarcodeDetector {
-    constructor(options?: { formats: string[] });
-    detect(image: HTMLCanvasElement): Promise<{ rawValue: string }[]>;
-  }
-}
 
 function ArrowLeftIcon({ className }: { className?: string }) {
   return (
