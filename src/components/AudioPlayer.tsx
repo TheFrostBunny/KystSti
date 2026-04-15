@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { uiText } from "@/data/tours";
+import { appConfig } from "@/config";
 
 interface AudioPlayerProps {
   audioUrl: string;
@@ -99,12 +100,13 @@ export function AudioPlayer({ audioUrl, title }: AudioPlayerProps) {
   };
 
   if (error) {
-    return (
-      <div className="rounded-xl border bg-muted/50 p-4 text-center text-muted-foreground">
-        <VolumeOffIcon className="mx-auto h-8 w-8 mb-2 opacity-50" />
-        <p className="text-sm">Lydguide ikke tilgjengelig</p>
-      </div>
-    );
+    // Returner null for å ikke vise noe hvis det er en feil
+    return null;
+  }
+
+  // Returner null hvis lyd er deaktivert i config
+  if (!appConfig.enableAudio) {
+    return null;
   }
 
   return (

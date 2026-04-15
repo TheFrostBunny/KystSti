@@ -4,7 +4,8 @@ import { cn } from "@/lib/utils";
 
 const baseNavItems = [
   { to: "/", label: "Hjem", icon: HomeIcon, exact: true },
-  { to: "/turer", label: "Stopp", icon: RouteIcon, matchPaths: ["/turer", "/tur"] },
+  { to: "/stopp", label: "Stopp", icon: RouteIcon, matchPaths: ["/tur", "/stopp"] },
+  { to: "/kart", label: "Kart", icon: MapIcon },
   { to: "/skann", label: "Skann", icon: QrCodeIcon, highlight: true },
   { to: "/om", label: "Om", icon: InfoIcon },
 ];
@@ -20,8 +21,15 @@ export function BottomNav() {
         to: currentTourId ? `/tur/${currentTourId}/stopp` : '/turer',
       };
     }
+    if (item.label === "Kart") {
+      return {
+        ...item,
+        to: currentTourId ? `/tur/${currentTourId}/kart` : '#',
+        disabled: !currentTourId,
+      };
+    }
     return item;
-  });
+  }).filter(item => !(item.label === 'Kart' && item.disabled));
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 border-t bg-card/95 backdrop-blur-md safe-area-bottom">
@@ -91,6 +99,14 @@ function RouteIcon({ className }: { className?: string }) {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className={className}>
       <circle cx="6" cy="19" r="3" /><path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15" /><circle cx="18" cy="5" r="3" />
+    </svg>
+  );
+}
+
+function MapIcon({ className }: { className?: string }) {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" /><circle cx="12" cy="10" r="3" />
     </svg>
   );
 }

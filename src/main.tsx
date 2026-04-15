@@ -6,7 +6,6 @@ import "./styles.css";
 import { TourProvider } from "@/context/TourContext";
 import App from "./App";
 import HomePage from "./pages/index";
-import ToursPage from "./pages/turer";
 import TourDetailPage from "./pages/tur/[tourId]";
 import TourStopsPage from "./pages/tur/[tourId]/stopp";
 import TourStopDetailPage from "./pages/tur/[tourId]/stopp/[stopId]";
@@ -22,7 +21,6 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         <Routes>
           <Route element={<App />}>
             <Route index element={<HomePage />} />
-            <Route path="turer" element={<ToursPage />} />
             <Route path="tur/:tourId" element={<TourDetailPage />} />
             <Route path="tur/:tourId/stopp" element={<TourStopsPage />} />
             <Route path="tur/:tourId/stopp/:stopId" element={<TourStopDetailPage />} />

@@ -5,6 +5,7 @@ import { useTour } from "@/context/TourContext";
 import { BottomNav } from "@/components/BottomNav";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { Progress } from "@/components/ui/progress";
 
 export default function TourStopsPage() {
   const { tourId } = useParams<{ tourId: string }>();
@@ -23,87 +24,93 @@ export default function TourStopsPage() {
   }
 
   const progress = getProgress();
+  const progressPercent = progress.total > 0 ? (progress.unlocked / progress.total) * 100 : 0;
 
   return (
     <div className="flex min-h-screen flex-col pb-20">
       <header className="sticky top-0 z-40 border-b bg-background/95 backdrop-blur-md">
         <div className="flex h-14 items-center px-4">
-          <Link to={`/tur/${tour.id}`} className="mr-3">
+          <Link to={`/`} className="mr-3 p-2 -ml-2">
             <ArrowLeftIcon className="h-5 w-5" />
           </Link>
           <div className="flex-1">
-            <h1 className="font-display text-lg font-bold">{tour.title}</h1>
-            <p className="text-xs text-muted-foreground">
-              {progress.unlocked} av {progress.total} stopp fullfort
-            </p>
+            <h1 className="font-display text-lg font-bold truncate">{tour.title}</h1>
           </div>
-          <Link to="/skann" className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-primary-foreground">
-            <QrCodeIcon className="h-4 w-4" />
-          </Link>
+          <Button asChild variant="ghost" size="icon" className="w-10 h-10">
+            <Link to={`/tur/${tour.id}/kart`}>
+              <MapIcon className="h-5 w-5" />
+            </Link>
+          </Button>
+        </div>
+        <div className="px-4 pb-2">
+          <Progress value={progressPercent} className="h-1" />
+          <p className="text-xs text-muted-foreground mt-1 text-right">
+            {progress.unlocked} av {progress.total} stopp fullført
+          </p>
         </div>
       </header>
 
-      <main className="flex-1 px-4 py-4">
-        <div className="space-y-3">
-          {tour.stops.map((stop, index) => {
-            const unlocked = isStopUnlocked(stop.id);
-            const isFirst = index === 0;
-            const previousUnlocked = index === 0 || isStopUnlocked(tour.stops[index - 1].id);
+      <main className="flex-1">
+        <div className="relative">
+          {/* Vertical line */}
+          <div className="absolute left-8 top-10 bottom-10 w-0.5 bg-border" />
 
-            return (
-              <motion.div
-                key={stop.id}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: index * 0.05 }}
-              >
-                <Link
-                  to={unlocked || isFirst ? `/tur/${tour.id}/stopp/${stop.id}` : "#"}
-                  className={cn(
-                    "flex items-center gap-4 rounded-xl border p-4 transition-all",
-                    unlocked ? "bg-card hover:shadow-md" : "bg-muted/30 opacity-70"
-                  )}
-                  onClick={(e) => {
-                    if (!unlocked && !isFirst) e.preventDefault();
-                  }}
+          <div className="space-y-2 p-4">
+            {tour.stops.map((stop, index) => {
+              const unlocked = isStopUnlocked(stop.id);
+              const isFirst = index === 0;
+
+              return (
+                <motion.div
+                  key={stop.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.07 }}
+                  className="relative pl-12"
                 >
-                  <div
+                  {/* Dot on the line */}
+                  <div className={cn(
+                    "absolute left-8 top-7 -translate-x-1/2 w-3 h-3 rounded-full border-2",
+                    unlocked ? "bg-primary border-primary-foreground" : "bg-muted border-muted-foreground/30"
+                  )} />
+
+                  <Link
+                    to={unlocked || isFirst ? `/tur/${tour.id}/stopp/${stop.id}` : "#"}
                     className={cn(
-                      "flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-bold",
-                      unlocked
-                        ? "bg-primary text-primary-foreground"
-                        : "bg-muted text-muted-foreground"
+                      "block rounded-xl border p-4 transition-all",
+                      unlocked ? "bg-card hover:shadow-md" : "bg-muted/40",
+                      !unlocked && !isFirst && "pointer-events-none opacity-60"
                     )}
                   >
-                    {unlocked ? (
-                      <CheckIcon className="h-5 w-5" />
-                    ) : (
-                      stop.order
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1 min-w-0">
+                        <p className="text-xs text-muted-foreground">Stopp {stop.order}</p>
+                        <h3 className="font-medium truncate mt-0.5">
+                          {stop.title}
+                        </h3>
+                      </div>
+                      <div className="ml-4 shrink-0">
+                        {unlocked ? (
+                          <div className="flex h-7 w-7 items-center justify-center rounded-full bg-green-100 text-green-700">
+                            <CheckIcon className="h-4 w-4" />
+                          </div>
+                        ) : (
+                          <div className="flex h-7 w-7 items-center justify-center rounded-full bg-muted">
+                            <LockIcon className="h-4 w-4 text-muted-foreground" />
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                    {(unlocked || isFirst) && (
+                      <p className="text-xs text-muted-foreground mt-2 truncate">
+                        {stop.description}
+                      </p>
                     )}
-                  </div>
-
-                  <div className="flex-1 min-w-0">
-                    <h3 className={cn(
-                      "font-medium truncate",
-                      !unlocked && !isFirst && "text-muted-foreground"
-                    )}>
-                      {stop.title}
-                    </h3>
-                    <p className="text-xs text-muted-foreground truncate">
-                      {unlocked || isFirst ? stop.description : stop.locationHint || uiText.scanToUnlock}
-                    </p>
-                  </div>
-
-                  {(unlocked || isFirst) && (
-                    <ChevronRightIcon className="h-5 w-5 text-muted-foreground shrink-0" />
-                  )}
-                  {!unlocked && !isFirst && (
-                    <LockIcon className="h-4 w-4 text-muted-foreground shrink-0" />
-                  )}
-                </Link>
-              </motion.div>
-            );
-          })}
+                  </Link>
+                </motion.div>
+              );
+            })}
+          </div>
         </div>
       </main>
 
@@ -148,6 +155,14 @@ function LockIcon({ className }: { className?: string }) {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className={className}>
       <rect width="18" height="11" x="3" y="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" />
+    </svg>
+  );
+}
+
+function MapIcon({ className }: { className?: string }) {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" /><circle cx="12" cy="10" r="3" />
     </svg>
   );
 }
