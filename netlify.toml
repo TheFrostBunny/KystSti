@@ -1,0 +1,4 @@
+# Netlify configuration file
+[build]
+  command = "vite build"
+  publish = "dist"
