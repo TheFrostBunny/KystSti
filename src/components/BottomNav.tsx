@@ -2,8 +2,8 @@ import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 
 const navItems = [
-  { to: "/", label: "Hjem", icon: HomeIcon },
-  { to: "/turer", label: "Turer", icon: RouteIcon },
+  { to: "/", label: "Hjem", icon: HomeIcon, exact: true },
+  { to: "/turer", label: "Turer", icon: RouteIcon, matchPaths: ["/turer", "/tur"] },
   { to: "/skann", label: "Skann", icon: QrCodeIcon, highlight: true },
   { to: "/om", label: "Om", icon: InfoIcon },
 ];
@@ -15,9 +15,11 @@ export function BottomNav() {
     <nav className="fixed bottom-0 left-0 right-0 z-50 border-t bg-card/95 backdrop-blur-md safe-area-bottom">
       <div className="mx-auto flex h-16 max-w-lg items-center justify-around px-2">
         {navItems.map((item) => {
-          const active = item.to === "/" 
-            ? location.pathname === "/" 
-            : location.pathname.startsWith(item.to);
+          const active = item.exact
+            ? location.pathname === item.to
+            : item.matchPaths
+              ? item.matchPaths.some(p => location.pathname === p || location.pathname.startsWith(p + "/"))
+              : location.pathname.startsWith(item.to);
           
           if (item.highlight) {
             return (
