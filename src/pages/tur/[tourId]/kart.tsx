@@ -61,7 +61,7 @@ export default function TourMapPage() {
       {/* Header */}
       <header className="sticky top-0 z-[1000] border-b bg-background/95 backdrop-blur-md">
         <div className="flex h-14 items-center px-4">
-          <button onClick={() => navigate(`/tur/${tour.id}`)} className="mr-3">
+          <button onClick={() => navigate(-1)} className="mr-3">
             <ArrowLeftIcon className="h-5 w-5" />
           </button>
           <h1 className="font-display text-lg font-bold">{tour.title} - Kart</h1>
