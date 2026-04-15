@@ -93,39 +93,36 @@ export default function TourMapPage() {
 
           {/* Stop markers */}
           {(() => {
-            // Only show unlocked stops, the first stop, and the next stop to unlock
-            const unlockedStops = tour.stops.filter(s => isStopUnlocked(s.id));
+            // Only show the first stop if not unlocked, otherwise only the next stop to unlock
             const firstStop = tour.stops.find(s => s.order === 1);
+            if (firstStop && !isStopUnlocked(firstStop.id)) {
+              return [
+                <Marker
+                  key={firstStop.id}
+                  position={[firstStop.lat, firstStop.lng]}
+                  icon={createCustomIcon(mapColors.lockedPin, firstStop.order)}
+                  eventHandlers={{ click: () => setSelectedStop(firstStop) }}
+                />
+              ];
+            }
+            // Find the next stop to unlock (the first locked stop where all previous are unlocked)
             const nextStop = tour.stops.find(s => {
               if (isStopUnlocked(s.id)) return false;
               if (s.order === 1) return false;
-              // All previous stops must be unlocked
               const prev = tour.stops.filter(p => p.order < s.order);
               return prev.every(p => isStopUnlocked(p.id));
             });
-            const visibleStops = [
-              ...unlockedStops,
-              ...(firstStop && !isStopUnlocked(firstStop.id) ? [firstStop] : []),
-              ...(nextStop ? [nextStop] : []),
-            ];
-            // Remove duplicates
-            const uniqueStops = Array.from(new Set(visibleStops));
-            return uniqueStops.map((stop) => {
-              const unlocked = isStopUnlocked(stop.id) || stop.order === 1;
-              return (
+            if (nextStop) {
+              return [
                 <Marker
-                  key={stop.id}
-                  position={[stop.lat, stop.lng]}
-                  icon={createCustomIcon(
-                    unlocked ? mapColors.unlockedPin : mapColors.lockedPin,
-                    stop.order
-                  )}
-                  eventHandlers={{
-                    click: () => setSelectedStop(stop),
-                  }}
+                  key={nextStop.id}
+                  position={[nextStop.lat, nextStop.lng]}
+                  icon={createCustomIcon(mapColors.lockedPin, nextStop.order)}
+                  eventHandlers={{ click: () => setSelectedStop(nextStop) }}
                 />
-              );
-            });
+              ];
+            }
+            return [];
           })()}
         </MapContainer>
 
