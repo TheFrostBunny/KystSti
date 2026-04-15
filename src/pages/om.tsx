@@ -1,19 +1,7 @@
-import { createFileRoute } from "@tanstack/react-router";
 import { BottomNav } from "@/components/BottomNav";
-import { uiText } from "@/data/tourData";
 import { tourInfo } from "@/data/Turinfo";
 
-export const Route = createFileRoute("/om")({
-  component: AboutPage,
-  head: () => ({
-    meta: [
-      { title: `Om turen — ${tourInfo.title}` },
-      { name: "description", content: `Om ${tourInfo.title} — en interaktiv guidet tur.` },
-    ],
-  }),
-});
-
-function AboutPage() {
+export default function AboutPage() {
   return (
     <div className="min-h-screen pb-24">
       <header className="sticky top-0 z-40 border-b bg-background/95 backdrop-blur-md px-4 py-3">

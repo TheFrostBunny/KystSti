@@ -1,11 +1,11 @@
-import { Link, useLocation } from "@tanstack/react-router";
+import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 
 const navItems = [
-  { to: "/" as const, label: "Hjem", icon: HomeIcon },
-  { to: "/stopp-liste" as const, label: "Stopp", icon: ListIcon },
-  { to: "/kart" as const, label: "Kart", icon: MapIcon },
-  { to: "/om" as const, label: "Om", icon: InfoIcon },
+  { to: "/", label: "Hjem", icon: HomeIcon },
+  { to: "/stopp-liste", label: "Stopp", icon: ListIcon },
+  { to: "/kart", label: "Kart", icon: MapIcon },
+  { to: "/om", label: "Om", icon: InfoIcon },
 ];
 
 export function BottomNav() {

@@ -1,52 +1,35 @@
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import { useParams, Link, Navigate } from "react-router-dom";
 import { tourStops, uiText } from "@/data/tourData";
 import { ImageGallery } from "@/components/ImageGallery";
 import { BottomNav } from "@/components/BottomNav";
 import { Button } from "@/components/ui/button";
 import { unlockStop } from "@/lib/unlocked";
-import { tourInfo } from "@/data/Turinfo";
 
-export const Route = createFileRoute("/stopp/$stopId")({
-  component: StopDetailPage,
-  loader: ({ params }) => {
-    const stop = tourStops.find((s) => s.id === params.stopId);
-    if (!stop) throw notFound();
-    return { stop };
-  },
-  notFoundComponent: () => (
-    <div className="flex min-h-screen items-center justify-center px-4 text-center">
-      <div>
-        <h1 className="font-display text-2xl font-bold">{uiText.stopNotFound}</h1>
-        <p className="mt-2 text-muted-foreground">{uiText.stopNotFoundDesc}</p>
-        <Button asChild className="mt-6"><Link to="/stopp-liste">{uiText.backToList}</Link></Button>
-      </div>
-    </div>
-  ),
-  head: ({ loaderData }) => {
-    const stop = loaderData?.stop;
-    return {
-      meta: stop
-        ? [
-            { title: `${stop.title} — ${tourInfo.title}` },
-            { name: "description", content: stop.description },
-            { property: "og:title", content: `${stop.title} — ${tourInfo.title}` },
-            { property: "og:description", content: stop.description },
-            { property: "og:image", content: stop.images[0] },
-          ]
-        : [],
-    };
-  },
-});
-
-function StopDetailPage() {
-  const { stop } = Route.useLoaderData();
+export default function StopDetailPage() {
+  const { stopId } = useParams<{ stopId: string }>();
   const [ready, setReady] = useState(false);
 
+  const stop = tourStops.find((s) => s.id === stopId);
+
   useEffect(() => {
-    unlockStop(stop.id);
-    setReady(true);
-  }, [stop.id]);
+    if (stop) {
+      unlockStop(stop.id);
+      setReady(true);
+    }
+  }, [stop]);
+
+  if (!stop) {
+    return (
+      <div className="flex min-h-screen items-center justify-center px-4 text-center">
+        <div>
+          <h1 className="font-display text-2xl font-bold">{uiText.stopNotFound}</h1>
+          <p className="mt-2 text-muted-foreground">{uiText.stopNotFoundDesc}</p>
+          <Button asChild className="mt-6"><Link to="/stopp-liste">{uiText.backToList}</Link></Button>
+        </div>
+      </div>
+    );
+  }
 
   const nextStop = tourStops.find((s) => s.order === stop.order + 1);
 
@@ -102,7 +85,7 @@ function StopDetailPage() {
               {uiText.stopLabel(nextStop.order)} — ???
             </p>
             {nextStop.locationHint && (
-              <p className="text-sm text-muted-foreground mt-1">📍 Hint: {nextStop.locationHint}</p>
+              <p className="text-sm text-muted-foreground mt-1">Hint: {nextStop.locationHint}</p>
             )}
             <p className="text-xs text-muted-foreground mt-2">{uiText.findQrHint}</p>
           </div>
@@ -110,8 +93,8 @@ function StopDetailPage() {
 
         {!nextStop && (
           <div className="rounded-xl bg-primary/10 border border-primary/20 p-4 text-center">
-            <p className="font-display text-lg font-bold text-primary">🎉 Siste stopp!</p>
-            <p className="text-sm text-muted-foreground mt-1">Du har fullført hele byvandringen!</p>
+            <p className="font-display text-lg font-bold text-primary">Siste stopp!</p>
+            <p className="text-sm text-muted-foreground mt-1">Du har fullfort hele byvandringen!</p>
           </div>
         )}
       </div>

@@ -1,32 +1,22 @@
-import { createFileRoute } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { tourStops, uiText } from "@/data/tourData";
 import { appConfig } from "@/config";
 import { BottomNav } from "@/components/BottomNav";
 import { useUserLocation, getDistanceKm } from "@/hooks/useUserLocation";
 import { Button } from "@/components/ui/button";
 import { getUnlockedStops } from "@/lib/unlocked";
-import { Link } from "@tanstack/react-router";
 import { tourInfo } from "@/data/Turinfo";
 
-export const Route = createFileRoute("/stopp-liste")({
-  component: StopListPage,
-  head: () => ({
-    meta: [
-      { title: `Alle stopp — ${tourInfo.title}` },
-      { name: "description", content: `Se alle stoppene på ${tourInfo.title}.` },
-    ],
-  }),
-});
-
-function StopListPage() {
+export default function StopListPage() {
   const { location, loading, requestLocation } = useUserLocation();
   const [unlocked, setUnlocked] = useState<Set<string>>(new Set());
-    if (!appConfig.enableStopList) return null;
 
   useEffect(() => {
     setUnlocked(getUnlockedStops());
   }, []);
+
+  if (!appConfig.enableStopList) return null;
 
   const unlockedCount = tourStops.filter((s) => unlocked.has(s.id)).length;
 
@@ -63,7 +53,7 @@ function StopListPage() {
             </p>
             {nextLockedStop.locationHint && (
               <p className="text-sm text-muted-foreground mt-1">
-                📍 Hint: {nextLockedStop.locationHint}
+                Hint: {nextLockedStop.locationHint}
               </p>
             )}
             <p className="text-xs text-muted-foreground mt-2">{uiText.findQrHint}</p>
@@ -72,8 +62,8 @@ function StopListPage() {
 
         {!nextLockedStop && unlockedCount === tourStops.length && (
           <div className="rounded-xl bg-primary/10 border border-primary/20 p-4 text-center">
-            <p className="font-display text-lg font-bold text-primary">🎉 Gratulerer!</p>
-            <p className="text-sm text-muted-foreground mt-1">Du har fullført hele byvandringen!</p>
+            <p className="font-display text-lg font-bold text-primary">Gratulerer!</p>
+            <p className="text-sm text-muted-foreground mt-1">Du har fullfort hele byvandringen!</p>
           </div>
         )}
 
@@ -127,8 +117,7 @@ function StopListPage() {
                       {stop.description}
                     </p>
                     <Link
-                      to="/stopp/$stopId"
-                      params={{ stopId: stop.id }}
+                      to={`/stopp/${stop.id}`}
                       className="mt-1 text-xs font-medium text-primary underline underline-offset-2"
                     >
                       {uiText.seeDetails}
@@ -137,7 +126,7 @@ function StopListPage() {
                 ) : (
                   <p className="mt-0.5 text-xs text-muted-foreground">
                     {isNext && stop.locationHint
-                      ? `📍 ${stop.locationHint}`
+                      ? stop.locationHint
                       : uiText.scanToUnlock}
                   </p>
                 )}

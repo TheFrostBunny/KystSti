@@ -1,5 +1,5 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import { tourStops, mapColors, uiText } from "@/data/tourData";
 import { appConfig } from "@/config";
 import { tourInfo } from "@/data/Turinfo";
@@ -7,18 +7,7 @@ import { BottomNav } from "@/components/BottomNav";
 import { getUnlockedStops } from "@/lib/unlocked";
 import { useUserLocation, getDistanceKm } from "@/hooks/useUserLocation";
 
-export const Route = createFileRoute("/kart")({
-  component: MapPage,
-  head: () => ({
-    meta: [
-      { title: "Kartvisning" },
-      { name: "description", content: "Se alle stoppene på kartet." },
-    ],
-  }),
-});
-
-function MapPage() {
-    if (!appConfig.enableMap) return null;
+export default function MapPage() {
   const mapRef = useRef<HTMLDivElement>(null);
   const [selectedStop, setSelectedStop] = useState<typeof tourStops[0] | null>(null);
   const [unlocked, setUnlocked] = useState<Set<string>>(new Set());
@@ -50,7 +39,7 @@ function MapPage() {
         const isUnlocked = unlocked.has(stop.id);
         const bg = isUnlocked ? mapColors.unlockedPin : mapColors.lockedPin;
         const icon = L.divIcon({
-          html: `<div style="background:${bg};color:white;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;border:2px solid white;box-shadow:0 2px 6px rgba(0,0,0,.3);">${isUnlocked ? stop.order : "🔒"}</div>`,
+          html: `<div style="background:${bg};color:white;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;border:2px solid white;box-shadow:0 2px 6px rgba(0,0,0,.3);">${isUnlocked ? stop.order : "?"}</div>`,
           className: "",
           iconSize: [28, 28],
           iconAnchor: [14, 14],
@@ -65,6 +54,8 @@ function MapPage() {
     return () => { cancelled = true; cleanup?.then((fn) => fn?.()); };
   }, [unlocked]);
 
+  if (!appConfig.enableMap) return null;
+
   const isSelectedUnlocked = selectedStop ? unlocked.has(selectedStop.id) : false;
   let distance = null;
   if (selectedStop && location) {
@@ -77,7 +68,7 @@ function MapPage() {
         <h1 className="font-display text-xl font-bold">Kart</h1>
       </header>
 
-      <div className="relative flex-1 pb-16"> {/* Matcher høyden til BottomNav for å fjerne gap */}
+      <div className="relative flex-1 pb-16">
         <div ref={mapRef} className="h-full w-full" />
 
         {selectedStop && (
@@ -87,13 +78,13 @@ function MapPage() {
                 onClick={() => setSelectedStop(null)}
                 className="absolute right-3 top-3 h-7 w-7 rounded-full bg-muted flex items-center justify-center text-muted-foreground hover:bg-muted/80"
                 aria-label="Lukk"
-              >×</button>
+              >x</button>
               <div className="flex gap-3">
                 <div className="h-16 w-16 flex-shrink-0 overflow-hidden rounded-lg">
                   {isSelectedUnlocked ? (
                     <img src={selectedStop.images[0]} alt={selectedStop.title} className="h-full w-full object-cover" />
                   ) : (
-                    <div className="h-full w-full bg-muted flex items-center justify-center"><span className="text-xl">🔒</span></div>
+                    <div className="h-full w-full bg-muted flex items-center justify-center"><span className="text-xl">?</span></div>
                   )}
                 </div>
                 <div className="min-w-0">
@@ -123,7 +114,7 @@ function MapPage() {
                     </div>
                   )}
                   {isSelectedUnlocked ? (
-                    <Link to="/stopp/$stopId" params={{ stopId: selectedStop.id }} className="mt-1 inline-block text-sm font-medium text-primary underline underline-offset-2">
+                    <Link to={`/stopp/${selectedStop.id}`} className="mt-1 inline-block text-sm font-medium text-primary underline underline-offset-2">
                       {uiText.seeDetails}
                     </Link>
                   ) : (

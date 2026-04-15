@@ -1,22 +1,11 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { uiText } from "@/data/tourData";
 import { tourInfo } from "@/data/Turinfo";
-
 import { BottomNav } from "@/components/BottomNav";
 import { Button } from "@/components/ui/button";
 
-export const Route = createFileRoute("/")({
-  component: HomePage,
-  head: () => ({
-    meta: [
-      { title: `${tourInfo.title} — Guidet tur` },
-      { name: "description", content: tourInfo.description },
-    ],
-  }),
-});
-
-function HomePage() {
+export default function HomePage() {
   return (
     <div className="flex min-h-screen flex-col">
       <div className="relative flex flex-1 flex-col items-center justify-center px-6 py-16 text-center">
