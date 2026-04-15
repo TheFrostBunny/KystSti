@@ -92,39 +92,22 @@ export default function TourMapPage() {
           />
 
           {/* Stop markers */}
-          {(() => {
-            // Show all unlocked stops and the next stop to unlock
-            const unlockedStops = tour.stops.filter(s => isStopUnlocked(s.id));
-            // Find the next stop to unlock (the first locked stop where all previous are unlocked)
-            const nextStop = tour.stops.find(s => {
-              if (isStopUnlocked(s.id)) return false;
-              if (s.order === 1) return false;
-              const prev = tour.stops.filter(p => p.order < s.order);
-              return prev.every(p => isStopUnlocked(p.id));
-            });
-            const visibleStops = [
-              ...unlockedStops,
-              ...(nextStop ? [nextStop] : []),
-            ];
-            // Remove duplicates
-            const uniqueStops = Array.from(new Map(visibleStops.map(s => [s.id, s])).values());
-            return uniqueStops.map((stop) => {
-              const unlocked = isStopUnlocked(stop.id) || stop.order === 1;
-              return (
-                <Marker
-                  key={stop.id}
-                  position={[stop.lat, stop.lng]}
-                  icon={createCustomIcon(
-                    unlocked ? mapColors.unlockedPin : mapColors.lockedPin,
-                    stop.order
-                  )}
-                  eventHandlers={{
-                    click: () => setSelectedStop(stop),
-                  }}
-                />
-              );
-            });
-          })()}
+          {tour.stops.map((stop) => {
+            const unlocked = isStopUnlocked(stop.id) || stop.order === 1;
+            return (
+              <Marker
+                key={stop.id}
+                position={[stop.lat, stop.lng]}
+                icon={createCustomIcon(
+                  unlocked ? mapColors.unlockedPin : mapColors.lockedPin,
+                  stop.order
+                )}
+                eventHandlers={{
+                  click: () => setSelectedStop(stop),
+                }}
+              />
+            );
+          })}
         </MapContainer>
 
         {/* Legend */}
@@ -132,11 +115,11 @@ export default function TourMapPage() {
           <div className="flex items-center gap-2 text-xs">
             <div className="flex items-center gap-1.5">
               <div className="w-3 h-3 rounded-full" style={{ backgroundColor: mapColors.unlockedPin }} />
-              <span>Opplåst</span>
+              <span>OpplÅst</span>
             </div>
             <div className="flex items-center gap-1.5">
               <div className="w-3 h-3 rounded-full" style={{ backgroundColor: mapColors.lockedPin }} />
-              <span>Låst</span>
+              <span>LÅst</span>
             </div>
           </div>
         </div>
