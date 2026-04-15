@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { Tour, TourStop, getTourById } from "@/data/tours";
+import { appConfig } from "@/config";
 
 interface TourContextType {
   currentTourId: string | null;
@@ -20,9 +21,10 @@ const STORAGE_KEY_UNLOCKED = "kyststi-unlocked-stops";
 export function TourProvider({ children }: { children: ReactNode }) {
   const [currentTourId, setCurrentTourId] = useState<string | null>(() => {
     if (typeof window !== "undefined") {
-      return localStorage.getItem(STORAGE_KEY_TOUR);
+      // Bruk aktiv tur fra config som fallback hvis ingenting er i localStorage
+      return localStorage.getItem(STORAGE_KEY_TOUR) || appConfig.activeTourId;
     }
-    return null;
+    return appConfig.activeTourId;
   });
 
   const [unlockedStops, setUnlockedStops] = useState<Set<string>>(() => {

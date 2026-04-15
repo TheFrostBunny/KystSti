@@ -6,8 +6,9 @@ export const appConfig = {
   enableStopList: true, // Vis stopp-liste
   enableProgress: true, // Lagre fremgang i localStorage
   enableDistance: false, // Vis avstand fra bruker
-  enableAudio: true, // Aktiver lydavspilling på stopp
+  enableAudio: false, // Aktiver lydavspilling på stopp
   enableMultiLang: false, // Aktiver støtte for flere språk
+  activeTourId: "kristiansund-byvandring", // Sett ID-en til turen som skal være aktiv
   enableDebug: false, // Vis debug-informasjon i UI
   enableOnboarding: true, // Vis onboarding ved første besøk
 };

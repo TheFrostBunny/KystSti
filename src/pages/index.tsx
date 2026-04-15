@@ -4,10 +4,16 @@ import { getAllTours, uiText } from "@/data/tours";
 import { useTour } from "@/context/TourContext";
 import { BottomNav } from "@/components/BottomNav";
 import { Button } from "@/components/ui/button";
+import { appConfig } from "@/config";
 
 export default function HomePage() {
-  const tours = getAllTours();
-  const { currentTour, getProgress } = useTour();
+  const { currentTour, getProgress, setCurrentTour } = useTour();
+
+  // Sørg for at turen fra config er satt som aktiv
+  if (currentTour?.id !== appConfig.activeTourId) {
+    setCurrentTour(appConfig.activeTourId);
+  }
+
   const progress = getProgress();
 
   return (
@@ -31,36 +37,36 @@ export default function HomePage() {
           </div>
 
           <h1 className="font-display text-3xl font-bold leading-tight tracking-tight sm:text-4xl text-balance">
-            KystSti
+            {currentTour?.title || "KystSti"}
           </h1>
-          <p className="mt-3 text-lg text-muted-foreground">Opplev kysten pa en ny mate</p>
+          <p className="mt-3 text-lg text-muted-foreground">
+            {currentTour?.subtitle || "Opplev kysten på en ny måte"}
+          </p>
           <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-            Utforsk vakre kyststier med interaktive turer, QR-koder og lydguider. Velg en tur og start opplevelsen!
+            {currentTour?.description || "Utforsk vakre kyststier med interaktive turer, QR-koder og lydguider."}
           </p>
 
-          <div className="mt-8 flex justify-center gap-6 text-sm">
-            <div className="text-center">
-              <div className="font-display text-xl font-bold text-primary">{tours.length}</div>
-              <div className="text-muted-foreground">turer</div>
-            </div>
-            <div className="h-10 w-px bg-border" />
-            <div className="text-center">
-              <div className="font-display text-xl font-bold text-primary">
-                {tours.reduce((acc, tour) => acc + tour.stops.length, 0)}
+          {currentTour && (
+            <div className="mt-8 flex justify-center gap-6 text-sm">
+              <div className="text-center">
+                <div className="font-display text-xl font-bold text-primary">{currentTour.stops.length}</div>
+                <div className="text-muted-foreground">stopp</div>
               </div>
-              <div className="text-muted-foreground">stopp totalt</div>
+              <div className="h-10 w-px bg-border" />
+              <div className="text-center">
+                <div className="font-display text-xl font-bold text-primary">{currentTour.estimatedTime}</div>
+                <div className="text-muted-foreground">estimert tid</div>
+              </div>
             </div>
-          </div>
+          )}
 
-          {/* Active tour card */}
           {currentTour && (
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               className="mt-8 rounded-xl bg-card border p-4 text-left"
             >
-              <p className="text-xs text-muted-foreground uppercase tracking-wider">Aktiv tur</p>
-              <h3 className="mt-1 font-display text-lg font-bold">{currentTour.title}</h3>
+              <p className="text-xs text-muted-foreground uppercase tracking-wider">Din fremgang</p>
               <div className="mt-2 flex items-center gap-2">
                 <div className="flex-1 h-2 rounded-full bg-muted overflow-hidden">
                   <div 
@@ -73,19 +79,19 @@ export default function HomePage() {
                 </span>
               </div>
               <Button asChild size="sm" className="mt-3 w-full">
-                <Link to={`/tur/${currentTour.id}`}>Fortsett tur</Link>
+                <Link to={`/tur/${currentTour.id}/stopp`}>Se alle stopp</Link>
               </Button>
             </motion.div>
           )}
 
           <div className="mt-8 rounded-xl bg-muted/50 border p-4 text-sm text-muted-foreground">
             <p className="font-medium text-foreground">{uiText.howItWorksLabel}</p>
-            <p className="mt-1">Velg en tur, finn QR-kodene ved hvert stopp, og las opp historier, bilder og lydguider!</p>
+            <p className="mt-1">{currentTour?.howItWorks || "Finn QR-kodene ved hvert stopp for å låse opp historier, bilder og lydguider!"}</p>
           </div>
 
           <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
             <Button asChild size="lg" className="h-14 rounded-xl px-8 text-base font-semibold shadow-lg">
-              <Link to="/turer">{uiText.chooseTour}</Link>
+              <Link to={currentTour ? `/tur/${currentTour.id}/stopp` : '/turer'}>Start Turen</Link>
             </Button>
             <Button asChild variant="outline" size="lg" className="h-14 rounded-xl px-8 text-base">
               <Link to="/skann">{uiText.scanQr}</Link>
