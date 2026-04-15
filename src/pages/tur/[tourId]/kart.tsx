@@ -19,7 +19,7 @@ L.Icon.Default.mergeOptions({
 function createCustomIcon(color: string, number: number) {
   return L.divIcon({
     className: "custom-marker",
-    html: `<div style="background-color: ${color}; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 14px; box-shadow: 0 2px 8px rgba(0,0,0,0.3);">${number}</div>`,
+    html: `<div style=\"background-color: ${color}; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 14px; box-shadow: 0 2px 8px rgba(0,0,0,0.3);\">${number}</div>`,
     iconSize: [32, 32],
     iconAnchor: [16, 16],
   });
@@ -92,39 +92,41 @@ export default function TourMapPage() {
           />
 
           {/* Stop markers */}
-          {tour.stops.map((stop) => {
-            const unlocked = isStopUnlocked(stop.id) || stop.order === 1;
-            return (
-              <Marker
-                key={stop.id}
-                position={[stop.lat, stop.lng]}
-                icon={createCustomIcon(
-                  unlocked ? mapColors.unlockedPin : mapColors.lockedPin,
-                  stop.order
-                )}
-                eventHandlers={{
-                  click: () => setSelectedStop(stop),
-                }}
-              >
-                <Popup>
-                  <div className="min-w-[200px]">
-                    <h3 className="font-bold">{stop.title}</h3>
-                    <p className="text-sm text-gray-600 mt-1">
-                      {unlocked ? stop.description.slice(0, 100) + "..." : stop.locationHint}
-                    </p>
-                    {(unlocked || stop.order === 1) && (
-                      <Link
-                        to={`/tur/${tour.id}/stopp/${stop.id}`}
-                        className="inline-block mt-2 text-sm text-primary font-medium"
-                      >
-                        Se detaljer
-                      </Link>
-                    )}
-                  </div>
-                </Popup>
-              </Marker>
-            );
-          })}
+          {(() => {
+            // Only show unlocked stops, the first stop, and the next stop to unlock
+            const unlockedStops = tour.stops.filter(s => isStopUnlocked(s.id));
+            const firstStop = tour.stops.find(s => s.order === 1);
+            const nextStop = tour.stops.find(s => {
+              if (isStopUnlocked(s.id)) return false;
+              if (s.order === 1) return false;
+              // All previous stops must be unlocked
+              const prev = tour.stops.filter(p => p.order < s.order);
+              return prev.every(p => isStopUnlocked(p.id));
+            });
+            const visibleStops = [
+              ...unlockedStops,
+              ...(firstStop && !isStopUnlocked(firstStop.id) ? [firstStop] : []),
+              ...(nextStop ? [nextStop] : []),
+            ];
+            // Remove duplicates
+            const uniqueStops = Array.from(new Set(visibleStops));
+            return uniqueStops.map((stop) => {
+              const unlocked = isStopUnlocked(stop.id) || stop.order === 1;
+              return (
+                <Marker
+                  key={stop.id}
+                  position={[stop.lat, stop.lng]}
+                  icon={createCustomIcon(
+                    unlocked ? mapColors.unlockedPin : mapColors.lockedPin,
+                    stop.order
+                  )}
+                  eventHandlers={{
+                    click: () => setSelectedStop(stop),
+                  }}
+                />
+              );
+            });
+          })()}
         </MapContainer>
 
         {/* Legend */}
@@ -132,14 +134,47 @@ export default function TourMapPage() {
           <div className="flex items-center gap-2 text-xs">
             <div className="flex items-center gap-1.5">
               <div className="w-3 h-3 rounded-full" style={{ backgroundColor: mapColors.unlockedPin }} />
-              <span>Opplast</span>
+              <span>Opplåst</span>
             </div>
             <div className="flex items-center gap-1.5">
               <div className="w-3 h-3 rounded-full" style={{ backgroundColor: mapColors.lockedPin }} />
-              <span>Last</span>
+              <span>Låst</span>
             </div>
           </div>
         </div>
+
+        {/* Pop-out stop info card */}
+        {selectedStop && (
+          <div className="fixed left-0 right-0 bottom-0 z-[1100] flex justify-center pointer-events-none">
+            <div className="w-full max-w-md m-4 pointer-events-auto">
+              <div className="rounded-xl bg-white shadow-2xl p-5 border border-gray-200 animate-popin">
+                <div className="flex items-center justify-between mb-2">
+                  <h3 className="font-bold text-lg truncate">{selectedStop.title}</h3>
+                  <button
+                    onClick={() => setSelectedStop(null)}
+                    className="ml-2 text-gray-400 hover:text-gray-700"
+                    aria-label="Lukk"
+                  >
+                    <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+                  </button>
+                </div>
+                <p className="text-sm text-gray-600 mb-2">
+                  {(isStopUnlocked(selectedStop.id) || selectedStop.order === 1)
+                    ? selectedStop.description.slice(0, 120) + (selectedStop.description.length > 120 ? "..." : "")
+                    : selectedStop.locationHint}
+                </p>
+                {(isStopUnlocked(selectedStop.id) || selectedStop.order === 1) && (
+                  <Link
+                    to={`/tur/${tour.id}/stopp/${selectedStop.id}`}
+                    className="inline-block mt-2 text-sm text-primary font-medium"
+                  >
+                    Se detaljer
+                  </Link>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       <BottomNav />
