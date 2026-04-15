@@ -60,7 +60,19 @@ export function TourProvider({ children }: { children: ReactNode }) {
   };
 
   const unlockStop = (stopId: string) => {
-    setUnlockedStops((prev) => new Set([...prev, stopId]));
+    if (!currentTour) return;
+    const stop = currentTour.stops.find((s) => s.id === stopId);
+    if (!stop) return;
+    // Only allow unlocking if all previous stops are unlocked
+    if (stop.order === 1) {
+      setUnlockedStops((prev) => new Set([...prev, stopId]));
+      return;
+    }
+    const previousStops = currentTour.stops.filter(s => s.order < stop.order);
+    const allPrevUnlocked = previousStops.every(s => unlockedStops.has(s.id));
+    if (allPrevUnlocked) {
+      setUnlockedStops((prev) => new Set([...prev, stopId]));
+    }
   };
 
   const isStopUnlocked = (stopId: string) => {
