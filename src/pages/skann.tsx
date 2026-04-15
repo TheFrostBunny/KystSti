@@ -1,0 +1,277 @@
+import { useEffect, useRef, useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
+import { useTour } from "@/context/TourContext";
+import { getAllTours, getTourById, uiText } from "@/data/tours";
+import { BottomNav } from "@/components/BottomNav";
+import { Button } from "@/components/ui/button";
+
+type ScanStatus = "idle" | "scanning" | "success" | "error";
+
+export default function ScanPage() {
+  const navigate = useNavigate();
+  const { unlockStop, currentTourId, setCurrentTour } = useTour();
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [status, setStatus] = useState<ScanStatus>("idle");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+  const [hasCamera, setHasCamera] = useState(true);
+  const streamRef = useRef<MediaStream | null>(null);
+
+  useEffect(() => {
+    let animationId: number;
+    let barcodeDetector: BarcodeDetector | null = null;
+
+    const startCamera = async () => {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: "environment" },
+        });
+        streamRef.current = stream;
+        
+        if (videoRef.current) {
+          videoRef.current.srcObject = stream;
+          await videoRef.current.play();
+          setStatus("scanning");
+
+          // Check if BarcodeDetector is available
+          if ("BarcodeDetector" in window) {
+            barcodeDetector = new BarcodeDetector({ formats: ["qr_code"] });
+            scanFrame();
+          } else {
+            // Fallback: manual QR code input
+            setErrorMessage("QR-skanning er ikke stottet i denne nettleseren. Bruk manuell inndata.");
+          }
+        }
+      } catch (err) {
+        console.error("Camera error:", err);
+        setHasCamera(false);
+        setErrorMessage("Kunne ikke fa tilgang til kameraet. Sjekk tillatelser.");
+      }
+    };
+
+    const scanFrame = async () => {
+      if (!videoRef.current || !canvasRef.current || !barcodeDetector) return;
+
+      const video = videoRef.current;
+      const canvas = canvasRef.current;
+      const ctx = canvas.getContext("2d");
+
+      if (video.readyState === video.HAVE_ENOUGH_DATA && ctx) {
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+        try {
+          const barcodes = await barcodeDetector.detect(canvas);
+          if (barcodes.length > 0) {
+            const qrData = barcodes[0].rawValue;
+            handleQRCode(qrData);
+            return;
+          }
+        } catch (err) {
+          // Ignore detection errors, keep scanning
+        }
+      }
+
+      animationId = requestAnimationFrame(scanFrame);
+    };
+
+    startCamera();
+
+    return () => {
+      if (animationId) cancelAnimationFrame(animationId);
+      if (streamRef.current) {
+        streamRef.current.getTracks().forEach((track) => track.stop());
+      }
+    };
+  }, []);
+
+  const handleQRCode = (data: string) => {
+    // Expected format: kyststi://tour/{tourId}/stop/{stopId}
+    // or simpler: {tourId}/{stopId}
+    setStatus("success");
+    
+    const match = data.match(/(?:kyststi:\/\/tour\/)?([^\/]+)\/(?:stop\/)?([^\/]+)/);
+    
+    if (match) {
+      const [, tourId, stopId] = match;
+      const tour = getTourById(tourId);
+      
+      if (tour) {
+        const stop = tour.stops.find((s) => s.id === stopId);
+        if (stop) {
+          if (currentTourId !== tourId) {
+            setCurrentTour(tourId);
+          }
+          unlockStop(stopId);
+          setSuccessMessage(`${stop.title} er nå låst opp!`);
+          
+          setTimeout(() => {
+            navigate(`/tur/${tourId}/stopp/${stopId}`);
+          }, 1500);
+          return;
+        }
+      }
+    }
+
+    // Invalid QR code
+    setStatus("error");
+    setErrorMessage("Ugyldig QR-kode. Proev igjen.");
+    setTimeout(() => setStatus("scanning"), 2000);
+  };
+
+  const handleManualInput = () => {
+    const input = prompt("Skriv inn QR-kode data (format: turId/stoppId):");
+    if (input) {
+      handleQRCode(input);
+    }
+  };
+
+  return (
+    <div className="flex min-h-screen flex-col bg-black">
+      {/* Header */}
+      <header className="sticky top-0 z-50 bg-black/80 backdrop-blur-md">
+        <div className="flex h-14 items-center px-4">
+          <button onClick={() => navigate(-1)} className="mr-3 text-white">
+            <ArrowLeftIcon className="h-5 w-5" />
+          </button>
+          <h1 className="font-display text-lg font-bold text-white">{uiText.scanQr}</h1>
+        </div>
+      </header>
+
+      {/* Camera View */}
+      <div className="relative flex-1 flex items-center justify-center overflow-hidden">
+        {hasCamera ? (
+          <>
+            <video
+              ref={videoRef}
+              className="absolute inset-0 w-full h-full object-cover"
+              playsInline
+              muted
+            />
+            <canvas ref={canvasRef} className="hidden" />
+
+            {/* Scan overlay */}
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="relative">
+                {/* Corners */}
+                <div className="w-64 h-64 relative">
+                  <div className="absolute top-0 left-0 w-12 h-12 border-t-4 border-l-4 border-white rounded-tl-lg" />
+                  <div className="absolute top-0 right-0 w-12 h-12 border-t-4 border-r-4 border-white rounded-tr-lg" />
+                  <div className="absolute bottom-0 left-0 w-12 h-12 border-b-4 border-l-4 border-white rounded-bl-lg" />
+                  <div className="absolute bottom-0 right-0 w-12 h-12 border-b-4 border-r-4 border-white rounded-br-lg" />
+                  
+                  {/* Scanning line animation */}
+                  {status === "scanning" && (
+                    <motion.div
+                      className="absolute left-2 right-2 h-0.5 bg-primary"
+                      initial={{ top: "10%" }}
+                      animate={{ top: ["10%", "90%", "10%"] }}
+                      transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                    />
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* Dark overlay outside scan area */}
+            <div className="absolute inset-0 pointer-events-none">
+              <div className="absolute inset-0 bg-black/60" style={{
+                clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%, 0 0, calc(50% - 128px) calc(50% - 128px), calc(50% - 128px) calc(50% + 128px), calc(50% + 128px) calc(50% + 128px), calc(50% + 128px) calc(50% - 128px), calc(50% - 128px) calc(50% - 128px))"
+              }} />
+            </div>
+          </>
+        ) : (
+          <div className="text-center text-white p-6">
+            <CameraOffIcon className="h-16 w-16 mx-auto mb-4 opacity-50" />
+            <p className="text-lg mb-2">Kamera ikke tilgjengelig</p>
+            <p className="text-sm text-white/70 mb-4">{errorMessage}</p>
+            <Button onClick={handleManualInput} variant="secondary">
+              Skriv inn manuelt
+            </Button>
+          </div>
+        )}
+
+        {/* Status Messages */}
+        <AnimatePresence>
+          {status === "success" && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              className="absolute inset-0 flex items-center justify-center bg-black/80"
+            >
+              <div className="text-center text-white">
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-green-500"
+                >
+                  <CheckIcon className="h-10 w-10" />
+                </motion.div>
+                <p className="text-xl font-bold">{successMessage}</p>
+              </div>
+            </motion.div>
+          )}
+
+          {status === "error" && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 20 }}
+              className="absolute bottom-24 left-4 right-4 rounded-xl bg-destructive p-4 text-center text-white"
+            >
+              {errorMessage}
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+
+      {/* Instructions */}
+      <div className="bg-black px-6 py-4 text-center text-white">
+        <p className="text-sm opacity-80">
+          Hold telefonen over QR-koden ved stoppet for a lase opp innholdet
+        </p>
+      </div>
+
+      <BottomNav />
+    </div>
+  );
+}
+
+// BarcodeDetector type declaration
+declare global {
+  interface Window {
+    BarcodeDetector: typeof BarcodeDetector;
+  }
+  class BarcodeDetector {
+    constructor(options?: { formats: string[] });
+    detect(image: HTMLCanvasElement): Promise<{ rawValue: string }[]>;
+  }
+}
+
+function ArrowLeftIcon({ className }: { className?: string }) {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <path d="m12 19-7-7 7-7" /><path d="M19 12H5" />
+    </svg>
+  );
+}
+
+function CheckIcon({ className }: { className?: string }) {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <path d="M20 6 9 17l-5-5" />
+    </svg>
+  );
+}
+
+function CameraOffIcon({ className }: { className?: string }) {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <line x1="2" x2="22" y1="2" y2="22" /><path d="M7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16" /><path d="M9.5 4h5L17 7h3a2 2 0 0 1 2 2v7.5" /><path d="M14.121 15.121A3 3 0 1 1 9.88 10.88" />
+    </svg>
+  );
+}

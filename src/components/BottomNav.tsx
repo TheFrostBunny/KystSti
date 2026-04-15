@@ -1,11 +1,11 @@
-import { Link, useLocation } from "@tanstack/react-router";
+import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 
 const navItems = [
-  { to: "/" as const, label: "Hjem", icon: HomeIcon },
-  { to: "/stopp-liste" as const, label: "Stopp", icon: ListIcon },
-  { to: "/kart" as const, label: "Kart", icon: MapIcon },
-  { to: "/om" as const, label: "Om", icon: InfoIcon },
+  { to: "/", label: "Hjem", icon: HomeIcon, exact: true },
+  { to: "/turer", label: "Turer", icon: RouteIcon, matchPaths: ["/turer", "/tur"] },
+  { to: "/skann", label: "Skann", icon: QrCodeIcon, highlight: true },
+  { to: "/om", label: "Om", icon: InfoIcon },
 ];
 
 export function BottomNav() {
@@ -15,7 +15,35 @@ export function BottomNav() {
     <nav className="fixed bottom-0 left-0 right-0 z-50 border-t bg-card/95 backdrop-blur-md safe-area-bottom">
       <div className="mx-auto flex h-16 max-w-lg items-center justify-around px-2">
         {navItems.map((item) => {
-          const active = location.pathname === item.to;
+          const active = item.exact
+            ? location.pathname === item.to
+            : item.matchPaths
+              ? item.matchPaths.some(p => location.pathname === p || location.pathname.startsWith(p + "/"))
+              : location.pathname.startsWith(item.to);
+          
+          if (item.highlight) {
+            return (
+              <Link
+                key={item.to}
+                to={item.to}
+                className="flex flex-col items-center gap-0.5 min-w-[3.5rem]"
+              >
+                <div className={cn(
+                  "flex h-10 w-10 items-center justify-center rounded-full transition-colors",
+                  active ? "bg-primary text-primary-foreground" : "bg-primary/10 text-primary"
+                )}>
+                  <item.icon className="h-5 w-5" />
+                </div>
+                <span className={cn(
+                  "text-xs font-medium",
+                  active ? "text-primary" : "text-muted-foreground"
+                )}>
+                  {item.label}
+                </span>
+              </Link>
+            );
+          }
+          
           return (
             <Link
               key={item.to}
@@ -47,18 +75,18 @@ function HomeIcon({ className }: { className?: string }) {
   );
 }
 
-function ListIcon({ className }: { className?: string }) {
+function RouteIcon({ className }: { className?: string }) {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className={className}>
-      <line x1="8" y1="6" x2="21" y2="6" /><line x1="8" y1="12" x2="21" y2="12" /><line x1="8" y1="18" x2="21" y2="18" /><line x1="3" y1="6" x2="3.01" y2="6" /><line x1="3" y1="12" x2="3.01" y2="12" /><line x1="3" y1="18" x2="3.01" y2="18" />
+      <circle cx="6" cy="19" r="3" /><path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15" /><circle cx="18" cy="5" r="3" />
     </svg>
   );
 }
 
-function MapIcon({ className }: { className?: string }) {
+function QrCodeIcon({ className }: { className?: string }) {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className={className}>
-      <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6" /><line x1="8" y1="2" x2="8" y2="18" /><line x1="16" y1="6" x2="16" y2="22" />
+      <rect width="5" height="5" x="3" y="3" rx="1" /><rect width="5" height="5" x="16" y="3" rx="1" /><rect width="5" height="5" x="3" y="16" rx="1" /><path d="M21 16h-3a2 2 0 0 0-2 2v3" /><path d="M21 21v.01" /><path d="M12 7v3a2 2 0 0 1-2 2H7" /><path d="M3 12h.01" /><path d="M12 3h.01" /><path d="M12 16v.01" /><path d="M16 12h1" /><path d="M21 12v.01" /><path d="M12 21v-1" />
     </svg>
   );
 }

@@ -6,7 +6,8 @@ export const appConfig = {
   enableStopList: true, // Vis stopp-liste
   enableProgress: true, // Lagre fremgang i localStorage
   enableDistance: false, // Vis avstand fra bruker
-  enableAudio: false, // Aktiver lydavspilling på stopp
+  enableAudio: true, // Aktiver lydavspilling på stopp
   enableMultiLang: false, // Aktiver støtte for flere språk
   enableDebug: false, // Vis debug-informasjon i UI
+  enableOnboarding: true, // Vis onboarding ved første besøk
 };

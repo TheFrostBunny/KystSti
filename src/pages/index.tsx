@@ -1,22 +1,15 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { uiText } from "@/data/tourData";
-import { tourInfo } from "@/data/Turinfo";
-
+import { getAllTours, uiText } from "@/data/tours";
+import { useTour } from "@/context/TourContext";
 import { BottomNav } from "@/components/BottomNav";
 import { Button } from "@/components/ui/button";
 
-export const Route = createFileRoute("/")({
-  component: HomePage,
-  head: () => ({
-    meta: [
-      { title: `${tourInfo.title} — Guidet tur` },
-      { name: "description", content: tourInfo.description },
-    ],
-  }),
-});
+export default function HomePage() {
+  const tours = getAllTours();
+  const { currentTour, getProgress } = useTour();
+  const progress = getProgress();
 
-function HomePage() {
   return (
     <div className="flex min-h-screen flex-col">
       <div className="relative flex flex-1 flex-col items-center justify-center px-6 py-16 text-center">
@@ -38,39 +31,64 @@ function HomePage() {
           </div>
 
           <h1 className="font-display text-3xl font-bold leading-tight tracking-tight sm:text-4xl text-balance">
-            {tourInfo.title}
+            KystSti
           </h1>
-          <p className="mt-3 text-lg text-muted-foreground">{tourInfo.subtitle}</p>
-          <p className="mt-4 text-sm leading-relaxed text-muted-foreground">{tourInfo.description}</p>
+          <p className="mt-3 text-lg text-muted-foreground">Opplev kysten pa en ny mate</p>
+          <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+            Utforsk vakre kyststier med interaktive turer, QR-koder og lydguider. Velg en tur og start opplevelsen!
+          </p>
 
           <div className="mt-8 flex justify-center gap-6 text-sm">
             <div className="text-center">
-              <div className="font-display text-xl font-bold text-primary">{tourInfo.totalStops}</div>
-              <div className="text-muted-foreground">stopp</div>
+              <div className="font-display text-xl font-bold text-primary">{tours.length}</div>
+              <div className="text-muted-foreground">turer</div>
             </div>
             <div className="h-10 w-px bg-border" />
             <div className="text-center">
-              <div className="font-display text-xl font-bold text-primary">{tourInfo.distance}</div>
-              <div className="text-muted-foreground">distanse</div>
-            </div>
-            <div className="h-10 w-px bg-border" />
-            <div className="text-center">
-              <div className="font-display text-xl font-bold text-primary">{tourInfo.estimatedTime}</div>
-              <div className="text-muted-foreground">tid</div>
+              <div className="font-display text-xl font-bold text-primary">
+                {tours.reduce((acc, tour) => acc + tour.stops.length, 0)}
+              </div>
+              <div className="text-muted-foreground">stopp totalt</div>
             </div>
           </div>
 
+          {/* Active tour card */}
+          {currentTour && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mt-8 rounded-xl bg-card border p-4 text-left"
+            >
+              <p className="text-xs text-muted-foreground uppercase tracking-wider">Aktiv tur</p>
+              <h3 className="mt-1 font-display text-lg font-bold">{currentTour.title}</h3>
+              <div className="mt-2 flex items-center gap-2">
+                <div className="flex-1 h-2 rounded-full bg-muted overflow-hidden">
+                  <div 
+                    className="h-full bg-primary transition-all" 
+                    style={{ width: `${progress.total > 0 ? (progress.unlocked / progress.total) * 100 : 0}%` }}
+                  />
+                </div>
+                <span className="text-xs text-muted-foreground">
+                  {progress.unlocked}/{progress.total}
+                </span>
+              </div>
+              <Button asChild size="sm" className="mt-3 w-full">
+                <Link to={`/tur/${currentTour.id}`}>Fortsett tur</Link>
+              </Button>
+            </motion.div>
+          )}
+
           <div className="mt-8 rounded-xl bg-muted/50 border p-4 text-sm text-muted-foreground">
             <p className="font-medium text-foreground">{uiText.howItWorksLabel}</p>
-            <p className="mt-1">{tourInfo.howItWorks}</p>
+            <p className="mt-1">Velg en tur, finn QR-kodene ved hvert stopp, og las opp historier, bilder og lydguider!</p>
           </div>
 
           <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
             <Button asChild size="lg" className="h-14 rounded-xl px-8 text-base font-semibold shadow-lg">
-              <Link to="/stopp-liste">{uiText.startButton}</Link>
+              <Link to="/turer">{uiText.chooseTour}</Link>
             </Button>
             <Button asChild variant="outline" size="lg" className="h-14 rounded-xl px-8 text-base">
-              <Link to="/kart">{uiText.mapButton}</Link>
+              <Link to="/skann">{uiText.scanQr}</Link>
             </Button>
           </div>
         </motion.div>

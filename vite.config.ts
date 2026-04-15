@@ -1,15 +1,17 @@
-import { defineConfig } from "@lovable.dev/vite-tanstack-config";
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import tailwindcss from "@tailwindcss/vite";
+import tsconfigPaths from "vite-tsconfig-paths";
+import path from "path";
 
 export default defineConfig({
-  vite: {
-    // Dine ekstra Vite-innstillinger her
-    // eksempel:
-    server: {
-      port: 5173,
+  plugins: [react(), tailwindcss(), tsconfigPaths()],
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "./src"),
     },
-    // eller
-    define: {
-      __MY_VAR__: JSON.stringify("verdi"),
-    },
+  },
+  server: {
+    port: 5173,
   },
 });
