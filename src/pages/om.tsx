@@ -75,6 +75,20 @@ export default function AboutPage() {
           <p>Denne appen samler ikke inn personlig informasjon.</p>
           <p className="mt-1">Posisjonen din brukes kun lokalt for a vise avstand.</p>
         </div>
+
+        <div className="text-center text-xs text-muted-foreground">
+          <p>
+            Laget av David. Se kildekoden på{" "}
+            <a
+              href="https://github.com/TheFrostBunny"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline hover:text-primary"
+            >
+              GitHub
+            </a>.
+          </p>
+        </div>
       </div>
       <BottomNav />
     </div>

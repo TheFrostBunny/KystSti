@@ -11,4 +11,5 @@ export const appConfig = {
   activeTourId: "kristiansund-byvandring", // Sett ID-en til turen som skal være aktiv
   enableDebug: false, // Vis debug-informasjon i UI
   enableOnboarding: true, // Vis onboarding ved første besøk
+  enableQrScanner: true, // Vis QR-skanner-knapp og -side
 };

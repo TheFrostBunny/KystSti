@@ -1,6 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
 import { useTour } from "@/context/TourContext";
 import { cn } from "@/lib/utils";
+import { appConfig } from "@/config";
 
 const baseNavItems = [
   { to: "/", label: "Hjem", icon: HomeIcon, exact: true },
@@ -29,7 +30,11 @@ export function BottomNav() {
       };
     }
     return item;
-  }).filter(item => !(item.label === 'Kart' && item.disabled));
+  }).filter(item => {
+    if (item.label === 'Kart' && item.disabled) return false;
+    if (item.label === 'Skann' && !appConfig.enableQrScanner) return false;
+    return true;
+  });
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 border-t bg-card/95 backdrop-blur-md safe-area-bottom">
