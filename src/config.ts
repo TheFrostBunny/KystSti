@@ -1,0 +1,12 @@
+// Global konfigurasjon for å slå av/på funksjoner i appen
+// Endre verdiene til true/false for å aktivere/deaktivere funksjoner
+
+export const appConfig = {
+  enableMap: true, // Vis kart-siden
+  enableStopList: true, // Vis stopp-liste
+  enableProgress: true, // Lagre fremgang i localStorage
+  enableDistance: false, // Vis avstand fra bruker
+  enableAudio: false, // Aktiver lydavspilling på stopp
+  enableMultiLang: false, // Aktiver støtte for flere språk
+  enableDebug: false, // Vis debug-informasjon i UI
+};
