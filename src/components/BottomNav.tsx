@@ -1,15 +1,27 @@
 import { Link, useLocation } from "react-router-dom";
+import { useTour } from "@/context/TourContext";
 import { cn } from "@/lib/utils";
 
-const navItems = [
+const baseNavItems = [
   { to: "/", label: "Hjem", icon: HomeIcon, exact: true },
-  { to: "/turer", label: "Turer", icon: RouteIcon, matchPaths: ["/turer", "/tur"] },
+  { to: "/turer", label: "Stopp", icon: RouteIcon, matchPaths: ["/turer", "/tur"] },
   { to: "/skann", label: "Skann", icon: QrCodeIcon, highlight: true },
   { to: "/om", label: "Om", icon: InfoIcon },
 ];
 
 export function BottomNav() {
   const location = useLocation();
+  const { currentTourId } = useTour();
+
+  const navItems = baseNavItems.map(item => {
+    if (item.label === "Stopp") {
+      return {
+        ...item,
+        to: currentTourId ? `/tur/${currentTourId}/stopp` : '/turer',
+      };
+    }
+    return item;
+  });
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 border-t bg-card/95 backdrop-blur-md safe-area-bottom">
