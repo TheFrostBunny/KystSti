@@ -236,10 +236,7 @@ export default function StopDetailPage() {
               <div className="flex flex-col gap-2 pt-4 lg:pt-0">
                 {nextStop && !isStopUnlocked(nextStop.id) && (
                   <Button
-                    onClick={() => {
-                      unlockStop(nextStop.id);
-                      navigate(`/tur/${tour.id}/stopp/${nextStop.id}`);
-                    }}
+                    onClick={() => unlockStop(nextStop.id)}
                     size="sm"
                     className="w-full"
                   >
