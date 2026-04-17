@@ -3,7 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import QrScanner from "react-qr-scanner";
 import { useTour } from "@/context/TourContext";
-import { getTourById, uiText } from "@/data/tours";
+import { useTranslation } from "@/context/LanguageContext";
+import { getTourById } from "@/data/tours";
 import { BottomNav } from "@/components/BottomNav";
 import { Button } from "@/components/ui/button";
 
@@ -12,6 +13,7 @@ type ScanStatus = "idle" | "scanning" | "success" | "error";
 export default function ScanPage() {
   const navigate = useNavigate();
   const { unlockStop, currentTourId, setCurrentTour } = useTour();
+  const { t } = useTranslation();
   const [status, setStatus] = useState<ScanStatus>("scanning");
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
@@ -26,7 +28,7 @@ export default function ScanPage() {
   const handleError = (err: any) => {
     console.error(err);
     setHasCamera(false);
-    setErrorMessage("Kunne ikke få tilgang til kameraet. Sjekk tillatelser og prøv på nytt.");
+    setErrorMessage(t('scanner.cameraPermission'));
     setStatus("error");
   };
 
@@ -48,7 +50,7 @@ export default function ScanPage() {
             setCurrentTour(tourId);
           }
           unlockStop(stopId);
-          setSuccessMessage(`${stop.title} er nå låst opp!`);
+          setSuccessMessage(`${stop.title} ${t('tour.unlockedBanner')}`);
           
           setTimeout(() => {
             navigate(`/tur/${tourId}/stopp/${stopId}`);
@@ -60,12 +62,12 @@ export default function ScanPage() {
 
     // Invalid QR code
     setStatus("error");
-    setErrorMessage("Ugyldig QR-kode. Prøv igjen.");
+    setErrorMessage(t('scanner.scanning'));
     setTimeout(() => setStatus("scanning"), 2000);
   };
   
   const handleManualInput = () => {
-    const input = prompt("Skriv inn QR-kode data (format: turId/stoppId):");
+    const input = prompt(t('scanner.scanInstructions'));
     if (input) {
       handleQRCode(input);
     }
@@ -76,10 +78,10 @@ export default function ScanPage() {
       {/* Header */}
       <header className="sticky top-0 z-50 bg-black/80 backdrop-blur-md">
         <div className="flex h-14 items-center px-4">
-          <button onClick={() => navigate(-1)} className="mr-3 text-white">
+          <button onClick={() => navigate(-1)} className="mr-3 text-white hover:opacity-80 transition-opacity">
             <ArrowLeftIcon className="h-5 w-5" />
           </button>
-          <h1 className="font-display text-lg font-bold text-white">{uiText.scanQr}</h1>
+          <h1 className="font-display text-lg font-bold text-white">{t('scanner.title')}</h1>
         </div>
       </header>
 
@@ -106,7 +108,7 @@ export default function ScanPage() {
                   
                   {status === "scanning" && (
                     <motion.div
-                      className="absolute left-2 right-2 h-0.5 bg-primary"
+                      className="absolute left-2 right-2 h-1 bg-primary rounded-full"
                       initial={{ top: "10%" }}
                       animate={{ top: ["10%", "90%", "10%"] }}
                       transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
@@ -125,10 +127,10 @@ export default function ScanPage() {
         ) : (
           <div className="text-center text-white p-6">
             <CameraOffIcon className="h-16 w-16 mx-auto mb-4 opacity-50" />
-            <p className="text-lg mb-2">Kamera ikke tilgjengelig</p>
+            <p className="text-lg mb-2">{t('scanner.cameraPermission')}</p>
             <p className="text-sm text-white/70 mb-4">{errorMessage}</p>
             <Button onClick={handleManualInput} variant="secondary">
-              Skriv inn manuelt
+              {t('scanner.scanning')}
             </Button>
           </div>
         )}
@@ -171,7 +173,7 @@ export default function ScanPage() {
       {/* Instructions */}
       <div className="bg-black px-6 py-4 text-center text-white">
         <p className="text-sm opacity-80">
-          Hold telefonen over QR-koden ved stoppet for å låse opp innholdet.
+          {t('scanner.scanInstructions')}
         </p>
       </div>
 

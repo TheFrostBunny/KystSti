@@ -1,11 +1,12 @@
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Polyline, useMap } from "react-leaflet";
 import L from "leaflet";
 import { getTourById, mapColors, TourStop } from "@/data/tours";
 import { useTour } from "@/context/TourContext";
 import { BottomNav } from "@/components/BottomNav";
 import { Button } from "@/components/ui/button";
+import { motion, AnimatePresence } from "framer-motion";
 import "leaflet/dist/leaflet.css";
 
 // Fix default marker icons
@@ -56,6 +57,24 @@ export default function TourMapPage() {
     .sort((a, b) => a.order - b.order)
     .map((stop) => [stop.lat, stop.lng]);
 
+  // Filter stops: show only unlocked stops and next locked stop
+  const visibleStops = tour.stops.filter((stop) => {
+    const isUnlocked = isStopUnlocked(stop.id) || stop.order === 1;
+    if (isUnlocked) return true;
+    
+    // Find the first locked stop (next stop)
+    const isNextStop = tour.stops
+      .filter((s) => s.order < stop.order)
+      .every((s) => isStopUnlocked(s.id) || s.order === 1);
+    
+    return isNextStop;
+  });
+
+  // Create route coordinates only for visible stops
+  const visibleRouteCoordinates: [number, number][] = visibleStops
+    .sort((a, b) => a.order - b.order)
+    .map((stop) => [stop.lat, stop.lng]);
+
   return (
     <div className="flex min-h-screen flex-col">
       {/* Header */}
@@ -82,9 +101,9 @@ export default function TourMapPage() {
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
           
-          {/* Route line */}
+          {/* Route line - only between visible stops */}
           <Polyline
-            positions={routeCoordinates}
+            positions={visibleRouteCoordinates}
             color={mapColors.unlockedPin}
             weight={3}
             opacity={0.6}
@@ -92,7 +111,7 @@ export default function TourMapPage() {
           />
 
           {/* Stop markers */}
-          {tour.stops.map((stop) => {
+          {visibleStops.map((stop) => {
             const unlocked = isStopUnlocked(stop.id) || stop.order === 1;
             return (
               <Marker
@@ -105,24 +124,7 @@ export default function TourMapPage() {
                 eventHandlers={{
                   click: () => setSelectedStop(stop),
                 }}
-              >
-                <Popup>
-                  <div className="min-w-[200px]">
-                    <h3 className="font-bold">{stop.title}</h3>
-                    <p className="text-sm text-gray-600 mt-1">
-                      {unlocked ? stop.description.slice(0, 100) + "..." : stop.locationHint}
-                    </p>
-                    {(unlocked || stop.order === 1) && (
-                      <Link
-                        to={`/tur/${tour.id}/stopp/${stop.id}`}
-                        className="inline-block mt-2 text-sm text-primary font-medium"
-                      >
-                        Se detaljer
-                      </Link>
-                    )}
-                  </div>
-                </Popup>
-              </Marker>
+              />
             );
           })}
         </MapContainer>
@@ -143,6 +145,55 @@ export default function TourMapPage() {
       </div>
 
       <BottomNav />
+
+      {/* Bottom Sheet Modal for Stop Details */}
+      <AnimatePresence>
+        {selectedStop && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setSelectedStop(null)}
+              className="fixed inset-0 z-[1001] bg-black/40"
+            />
+
+            {/* Bottom Sheet */}
+            <motion.div
+              initial={{ y: "100%" }}
+              animate={{ y: 0 }}
+              exit={{ y: "100%" }}
+              transition={{ type: "spring", damping: 25, stiffness: 300 }}
+              className="fixed bottom-16 left-0 right-0 z-[1002] rounded-t-2xl bg-card border-t"
+            >
+              <div className="p-4">
+                <div className="flex flex-col items-center gap-3">
+                  {/* Handle bar */}
+                  <div className="h-1 w-12 rounded-full bg-muted" />
+
+                  {/* Title */}
+                  <h2 className="font-display text-lg font-bold text-center">
+                    {selectedStop.title}
+                  </h2>
+
+                  {/* Status chip */}
+                  <div className="inline-flex items-center gap-2 bg-muted/50 rounded-full px-3 py-2">
+                    <div className={`w-3 h-3 rounded-full ${
+                      (isStopUnlocked(selectedStop.id) || selectedStop.order === 1)
+                        ? 'bg-green-600' 
+                        : 'bg-gray-400'
+                    }`} />
+                    <span className="text-sm font-medium text-foreground">
+                      {(isStopUnlocked(selectedStop.id) || selectedStop.order === 1) ? 'Opplåst' : 'Låst'}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

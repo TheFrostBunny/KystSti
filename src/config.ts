@@ -12,4 +12,5 @@ export const appConfig = {
   enableDebug: false, // Vis debug-informasjon i UI
   enableOnboarding: true, // Vis onboarding ved første besøk
   enableQrScanner: false, // Vis QR-skanner-knapp og -side
+  enableTourBuilder: false, // Vis "Lag tur" siden
 };

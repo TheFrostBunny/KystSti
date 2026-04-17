@@ -6,6 +6,7 @@ import { useTour } from "@/context/TourContext";
 import { BottomNav } from "@/components/BottomNav";
 import { Button } from "@/components/ui/button";
 import { AudioPlayer } from "@/components/AudioPlayer";
+import { cn } from "@/lib/utils";
 
 export default function StopDetailPage() {
   const { tourId, stopId } = useParams<{ tourId: string; stopId: string }>();
@@ -68,133 +69,183 @@ export default function StopDetailPage() {
   const distance = calculateDistance();
 
   return (
-    <div className="flex min-h-screen flex-col pb-20">
-      {/* Image Gallery */}
-      <div className="relative h-64 overflow-hidden bg-muted">
-        <motion.img
-          key={currentImageIndex}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          src={stop.images[currentImageIndex]}
-          alt={stop.title}
-          className="w-full h-full object-cover"
-          crossOrigin="anonymous"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-        
-        <button
-          onClick={() => navigate(`/tur/${tour.id}/stopp`)}
-          className="absolute top-4 left-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm text-white"
-        >
-          <ArrowLeftIcon className="h-5 w-5" />
-        </button>
-
-        {stop.images.length > 1 && (
-          <div className="absolute bottom-16 left-0 right-0 flex justify-center gap-1.5">
-            {stop.images.map((_, idx) => (
-              <button
-                key={idx}
-                onClick={() => setCurrentImageIndex(idx)}
-                className={`h-2 w-2 rounded-full transition-colors ${
-                  idx === currentImageIndex ? "bg-white" : "bg-white/40"
-                }`}
-              />
-            ))}
-          </div>
-        )}
-
-        <div className="absolute bottom-4 left-4 right-4">
-          <p className="text-sm text-white/80">
-            {uiText.stopOfTotal(stop.order, tour.stops.length)}
-          </p>
-          <h1 className="font-display text-2xl font-bold text-white">{stop.title}</h1>
+    <div className="flex min-h-screen flex-col bg-background">
+      {/* Header */}
+      <header className="sticky top-0 z-40 border-b bg-background/95 backdrop-blur-md">
+        <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
+          <button
+            onClick={() => navigate(`/tur/${tour.id}/stopp`)}
+            className="p-2 -ml-2 hover:bg-muted rounded-lg transition-colors"
+          >
+            <ArrowLeftIcon className="h-5 w-5" />
+          </button>
+          <h1 className="font-display text-lg font-bold truncate flex-1 mx-4">
+            {stop.title}
+          </h1>
+          <div className="w-9" />
         </div>
-      </div>
+      </header>
 
-      <main className="flex-1 px-4 py-6">
-        {/* Audio Player */}
-        {stop.audioUrl && (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mb-6"
-          >
-            <AudioPlayer audioUrl={stop.audioUrl} title={stop.title} />
-          </motion.div>
-        )}
-
-        {/* Description */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="mb-6"
-        >
-          <p className="text-muted-foreground leading-relaxed">{stop.description}</p>
-        </motion.div>
-
-        {/* Location */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="mb-6 rounded-xl border bg-card p-4"
-        >
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <MapPinIcon className="h-5 w-5 text-primary" />
-              <span className="font-medium">Posisjon</span>
-            </div>
-            {distance !== null && (
-              <span className="text-sm text-muted-foreground">
-                {uiText.distanceLabel(distance)}
-              </span>
-            )}
-          </div>
-          
-          <div className="mt-3 flex gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={getLocation}
-              disabled={loadingLocation}
-              className="flex-1"
-            >
-              {loadingLocation ? uiText.fetchingLocation : uiText.showDistance}
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              asChild
-              className="flex-1"
-            >
-              <a
-                href={`https://www.google.com/maps/dir/?api=1&destination=${stop.lat},${stop.lng}`}
-                target="_blank"
-                rel="noopener noreferrer"
+      {/* Main Content */}
+      <main className="flex-1">
+        <div className="mx-auto max-w-6xl">
+          {/* Desktop Grid Layout: 2 columns on lg, 1 on mobile */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 p-4 lg:p-8">
+            {/* Image Section - Left (2/3 width on desktop) */}
+            <div className="lg:col-span-2 space-y-4">
+              {/* Main Image */}
+              <motion.div
+                key={currentImageIndex}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="relative overflow-hidden rounded-2xl bg-muted aspect-video lg:aspect-auto lg:h-[500px]"
               >
-                {uiText.openInMaps}
-              </a>
-            </Button>
-          </div>
-        </motion.div>
+                <img
+                  src={stop.images[currentImageIndex]}
+                  alt={stop.title}
+                  className="w-full h-full object-cover"
+                  crossOrigin="anonymous"
+                />
+              </motion.div>
 
-        {/* Next Stop */}
-        {nextStop && (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="rounded-xl border bg-muted/50 p-4"
-          >
-            <p className="text-sm font-medium text-muted-foreground">{uiText.nextStopLabel}</p>
-            <p className="mt-1 font-display text-lg font-bold">{nextStop.title}</p>
-            {nextStop.locationHint && (
-              <p className="mt-1 text-sm text-muted-foreground">{nextStop.locationHint}</p>
-            )}
-            <p className="mt-2 text-xs text-primary">{uiText.findQrHint}</p>
-          </motion.div>
-        )}
+              {/* Image Gallery Thumbnails */}
+              {stop.images.length > 1 && (
+                <div className="flex gap-2 overflow-x-auto pb-2">
+                  {stop.images.map((image, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setCurrentImageIndex(index)}
+                      className={cn(
+                        "h-20 w-20 flex-shrink-0 rounded-lg overflow-hidden border-2 transition-all hover:border-muted-foreground",
+                        currentImageIndex === index
+                          ? "border-primary"
+                          : "border-muted"
+                      )}
+                    >
+                      <img
+                        src={image}
+                        alt={`${stop.title} ${index + 1}`}
+                        className="h-full w-full object-cover"
+                        crossOrigin="anonymous"
+                      />
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Content Section - Right (1/3 width on desktop, sticky) */}
+            <div className="space-y-4 lg:sticky lg:top-20 lg:h-fit">
+              {/* Stop Header */}
+              <div>
+                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+                  {uiText.stopOfTotal(stop.order, tour.stops.length)}
+                </p>
+                <h2 className="font-display text-2xl lg:text-3xl font-bold mt-2">{stop.title}</h2>
+              </div>
+
+              {/* Audio Player */}
+              {stop.audioUrl && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                >
+                  <AudioPlayer audioUrl={stop.audioUrl} title={stop.title} />
+                </motion.div>
+              )}
+
+              {/* Description Card */}
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 }}
+                className="rounded-xl bg-card border p-4 space-y-2"
+              >
+                <p className="text-xs font-semibold text-muted-foreground uppercase">
+                  Om stedet
+                </p>
+                <p className="text-sm leading-relaxed text-foreground">{stop.description}</p>
+              </motion.div>
+
+              {/* Location Card */}
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                className="rounded-xl border bg-card p-4"
+              >
+                <div className="flex items-center gap-2 mb-3">
+                  <MapPinIcon className="h-4 w-4 text-primary" />
+                  <span className="text-xs font-semibold text-muted-foreground uppercase">
+                    Posisjon
+                  </span>
+                </div>
+                
+                {distance !== null && (
+                  <p className="text-sm mb-3 text-muted-foreground">
+                    {uiText.distanceLabel(distance)}
+                  </p>
+                )}
+
+                <div className="flex flex-col gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={getLocation}
+                    disabled={loadingLocation}
+                    className="w-full"
+                  >
+                    {loadingLocation ? uiText.fetchingLocation : uiText.showDistance}
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    asChild
+                    className="w-full"
+                  >
+                    <a
+                      href={`https://www.google.com/maps/dir/?api=1&destination=${stop.lat},${stop.lng}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {uiText.openInMaps}
+                    </a>
+                  </Button>
+                </div>
+              </motion.div>
+
+              {/* Next Stop Card */}
+              {nextStop && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3 }}
+                  className="rounded-xl border bg-muted/50 p-4"
+                >
+                  <p className="text-xs font-semibold text-muted-foreground uppercase">
+                    {uiText.nextStopLabel}
+                  </p>
+                  <p className="mt-2 font-display text-lg font-bold">{nextStop.title}</p>
+                  {nextStop.locationHint && (
+                    <p className="mt-1 text-xs text-muted-foreground">{nextStop.locationHint}</p>
+                  )}
+                </motion.div>
+              )}
+
+              {/* Navigation Buttons */}
+              <div className="flex flex-col gap-2 pt-4 lg:pt-0">
+                <Button
+                  asChild
+                  variant="outline"
+                  size="sm"
+                  className="w-full"
+                >
+                  <Link to={`/tur/${tour.id}/stopp`}>Tilbake til stopp</Link>
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
       </main>
 
       <BottomNav />
