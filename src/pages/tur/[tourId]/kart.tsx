@@ -1,11 +1,12 @@
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Polyline, useMap } from "react-leaflet";
 import L from "leaflet";
 import { getTourById, mapColors, TourStop } from "@/data/tours";
 import { useTour } from "@/context/TourContext";
 import { BottomNav } from "@/components/BottomNav";
 import { Button } from "@/components/ui/button";
+import { motion, AnimatePresence } from "framer-motion";
 import "leaflet/dist/leaflet.css";
 
 // Fix default marker icons
@@ -123,59 +124,7 @@ export default function TourMapPage() {
                 eventHandlers={{
                   click: () => setSelectedStop(stop),
                 }}
-              >
-                <Popup offset={[0, -80]} keepInView={true}>
-                  <div className="w-56 sm:w-64">
-                    <div className="space-y-2">
-                      {/* Header with stop number and status */}
-                      <div className="flex items-center justify-between gap-2">
-                        <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
-                          Stopp {stop.order}
-                        </span>
-                        <span className={`text-xs font-semibold px-2 py-1 rounded-full whitespace-nowrap ${
-                          unlocked 
-                            ? 'bg-green-100 text-green-700' 
-                            : 'bg-gray-100 text-gray-700'
-                        }`}>
-                          {unlocked ? 'Opplåst' : 'Låst'}
-                        </span>
-                      </div>
-
-                      {/* Title */}
-                      <h3 className="font-display text-base font-bold leading-tight">
-                        {stop.title}
-                      </h3>
-
-                      {/* Description or hint */}
-                      <p className="text-xs text-muted-foreground leading-relaxed">
-                        {unlocked ? stop.description.slice(0, 80) : stop.locationHint || 'Skann QR-kode'}
-                      </p>
-
-                      {/* Location info if available */}
-                      {stop.locationHint && unlocked && (
-                        <div className="pt-2 border-t">
-                          <p className="text-xs font-semibold text-muted-foreground uppercase mb-1">
-                            Stedshint
-                          </p>
-                          <p className="text-sm text-muted-foreground">
-                            {stop.locationHint}
-                          </p>
-                        </div>
-                      )}
-
-                      {/* Action button */}
-                      {(unlocked || stop.order === 1) && (
-                        <Link
-                          to={`/tur/${tour.id}/stopp/${stop.id}`}
-                          className="inline-block mt-2 px-3 py-2 bg-primary text-primary-foreground text-sm font-medium rounded-lg hover:opacity-90 transition-opacity"
-                        >
-                          Se detaljer →
-                        </Link>
-                      )}
-                    </div>
-                  </div>
-                </Popup>
-              </Marker>
+              />
             );
           })}
         </MapContainer>
@@ -196,6 +145,100 @@ export default function TourMapPage() {
       </div>
 
       <BottomNav />
+
+      {/* Bottom Sheet Modal for Stop Details */}
+      <AnimatePresence>
+        {selectedStop && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setSelectedStop(null)}
+              className="fixed inset-0 z-[1001] bg-black/40"
+            />
+
+            {/* Bottom Sheet */}
+            <motion.div
+              initial={{ y: "100%" }}
+              animate={{ y: 0 }}
+              exit={{ y: "100%" }}
+              transition={{ type: "spring", damping: 25, stiffness: 300 }}
+              className="fixed bottom-16 left-0 right-0 z-[1002] rounded-t-2xl bg-card border-t max-h-[70vh] overflow-y-auto"
+            >
+              <div className="p-4 sm:p-6">
+                <div className="space-y-4">
+                  {/* Handle bar */}
+                  <div className="flex justify-center pb-2">
+                    <div className="h-1 w-12 rounded-full bg-muted" />
+                  </div>
+
+                  {/* Header with stop number and status */}
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+                      Stopp {selectedStop.order}
+                    </span>
+                    <span className={`text-xs font-semibold px-2 py-1 rounded-full whitespace-nowrap ${
+                      (isStopUnlocked(selectedStop.id) || selectedStop.order === 1)
+                        ? 'bg-green-100 text-green-700' 
+                        : 'bg-gray-100 text-gray-700'
+                    }`}>
+                      {(isStopUnlocked(selectedStop.id) || selectedStop.order === 1) ? 'Opplåst' : 'Låst'}
+                    </span>
+                  </div>
+
+                  {/* Title */}
+                  <h2 className="font-display text-2xl font-bold">
+                    {selectedStop.title}
+                  </h2>
+
+                  {/* Description or hint */}
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    {(isStopUnlocked(selectedStop.id) || selectedStop.order === 1) 
+                      ? selectedStop.description 
+                      : selectedStop.locationHint || 'Skann QR-kode for å låse opp'}
+                  </p>
+
+                  {/* Location info if available */}
+                  {selectedStop.locationHint && (isStopUnlocked(selectedStop.id) || selectedStop.order === 1) && (
+                    <div className="pt-3 border-t">
+                      <p className="text-xs font-semibold text-muted-foreground uppercase mb-2">
+                        Stedshint
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        {selectedStop.locationHint}
+                      </p>
+                    </div>
+                  )}
+
+                  {/* Action button */}
+                  {((isStopUnlocked(selectedStop.id) || selectedStop.order === 1)) && (
+                    <Button
+                      asChild
+                      className="w-full mt-4"
+                      size="lg"
+                    >
+                      <Link to={`/tur/${tour.id}/stopp/${selectedStop.id}`}>
+                        Se alle detaljer
+                      </Link>
+                    </Button>
+                  )}
+
+                  {/* Close button */}
+                  <Button
+                    variant="outline"
+                    className="w-full"
+                    onClick={() => setSelectedStop(null)}
+                  >
+                    Lukk
+                  </Button>
+                </div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
