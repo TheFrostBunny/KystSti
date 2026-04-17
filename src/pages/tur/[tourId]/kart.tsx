@@ -137,11 +137,11 @@ export default function TourMapPage() {
       </header>
 
       {/* Map */}
-      <div className="flex-1 relative w-full overflow-hidden">
+      <div className="flex-1 relative w-full" style={{ minHeight: 0 }}>
         <MapContainer
           center={[tour.mapCenter.lat, tour.mapCenter.lng]}
           zoom={tour.mapZoom}
-          className="w-full h-full"
+          style={{ width: "100%", height: "100%" }}
         >
           <MapController center={[tour.mapCenter.lat, tour.mapCenter.lng]} zoom={tour.mapZoom} />
           <TileLayer
