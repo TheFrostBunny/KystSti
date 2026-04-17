@@ -234,7 +234,19 @@ export default function StopDetailPage() {
 
               {/* Navigation Buttons */}
               <div className="flex flex-col gap-2 pt-4 lg:pt-0">
-                {nextStop && (
+                {nextStop && !isStopUnlocked(nextStop.id) && (
+                  <Button
+                    onClick={() => {
+                      unlockStop(nextStop.id);
+                      navigate(`/tur/${tour.id}/stopp/${nextStop.id}`);
+                    }}
+                    size="sm"
+                    className="w-full"
+                  >
+                    Skann QR-kode for neste stopp
+                  </Button>
+                )}
+                {nextStop && isStopUnlocked(nextStop.id) && (
                   <Button
                     asChild
                     size="sm"
