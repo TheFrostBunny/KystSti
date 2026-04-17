@@ -177,14 +177,17 @@ export default function TourMapPage() {
                     {selectedStop.title}
                   </h2>
 
-                  {/* Status badge */}
-                  <span className={`text-xs font-semibold px-3 py-1.5 rounded-full ${
-                    (isStopUnlocked(selectedStop.id) || selectedStop.order === 1)
-                      ? 'bg-green-100 text-green-700' 
-                      : 'bg-gray-100 text-gray-700'
-                  }`}>
-                    {(isStopUnlocked(selectedStop.id) || selectedStop.order === 1) ? 'Opplåst' : 'Låst'}
-                  </span>
+                  {/* Status chip */}
+                  <div className="inline-flex items-center gap-2 bg-muted/50 rounded-full px-3 py-2">
+                    <div className={`w-3 h-3 rounded-full ${
+                      (isStopUnlocked(selectedStop.id) || selectedStop.order === 1)
+                        ? 'bg-green-600' 
+                        : 'bg-gray-400'
+                    }`} />
+                    <span className="text-sm font-medium text-foreground">
+                      {(isStopUnlocked(selectedStop.id) || selectedStop.order === 1) ? 'Opplåst' : 'Låst'}
+                    </span>
+                  </div>
                 </div>
               </div>
             </motion.div>
