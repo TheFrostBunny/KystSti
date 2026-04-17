@@ -2,6 +2,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation } from "@/context/LanguageContext";
 import { Button } from "@/components/ui/button";
+import QRCode from "qrcode";
 import type { TourStop } from "@/data/tours";
 
 interface StopManagerProps {
@@ -85,6 +86,34 @@ export function StopManager({
     setShowForm(true);
   };
 
+  const generateQRCode = async (stop: TourStop) => {
+    try {
+      // Create a simple unlock code combining stopId and order
+      const unlockCode = `${stop.id}:${stop.order}`;
+      
+      // Generate QR code as data URL
+      const qrDataUrl = await QRCode.toDataURL(unlockCode, {
+        width: 300,
+        margin: 1,
+        color: {
+          dark: "#000000",
+          light: "#FFFFFF",
+        },
+      });
+
+      // Create download link
+      const link = document.createElement("a");
+      link.href = qrDataUrl;
+      link.download = `qr-code-stopp-${stop.order}.png`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error("Error generating QR code:", error);
+      alert("Feil ved generering av QR-kode");
+    }
+  };
+
   return (
     <div className="space-y-6">
       {/* Add Stop Button */}
@@ -135,6 +164,13 @@ export function StopManager({
                     </div>
                   </div>
                   <div className="flex gap-2 flex-shrink-0">
+                    <button
+                      onClick={() => generateQRCode(stop)}
+                      className="px-3 py-1 rounded text-sm bg-blue-100/50 text-blue-700 hover:bg-blue-100 transition-colors hover:font-medium"
+                      title="Last ned QR-kode for denne stoppet"
+                    >
+                      QR-kode
+                    </button>
                     <button
                       onClick={() => handleEditStop(index)}
                       className="px-3 py-1 rounded text-sm bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
