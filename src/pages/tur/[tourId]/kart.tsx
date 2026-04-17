@@ -167,37 +167,24 @@ export default function TourMapPage() {
               transition={{ type: "spring", damping: 25, stiffness: 300 }}
               className="fixed bottom-16 left-0 right-0 z-[1002] rounded-t-2xl bg-card border-t"
             >
-              <div className="p-4 sm:p-6">
-                <div className="space-y-3">
+              <div className="p-4">
+                <div className="flex flex-col items-center gap-3">
                   {/* Handle bar */}
-                  <div className="flex justify-center pb-2">
-                    <div className="h-1 w-12 rounded-full bg-muted" />
-                  </div>
+                  <div className="h-1 w-12 rounded-full bg-muted" />
 
                   {/* Title */}
-                  <h2 className="font-display text-xl font-bold">
+                  <h2 className="font-display text-lg font-bold text-center">
                     {selectedStop.title}
                   </h2>
 
-                  {/* Description or hint */}
-                  <p className="text-sm text-muted-foreground leading-relaxed">
-                    {(isStopUnlocked(selectedStop.id) || selectedStop.order === 1) 
-                      ? selectedStop.description.slice(0, 150) 
-                      : 'Skann QR-kode for å låse opp'}
-                  </p>
-
-                  {/* Action button */}
-                  {((isStopUnlocked(selectedStop.id) || selectedStop.order === 1)) && (
-                    <Button
-                      asChild
-                      className="w-full mt-2"
-                      size="sm"
-                    >
-                      <Link to={`/tur/${tour.id}/stopp/${selectedStop.id}`}>
-                        Se detaljer
-                      </Link>
-                    </Button>
-                  )}
+                  {/* Status badge */}
+                  <span className={`text-xs font-semibold px-3 py-1.5 rounded-full ${
+                    (isStopUnlocked(selectedStop.id) || selectedStop.order === 1)
+                      ? 'bg-green-100 text-green-700' 
+                      : 'bg-gray-100 text-gray-700'
+                  }`}>
+                    {(isStopUnlocked(selectedStop.id) || selectedStop.order === 1) ? 'Opplåst' : 'Låst'}
+                  </span>
                 </div>
               </div>
             </motion.div>
