@@ -56,6 +56,19 @@ export default function TourMapPage() {
     .sort((a, b) => a.order - b.order)
     .map((stop) => [stop.lat, stop.lng]);
 
+  // Filter stops: show only unlocked stops and next locked stop
+  const visibleStops = tour.stops.filter((stop) => {
+    const isUnlocked = isStopUnlocked(stop.id) || stop.order === 1;
+    if (isUnlocked) return true;
+    
+    // Find the first locked stop (next stop)
+    const isNextStop = tour.stops
+      .filter((s) => s.order < stop.order)
+      .every((s) => isStopUnlocked(s.id) || s.order === 1);
+    
+    return isNextStop;
+  });
+
   return (
     <div className="flex min-h-screen flex-col">
       {/* Header */}
@@ -92,7 +105,7 @@ export default function TourMapPage() {
           />
 
           {/* Stop markers */}
-          {tour.stops.map((stop) => {
+          {visibleStops.map((stop) => {
             const unlocked = isStopUnlocked(stop.id) || stop.order === 1;
             return (
               <Marker
