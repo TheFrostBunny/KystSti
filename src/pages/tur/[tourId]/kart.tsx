@@ -124,7 +124,7 @@ export default function TourMapPage() {
                   click: () => setSelectedStop(stop),
                 }}
               >
-                <Popup>
+                <Popup offset={[0, -80]} keepInView={true}>
                   <div className="w-56 sm:w-64">
                     <div className="space-y-2">
                       {/* Header with stop number and status */}
