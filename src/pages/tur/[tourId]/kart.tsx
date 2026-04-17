@@ -1,5 +1,5 @@
 import { useParams, Link, useNavigate } from "react-router-dom";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap } from "react-leaflet";
 import L from "leaflet";
 import { getTourById, mapColors, TourStop } from "@/data/tours";
@@ -137,12 +137,11 @@ export default function TourMapPage() {
       </header>
 
       {/* Map */}
-      <div className="flex-1 relative">
+      <div className="flex-1 relative w-full overflow-hidden">
         <MapContainer
           center={[tour.mapCenter.lat, tour.mapCenter.lng]}
           zoom={tour.mapZoom}
-          className="h-full w-full"
-          style={{ height: "calc(100vh - 56px - 64px)" }}
+          className="w-full h-full"
         >
           <MapController center={[tour.mapCenter.lat, tour.mapCenter.lng]} zoom={tour.mapZoom} />
           <TileLayer
