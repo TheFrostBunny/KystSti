@@ -30,6 +30,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
               <Route path="tur/:tourId/stopp" element={<TourStopsPage />} />
               <Route path="tur/:tourId/stopp/:stopId" element={<TourStopDetailPage />} />
               <Route path="tur/:tourId/kart" element={<TourMapPage />} />
+              {appConfig.enableQrScanner && <Route path="skann" element={<ScanPage />} />}
               <Route path="om" element={<AboutPage />} />
               <Route path="lage" element={<TourBuilderPage />} />
               <Route path="*" element={<NotFoundPage />} />

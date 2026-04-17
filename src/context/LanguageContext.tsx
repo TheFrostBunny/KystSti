@@ -1,7 +1,5 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
-import { translations } from "@/i18n/translations";
-
-export type Language = "no" | "en";
+import React, { createContext, useContext, useState, useEffect } from "react";
+import { translations, Language } from "@/i18n/translations";
 
 interface LanguageContextType {
   language: Language;
@@ -11,7 +9,7 @@ interface LanguageContextType {
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
-export function LanguageProvider({ children }: { children: ReactNode }) {
+export function LanguageProvider({ children }: { children: React.ReactNode }) {
   const [language, setLanguageState] = useState<Language>("no");
   const [isInitialized, setIsInitialized] = useState(false);
 
@@ -60,9 +58,13 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     return value;
   };
 
+  if (!isInitialized) {
+    return null; // or a loading spinner
+  }
+
   return (
     <LanguageContext.Provider value={{ language, setLanguage, t }}>
-      {isInitialized ? children : <div />}
+      {children}
     </LanguageContext.Provider>
   );
 }
