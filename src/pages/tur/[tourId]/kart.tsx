@@ -69,6 +69,11 @@ export default function TourMapPage() {
     return isNextStop;
   });
 
+  // Create route coordinates only for visible stops
+  const visibleRouteCoordinates: [number, number][] = visibleStops
+    .sort((a, b) => a.order - b.order)
+    .map((stop) => [stop.lat, stop.lng]);
+
   return (
     <div className="flex min-h-screen flex-col">
       {/* Header */}
@@ -95,9 +100,9 @@ export default function TourMapPage() {
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
           
-          {/* Route line */}
+          {/* Route line - only between visible stops */}
           <Polyline
-            positions={routeCoordinates}
+            positions={visibleRouteCoordinates}
             color={mapColors.unlockedPin}
             weight={3}
             opacity={0.6}
