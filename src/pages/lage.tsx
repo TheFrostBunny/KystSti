@@ -55,8 +55,8 @@ export default function TourBuilderPage() {
     <div className="flex min-h-screen flex-col pb-20">
       {/* Header */}
       <header className="sticky top-0 z-40 border-b bg-background/95 backdrop-blur-md">
-        <div className="mx-auto max-w-2xl px-4 py-4">
-          <h1 className="font-display text-2xl font-bold">Lag en tur</h1>
+        <div className="mx-auto max-w-4xl px-4 lg:px-8 py-4">
+          <h1 className="font-display text-2xl lg:text-3xl font-bold">Lag en tur</h1>
           <p className="text-sm text-muted-foreground mt-1">
             Opprett en interaktiv tur med stopp og QR-koder
           </p>
@@ -64,9 +64,9 @@ export default function TourBuilderPage() {
       </header>
 
       {/* Tab Navigation */}
-      <div className="sticky top-16 z-30 border-b bg-card/50 backdrop-blur-sm">
-        <div className="mx-auto max-w-2xl px-4">
-          <div className="flex gap-2 overflow-x-auto -mx-4 px-4">
+      <div className="sticky top-[68px] z-30 border-b bg-card/50 backdrop-blur-sm">
+        <div className="mx-auto max-w-4xl px-4 lg:px-8">
+          <div className="flex gap-2 overflow-x-auto -mx-4 px-4 lg:mx-0 lg:px-0">
             {(
               [
                 { id: "tour", label: "Turdetaljer" },
@@ -92,7 +92,7 @@ export default function TourBuilderPage() {
 
       {/* Content */}
       <main className="flex-1">
-        <div className="mx-auto max-w-2xl px-4 py-6">
+        <div className="mx-auto max-w-4xl px-4 lg:px-8 py-6 lg:py-8">
           <motion.div
             key={activeTab}
             initial={{ opacity: 0, y: 10 }}

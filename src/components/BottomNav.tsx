@@ -36,6 +36,7 @@ export function BottomNav() {
   }).filter(item => {
     if (item.label === t('nav.map') && item.disabled) return false;
     if (item.label === t('nav.scan') && !appConfig.enableQrScanner) return false;
+    if (item.label === "Lag tur" && !appConfig.enableTourBuilder) return false;
     return true;
   });
 
