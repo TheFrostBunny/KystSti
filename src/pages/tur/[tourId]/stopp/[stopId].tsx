@@ -234,26 +234,6 @@ export default function StopDetailPage() {
 
               {/* Navigation Buttons */}
               <div className="flex flex-col gap-2 pt-4 lg:pt-0">
-                {nextStop && !isStopUnlocked(nextStop.id) && (
-                  <Button
-                    onClick={() => unlockStop(nextStop.id)}
-                    size="sm"
-                    className="w-full"
-                  >
-                    Skann QR-kode for neste stopp
-                  </Button>
-                )}
-                {nextStop && isStopUnlocked(nextStop.id) && (
-                  <Button
-                    asChild
-                    size="sm"
-                    className="w-full"
-                  >
-                    <Link to={`/tur/${tour.id}/stopp/${nextStop.id}`}>
-                      Gå til neste stopp
-                    </Link>
-                  </Button>
-                )}
                 <Button
                   asChild
                   variant="outline"
