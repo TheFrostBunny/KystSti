@@ -20,39 +20,39 @@ L.Icon.Default.mergeOptions({
 
 // Create enhanced custom marker icons with better styling
 function createCustomIcon(color: string, number: number, isActive: boolean = false) {
-  const borderWidth = isActive ? 4 : 2;
+  const borderWidth = isActive ? 3 : 2;
+  const rgb = color === '#22c55e' ? '34, 197, 94' : '107, 114, 128';
+  
   return L.divIcon({
     className: `custom-marker ${isActive ? 'active-marker' : ''}`,
     html: `
       <div style="
         background-color: ${color};
-        width: 48px;
-        height: 48px;
+        width: 40px;
+        height: 40px;
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
         color: white;
         font-weight: bold;
-        font-size: 18px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        font-size: 16px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.25);
         border: ${borderWidth}px solid white;
         transition: all 0.3s ease;
-        ${isActive ? `
-          animation: pulse-marker 2s infinite;
-        ` : ''}
+        ${isActive ? `animation: pulse-marker 2s infinite;` : ''}
       ">
         ${number}
       </div>
       <style>
         @keyframes pulse-marker {
-          0%, 100% { transform: scale(1); box-shadow: 0 4px 12px rgba(0,0,0,0.3), 0 0 0 0 rgba(${color === mapColors.unlockedPin ? '34, 197, 94' : '107, 114, 128'}, 0.7); }
-          50% { transform: scale(1.1); box-shadow: 0 4px 12px rgba(0,0,0,0.3), 0 0 0 10px rgba(${color === mapColors.unlockedPin ? '34, 197, 94' : '107, 114, 128'}, 0); }
+          0%, 100% { transform: scale(1); box-shadow: 0 2px 8px rgba(0,0,0,0.25), 0 0 0 0 rgba(${rgb}, 0.7); }
+          50% { transform: scale(1.15); box-shadow: 0 2px 8px rgba(0,0,0,0.25), 0 0 0 8px rgba(${rgb}, 0); }
         }
       </style>
     `,
-    iconSize: [48, 48],
-    iconAnchor: [24, 24],
+    iconSize: [40, 40],
+    iconAnchor: [20, 20],
   });
 }
 
@@ -233,7 +233,7 @@ export default function TourMapPage() {
             <div>
               <p className="text-xs font-semibold text-foreground mb-1">Fremgang</p>
               <div className="flex items-center gap-2">
-                <div className="flex-1 h-2 bg-muted rounded-full overflow-hidden">
+                <div className="flex-1 h-1.5 bg-muted rounded-full overflow-hidden">
                   <div
                     className="h-full bg-primary transition-all duration-500"
                     style={{ width: `${progress.total > 0 ? (progress.unlocked / progress.total) * 100 : 0}%` }}
