@@ -4,7 +4,6 @@ import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap } from "react-
 import L from "leaflet";
 import { getTourById, mapColors, TourStop } from "@/data/tours";
 import { useTour } from "@/context/TourContext";
-import { useTranslation } from "@/context/LanguageContext";
 import { BottomNav } from "@/components/BottomNav";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
@@ -18,13 +17,13 @@ L.Icon.Default.mergeOptions({
   shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png",
 });
 
-// Create enhanced custom marker icons with better styling
+// Create custom marker icons
 function createCustomIcon(color: string, number: number, isActive: boolean = false) {
   const borderWidth = isActive ? 3 : 2;
   const rgb = color === '#22c55e' ? '34, 197, 94' : '107, 114, 128';
   
   return L.divIcon({
-    className: `custom-marker ${isActive ? 'active-marker' : ''}`,
+    className: `custom-marker`,
     html: `
       <div style="
         background-color: ${color};
@@ -39,7 +38,6 @@ function createCustomIcon(color: string, number: number, isActive: boolean = fal
         font-size: 16px;
         box-shadow: 0 2px 8px rgba(0,0,0,0.25);
         border: ${borderWidth}px solid white;
-        transition: all 0.3s ease;
         ${isActive ? `animation: pulse-marker 2s infinite;` : ''}
       ">
         ${number}
@@ -59,7 +57,7 @@ function createCustomIcon(color: string, number: number, isActive: boolean = fal
 function MapController({ center, zoom }: { center: [number, number]; zoom: number }) {
   const map = useMap();
   useEffect(() => {
-    map.setView(center, zoom, { animate: true, duration: 0.5 });
+    map.setView(center, zoom, { animate: true });
   }, [center, zoom, map]);
   return null;
 }
@@ -68,7 +66,6 @@ export default function TourMapPage() {
   const { tourId } = useParams<{ tourId: string }>();
   const navigate = useNavigate();
   const { isStopUnlocked, getProgress } = useTour();
-  const { t } = useTranslation();
   const [selectedStop, setSelectedStop] = useState<TourStop | null>(null);
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
   
@@ -78,9 +75,9 @@ export default function TourMapPage() {
   if (!tour) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center p-6 text-center">
-        <h1 className="font-display text-2xl font-bold">{t('tour.stopNotFound')}</h1>
+        <h1 className="font-display text-2xl font-bold">Tur ikke funnet</h1>
         <Button asChild className="mt-4">
-          <Link to="/">{t('common.back')}</Link>
+          <Link to="/">Se alle turer</Link>
         </Button>
       </div>
     );
@@ -136,17 +133,22 @@ export default function TourMapPage() {
         </div>
       </header>
 
-      {/* Map */}
+      {/* Map Container */}
       <div className="flex-1 relative w-full" style={{ minHeight: 0 }}>
         <MapContainer
           center={[tour.mapCenter.lat, tour.mapCenter.lng]}
           zoom={tour.mapZoom}
           style={{ width: "100%", height: "100%" }}
+          zoomControl={true}
+          attributionControl={true}
         >
           <MapController center={[tour.mapCenter.lat, tour.mapCenter.lng]} zoom={tour.mapZoom} />
+          
+          {/* OpenStreetMap Tile Layer */}
           <TileLayer
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            maxZoom={19}
           />
           
           {/* User location marker */}
@@ -154,7 +156,7 @@ export default function TourMapPage() {
             <Marker
               position={[userLocation.lat, userLocation.lng]}
               icon={L.icon({
-                iconUrl: `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%233b82f6'%3E%3Ccircle cx='12' cy='12' r='8' fill='%233b82f6'/%3E%3Ccircle cx='12' cy='12' r='4' fill='white'/%3E%3C/svg%3E`,
+                iconUrl: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='8' fill='%233b82f6'/%3E%3Ccircle cx='12' cy='12' r='4' fill='white'/%3E%3C/svg%3E",
                 iconSize: [24, 24],
                 iconAnchor: [12, 12],
               })}
@@ -163,26 +165,24 @@ export default function TourMapPage() {
             </Marker>
           )}
 
-          {/* Route line - animated gradient effect with separate completed/remaining */}
+          {/* Route polylines */}
           {routeCoordinates.length > 1 && (
             <>
+              {/* Completed route in green */}
               <Polyline
                 positions={routeCoordinates.slice(0, progress.unlocked + 1)}
                 color={mapColors.unlockedPin}
                 weight={4}
                 opacity={0.8}
-                lineCap="round"
-                lineJoin="round"
               />
+              {/* Remaining route in gray */}
               {progress.unlocked < progress.total && (
                 <Polyline
                   positions={routeCoordinates.slice(progress.unlocked)}
                   color={mapColors.lockedPin}
                   weight={4}
                   opacity={0.4}
-                  dashArray="8, 4"
-                  lineCap="round"
-                  lineJoin="round"
+                  dashArray="5, 5"
                 />
               )}
             </>
@@ -206,17 +206,17 @@ export default function TourMapPage() {
                 }}
               >
                 <Popup>
-                  <div className="min-w-[200px]">
-                    <h3 className="font-bold">{stop.title}</h3>
-                    <p className="text-sm text-gray-600 mt-1">
-                      {unlocked ? stop.description.slice(0, 100) + "..." : stop.locationHint}
+                  <div className="min-w-[180px]">
+                    <h3 className="font-bold text-sm">{stop.title}</h3>
+                    <p className="text-xs text-gray-600 mt-1">
+                      {unlocked ? stop.description.slice(0, 80) + "..." : stop.locationHint}
                     </p>
                     {(unlocked || stop.order === 1) && (
                       <Link
                         to={`/tur/${tour.id}/stopp/${stop.id}`}
-                        className="inline-block mt-2 text-sm text-primary font-medium"
+                        className="inline-block mt-2 text-xs text-primary font-medium"
                       >
-                        Se detaljer
+                        Se detaljer →
                       </Link>
                     )}
                   </div>
@@ -226,12 +226,12 @@ export default function TourMapPage() {
           })}
         </MapContainer>
 
-        {/* Enhanced Legend - Responsive */}
+        {/* Legend Panel */}
         <div className="absolute bottom-20 left-2 right-2 sm:left-4 sm:right-auto z-[1000] rounded-lg bg-white/95 backdrop-blur-md p-3 sm:p-4 shadow-xl border border-white/20 max-w-xs">
           <div className="space-y-3">
             {/* Progress */}
             <div>
-              <p className="text-xs font-semibold text-foreground mb-1">Fremgang</p>
+              <p className="text-xs font-semibold text-foreground mb-1.5">Fremgang</p>
               <div className="flex items-center gap-2">
                 <div className="flex-1 h-1.5 bg-muted rounded-full overflow-hidden">
                   <div
@@ -250,18 +250,18 @@ export default function TourMapPage() {
               <p className="text-xs font-semibold text-foreground">Markører</p>
               <div className="flex items-center gap-2 text-xs">
                 <div className="w-4 h-4 rounded-full" style={{ backgroundColor: mapColors.unlockedPin }} />
-                <span className="text-muted-foreground">Opplåst stopp</span>
+                <span className="text-muted-foreground">Opplåst</span>
               </div>
               <div className="flex items-center gap-2 text-xs">
                 <div className="w-4 h-4 rounded-full" style={{ backgroundColor: mapColors.lockedPin }} />
-                <span className="text-muted-foreground">Låst stopp</span>
+                <span className="text-muted-foreground">Låst</span>
               </div>
             </div>
 
             {/* Tour stats */}
-            <div className="pt-2 border-t border-border space-y-1">
+            <div className="pt-2 border-t border-border space-y-1.5">
               <div className="flex justify-between text-xs">
-                <span className="text-muted-foreground">Totale stopp:</span>
+                <span className="text-muted-foreground">Stopp:</span>
                 <span className="font-semibold">{progress.total}</span>
               </div>
               <div className="flex justify-between text-xs">
@@ -273,7 +273,7 @@ export default function TourMapPage() {
         </div>
       </div>
 
-      {/* Stop Details Bottom Sheet - Responsive */}
+      {/* Stop Details Bottom Sheet */}
       <AnimatePresence>
         {selectedStop && (
           <motion.div
