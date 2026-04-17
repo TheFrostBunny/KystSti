@@ -1,28 +1,31 @@
 import { Link, useLocation } from "react-router-dom";
 import { useTour } from "@/context/TourContext";
+import { useTranslation } from "@/context/LanguageContext";
 import { cn } from "@/lib/utils";
 import { appConfig } from "@/config";
-
-const baseNavItems = [
-  { to: "/", label: "Hjem", icon: HomeIcon, exact: true },
-  { to: "/stopp", label: "Stopp", icon: RouteIcon, matchPaths: ["/tur", "/stopp"] },
-  { to: "/kart", label: "Kart", icon: MapIcon },
-  { to: "/skann", label: "Skann", icon: QrCodeIcon, highlight: true },
-  { to: "/om", label: "Om", icon: InfoIcon },
-];
 
 export function BottomNav() {
   const location = useLocation();
   const { currentTourId } = useTour();
+  const { t } = useTranslation();
+
+  const baseNavItems = [
+    { to: "/", label: t('nav.home'), icon: HomeIcon, exact: true },
+    { to: "/stopp", label: t('nav.stops'), icon: RouteIcon, matchPaths: ["/tur", "/stopp"] },
+    { to: "/kart", label: t('nav.map'), icon: MapIcon },
+    { to: "/skann", label: t('nav.scan'), icon: QrCodeIcon, highlight: true },
+    { to: "/lage", label: "Lag tur", icon: PlusIcon },
+    { to: "/om", label: t('nav.about'), icon: InfoIcon },
+  ];
 
   const navItems = baseNavItems.map(item => {
-    if (item.label === "Stopp") {
+    if (item.label === t('nav.stops')) {
       return {
         ...item,
         to: currentTourId ? `/tur/${currentTourId}/stopp` : '/turer',
       };
     }
-    if (item.label === "Kart") {
+    if (item.label === t('nav.map')) {
       return {
         ...item,
         to: currentTourId ? `/tur/${currentTourId}/kart` : '#',
@@ -31,8 +34,8 @@ export function BottomNav() {
     }
     return item;
   }).filter(item => {
-    if (item.label === 'Kart' && item.disabled) return false;
-    if (item.label === 'Skann' && !appConfig.enableQrScanner) return false;
+    if (item.label === t('nav.map') && item.disabled) return false;
+    if (item.label === t('nav.scan') && !appConfig.enableQrScanner) return false;
     return true;
   });
 
@@ -120,6 +123,14 @@ function QrCodeIcon({ className }: { className?: string }) {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className={className}>
       <rect width="5" height="5" x="3" y="3" rx="1" /><rect width="5" height="5" x="16" y="3" rx="1" /><rect width="5" height="5" x="3" y="16" rx="1" /><path d="M21 16h-3a2 2 0 0 0-2 2v3" /><path d="M21 21v.01" /><path d="M12 7v3a2 2 0 0 1-2 2H7" /><path d="M3 12h.01" /><path d="M12 3h.01" /><path d="M12 16v.01" /><path d="M16 12h1" /><path d="M21 12v.01" /><path d="M12 21v-1" />
+    </svg>
+  );
+}
+
+function PlusIcon({ className }: { className?: string }) {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" />
     </svg>
   );
 }
