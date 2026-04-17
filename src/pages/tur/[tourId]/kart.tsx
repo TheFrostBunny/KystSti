@@ -117,7 +117,7 @@ export default function TourMapPage() {
             </button>
             <div className="min-w-0">
               <h1 className="font-display text-base md:text-lg font-bold truncate">{tour.title}</h1>
-              <p className="text-xs text-muted-foreground hidden sm:block">{t('stop.unlockedCount')(progress.unlocked, progress.total)}</p>
+              <p className="text-xs text-muted-foreground hidden sm:block">{progress.unlocked} av {progress.total} låst opp</p>
             </div>
           </div>
           <Button
