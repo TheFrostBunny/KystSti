@@ -125,19 +125,54 @@ export default function TourMapPage() {
                 }}
               >
                 <Popup>
-                  <div className="min-w-[200px]">
-                    <h3 className="font-bold">{stop.title}</h3>
-                    <p className="text-sm text-gray-600 mt-1">
-                      {unlocked ? stop.description.slice(0, 100) + "..." : stop.locationHint}
-                    </p>
-                    {(unlocked || stop.order === 1) && (
-                      <Link
-                        to={`/tur/${tour.id}/stopp/${stop.id}`}
-                        className="inline-block mt-2 text-sm text-primary font-medium"
-                      >
-                        Se detaljer
-                      </Link>
-                    )}
+                  <div className="w-72">
+                    <div className="space-y-3">
+                      {/* Header with stop number and status */}
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+                          Stopp {stop.order}
+                        </span>
+                        <span className={`text-xs font-semibold px-2 py-1 rounded-full ${
+                          unlocked 
+                            ? 'bg-green-100 text-green-700' 
+                            : 'bg-gray-100 text-gray-700'
+                        }`}>
+                          {unlocked ? 'Opplåst' : 'Låst'}
+                        </span>
+                      </div>
+
+                      {/* Title */}
+                      <h3 className="font-display text-lg font-bold leading-tight">
+                        {stop.title}
+                      </h3>
+
+                      {/* Description or hint */}
+                      <p className="text-sm text-muted-foreground leading-relaxed">
+                        {unlocked ? stop.description : stop.locationHint || 'Skann QR-kode for å låse opp'}
+                      </p>
+
+                      {/* Location info if available */}
+                      {stop.locationHint && unlocked && (
+                        <div className="pt-2 border-t">
+                          <p className="text-xs font-semibold text-muted-foreground uppercase mb-1">
+                            Stedshint
+                          </p>
+                          <p className="text-sm text-muted-foreground">
+                            {stop.locationHint}
+                          </p>
+                        </div>
+                      )}
+
+                      {/* Action button */}
+                      {(unlocked || stop.order === 1) && (
+                        <Link
+                          to={`/tur/${tour.id}/stopp/${stop.id}`}
+                          className="inline-block mt-2 px-3 py-2 bg-primary text-primary-foreground text-sm font-medium rounded-lg hover:opacity-90 transition-opacity"
+                        >
+                          Se detaljer →
+                        </Link>
+                      )}
+                    </div>
                   </div>
                 </Popup>
               </Marker>
