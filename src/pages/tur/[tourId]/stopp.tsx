@@ -29,7 +29,7 @@ export default function TourStopsPage() {
   return (
     <div className="flex min-h-screen flex-col pb-20">
       <header className="sticky top-0 z-40 border-b bg-background/95 backdrop-blur-md">
-        <div className="flex h-14 items-center px-4">
+        <div className="mx-auto max-w-4xl flex h-14 items-center px-4">
           <Link to={`/`} className="mr-3 p-2 -ml-2">
             <ArrowLeftIcon className="h-5 w-5" />
           </Link>
@@ -42,7 +42,7 @@ export default function TourStopsPage() {
             </Link>
           </Button>
         </div>
-        <div className="px-4 pb-2">
+        <div className="mx-auto max-w-4xl px-4 pb-2">
           <Progress value={progressPercent} className="h-1" />
           <p className="text-xs text-muted-foreground mt-1 text-right">
             {progress.unlocked} av {progress.total} stopp fullført
@@ -51,7 +51,7 @@ export default function TourStopsPage() {
       </header>
 
       <main className="flex-1">
-        <div className="relative">
+        <div className="mx-auto max-w-4xl relative">
           {/* Vertical line */}
           <div className="absolute left-8 top-10 bottom-10 w-0.5 bg-border" />
 
