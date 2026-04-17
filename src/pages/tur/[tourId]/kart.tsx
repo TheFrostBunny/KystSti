@@ -125,14 +125,14 @@ export default function TourMapPage() {
                 }}
               >
                 <Popup>
-                  <div className="w-72">
-                    <div className="space-y-3">
+                  <div className="w-56 sm:w-64">
+                    <div className="space-y-2">
                       {/* Header with stop number and status */}
-                      <div className="flex items-center justify-between">
+                      <div className="flex items-center justify-between gap-2">
                         <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
                           Stopp {stop.order}
                         </span>
-                        <span className={`text-xs font-semibold px-2 py-1 rounded-full ${
+                        <span className={`text-xs font-semibold px-2 py-1 rounded-full whitespace-nowrap ${
                           unlocked 
                             ? 'bg-green-100 text-green-700' 
                             : 'bg-gray-100 text-gray-700'
@@ -142,13 +142,13 @@ export default function TourMapPage() {
                       </div>
 
                       {/* Title */}
-                      <h3 className="font-display text-lg font-bold leading-tight">
+                      <h3 className="font-display text-base font-bold leading-tight">
                         {stop.title}
                       </h3>
 
                       {/* Description or hint */}
-                      <p className="text-sm text-muted-foreground leading-relaxed">
-                        {unlocked ? stop.description : stop.locationHint || 'Skann QR-kode for å låse opp'}
+                      <p className="text-xs text-muted-foreground leading-relaxed">
+                        {unlocked ? stop.description.slice(0, 80) : stop.locationHint || 'Skann QR-kode'}
                       </p>
 
                       {/* Location info if available */}
