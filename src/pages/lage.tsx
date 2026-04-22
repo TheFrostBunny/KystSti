@@ -2,7 +2,6 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { useTranslation } from "@/context/LanguageContext";
 import { BottomNav } from "@/components/BottomNav";
-import { Button } from "@/components/ui/button";
 import { TourBuilderForm } from "@/components/TourBuilder/TourBuilderForm";
 import { StopManager } from "@/components/TourBuilder/StopManager";
 import { ExportPanel } from "@/components/TourBuilder/ExportPanel";
