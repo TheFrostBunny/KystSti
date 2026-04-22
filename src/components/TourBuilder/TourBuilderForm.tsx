@@ -1,5 +1,4 @@
-import { useTranslation } from "@/context/LanguageContext";
-import { Button } from "@/components/ui/button";
+import { motion } from "framer-motion";
 import type { Tour } from "@/data/tours";
 
 interface TourBuilderFormProps {
@@ -7,9 +6,65 @@ interface TourBuilderFormProps {
   onChange: (updates: Partial<Tour>) => void;
 }
 
-export function TourBuilderForm({ tourData, onChange }: TourBuilderFormProps) {
-  const { t } = useTranslation();
+function FormSection({
+  title,
+  description,
+  children,
+  icon,
+}: {
+  title: string;
+  description?: string;
+  children: React.ReactNode;
+  icon?: React.ReactNode;
+}) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="rounded-xl border bg-card p-4 sm:p-6"
+    >
+      <div className="flex items-start gap-3 mb-4">
+        {icon && (
+          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+            {icon}
+          </div>
+        )}
+        <div>
+          <h3 className="font-medium">{title}</h3>
+          {description && (
+            <p className="text-sm text-muted-foreground mt-0.5">{description}</p>
+          )}
+        </div>
+      </div>
+      {children}
+    </motion.div>
+  );
+}
 
+function InputField({
+  label,
+  required,
+  hint,
+  children,
+}: {
+  label: string;
+  required?: boolean;
+  hint?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div>
+      <label className="block text-sm font-medium mb-1.5">
+        {label}
+        {required && <span className="text-destructive ml-0.5">*</span>}
+      </label>
+      {children}
+      {hint && <p className="text-xs text-muted-foreground mt-1.5">{hint}</p>}
+    </div>
+  );
+}
+
+export function TourBuilderForm({ tourData, onChange }: TourBuilderFormProps) {
   const generateId = (title: string) => {
     return title
       .toLowerCase()
@@ -25,202 +80,269 @@ export function TourBuilderForm({ tourData, onChange }: TourBuilderFormProps) {
     });
   };
 
+  const inputClasses =
+    "w-full px-3 py-2.5 rounded-lg border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 transition-shadow";
+  const textareaClasses =
+    "w-full px-3 py-2.5 rounded-lg border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 resize-none transition-shadow";
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Tour ID Preview */}
-      <div className="rounded-lg bg-muted/50 border p-4">
-        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
-          Tour ID (Auto-generert)
-        </p>
-        <p className="mt-2 font-mono text-sm font-medium break-all">
-          {tourData.id || "din-tur-id"}
-        </p>
-      </div>
-
-      {/* Title */}
-      <div>
-        <label className="block text-sm font-medium mb-2">Tittel *</label>
-        <input
-          type="text"
-          value={tourData.title || ""}
-          onChange={(e) => handleTitleChange(e.target.value)}
-          placeholder="f.eks. Kristiansund Byvandring"
-          className="w-full px-3 py-2 rounded-lg border bg-background focus:outline-none focus:ring-2 focus:ring-primary"
-        />
-      </div>
-
-      {/* Subtitle */}
-      <div>
-        <label className="block text-sm font-medium mb-2">Undertittel *</label>
-        <input
-          type="text"
-          value={tourData.subtitle || ""}
-          onChange={(e) =>
-            onChange({ subtitle: e.target.value })
-          }
-          placeholder="f.eks. Opplev byen mellom havene"
-          className="w-full px-3 py-2 rounded-lg border bg-background focus:outline-none focus:ring-2 focus:ring-primary"
-        />
-      </div>
-
-      {/* Description */}
-      <div>
-        <label className="block text-sm font-medium mb-2">Beskrivelse *</label>
-        <textarea
-          value={tourData.description || ""}
-          onChange={(e) =>
-            onChange({ description: e.target.value })
-          }
-          placeholder="Detaljert beskrivelse av turen..."
-          rows={4}
-          className="w-full px-3 py-2 rounded-lg border bg-background focus:outline-none focus:ring-2 focus:ring-primary resize-none"
-        />
-      </div>
-
-      {/* How It Works */}
-      <div>
-        <label className="block text-sm font-medium mb-2">
-          Hvordan fungerer det? *
-        </label>
-        <textarea
-          value={tourData.howItWorks || ""}
-          onChange={(e) =>
-            onChange({ howItWorks: e.target.value })
-          }
-          placeholder="Instruksjoner for hvordan brukere skal bruke turen..."
-          rows={3}
-          className="w-full px-3 py-2 rounded-lg border bg-background focus:outline-none focus:ring-2 focus:ring-primary resize-none"
-        />
-      </div>
-
-      {/* Estimated Time */}
-      <div>
-        <label className="block text-sm font-medium mb-2">Estimert tid *</label>
-        <input
-          type="text"
-          value={tourData.estimatedTime || ""}
-          onChange={(e) =>
-            onChange({ estimatedTime: e.target.value })
-          }
-          placeholder="f.eks. 1-1.5 timer"
-          className="w-full px-3 py-2 rounded-lg border bg-background focus:outline-none focus:ring-2 focus:ring-primary"
-        />
-      </div>
-
-      {/* Distance */}
-      <div>
-        <label className="block text-sm font-medium mb-2">Avstand *</label>
-        <input
-          type="text"
-          value={tourData.distance || ""}
-          onChange={(e) =>
-            onChange({ distance: e.target.value })
-          }
-          placeholder="f.eks. 2.5 km"
-          className="w-full px-3 py-2 rounded-lg border bg-background focus:outline-none focus:ring-2 focus:ring-primary"
-        />
-      </div>
-
-      {/* Difficulty */}
-      <div>
-        <label className="block text-sm font-medium mb-2">Vanskelighetsgrad *</label>
-        <div className="grid grid-cols-3 gap-2">
-          {(["lett", "moderat", "krevende"] as const).map((level) => (
-            <button
-              key={level}
-              onClick={() => onChange({ difficulty: level })}
-              className={`px-3 py-2 rounded-lg border transition-colors ${
-                tourData.difficulty === level
-                  ? "bg-primary text-primary-foreground border-primary"
-                  : "bg-background border-border hover:border-primary/50"
-              }`}
-            >
-              {level.charAt(0).toUpperCase() + level.slice(1)}
-            </button>
-          ))}
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="rounded-xl bg-muted/50 border p-4 flex items-center gap-3"
+      >
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-muted">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="h-4 w-4 text-muted-foreground">
+            <path fillRule="evenodd" d="M8.914 6.025a.75.75 0 0 1 1.06 0 3.5 3.5 0 0 1 0 4.95l-2 2a3.5 3.5 0 0 1-5.396-4.402.75.75 0 0 1 1.251.827 2 2 0 0 0 3.085 2.514l2-2a2 2 0 0 0 0-2.828.75.75 0 0 1 0-1.06Z" clipRule="evenodd" />
+            <path fillRule="evenodd" d="M7.086 9.975a.75.75 0 0 1-1.06 0 3.5 3.5 0 0 1 0-4.95l2-2a3.5 3.5 0 0 1 5.396 4.402.75.75 0 0 1-1.251-.827 2 2 0 0 0-3.085-2.514l-2 2a2 2 0 0 0 0 2.828.75.75 0 0 1 0 1.06Z" clipRule="evenodd" />
+          </svg>
         </div>
-      </div>
+        <div className="flex-1 min-w-0">
+          <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+            Tour ID (genereres automatisk)
+          </p>
+          <p className="font-mono text-sm font-medium truncate mt-0.5">
+            {tourData.id || "din-tur-id"}
+          </p>
+        </div>
+      </motion.div>
+
+      {/* Basic Info */}
+      <FormSection
+        title="Grunnleggende informasjon"
+        description="Gi turen et navn og en beskrivelse"
+        icon={
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="h-4 w-4">
+            <path d="M8 2a.75.75 0 0 1 .75.75v1.69l2.22-2.22a.75.75 0 0 1 1.06 1.06L9.81 5.5h1.69a.75.75 0 0 1 0 1.5H2.75a.75.75 0 0 1 0-1.5h1.69L2.22 3.28a.75.75 0 0 1 1.06-1.06l2.22 2.22V2.75A.75.75 0 0 1 8 2ZM2 9.25a.75.75 0 0 1 .75-.75h10.5a.75.75 0 0 1 0 1.5H2.75A.75.75 0 0 1 2 9.25ZM2.75 12a.75.75 0 0 0 0 1.5h10.5a.75.75 0 0 0 0-1.5H2.75Z" />
+          </svg>
+        }
+      >
+        <div className="space-y-4">
+          <InputField label="Tittel" required hint="Navnet som vises for brukerne">
+            <input
+              type="text"
+              value={tourData.title || ""}
+              onChange={(e) => handleTitleChange(e.target.value)}
+              placeholder="f.eks. Kristiansund Byvandring"
+              className={inputClasses}
+            />
+          </InputField>
+
+          <InputField label="Undertittel" required hint="En kort og fengende tagline">
+            <input
+              type="text"
+              value={tourData.subtitle || ""}
+              onChange={(e) => onChange({ subtitle: e.target.value })}
+              placeholder="f.eks. Opplev byen mellom havene"
+              className={inputClasses}
+            />
+          </InputField>
+
+          <InputField label="Beskrivelse" required hint="Beskriv hva brukerne kan forvente">
+            <textarea
+              value={tourData.description || ""}
+              onChange={(e) => onChange({ description: e.target.value })}
+              placeholder="En detaljert beskrivelse av turen..."
+              rows={4}
+              className={textareaClasses}
+            />
+          </InputField>
+        </div>
+      </FormSection>
+
+      {/* Instructions */}
+      <FormSection
+        title="Instruksjoner"
+        description="Forklar hvordan turen fungerer"
+        icon={
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="h-4 w-4">
+            <path fillRule="evenodd" d="M15 8A7 7 0 1 1 1 8a7 7 0 0 1 14 0ZM9 5a1 1 0 1 1-2 0 1 1 0 0 1 2 0ZM6.75 8a.75.75 0 0 0 0 1.5h.75v1.75a.75.75 0 0 0 1.5 0v-2.5A.75.75 0 0 0 8.25 8h-1.5Z" clipRule="evenodd" />
+          </svg>
+        }
+      >
+        <InputField label="Hvordan fungerer det?" required hint="Instruksjoner for brukerne">
+          <textarea
+            value={tourData.howItWorks || ""}
+            onChange={(e) => onChange({ howItWorks: e.target.value })}
+            placeholder="Finn QR-kodene ved hvert stopp for a lase opp historier..."
+            rows={3}
+            className={textareaClasses}
+          />
+        </InputField>
+      </FormSection>
+
+      {/* Tour Details */}
+      <FormSection
+        title="Turdetaljer"
+        description="Praktisk informasjon om turen"
+        icon={
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="h-4 w-4">
+            <path fillRule="evenodd" d="M5 4a.75.75 0 0 1 .738.616l.252 1.388A1.25 1.25 0 0 0 6.996 7.01l1.388.252a.75.75 0 0 1 0 1.476l-1.388.252A1.25 1.25 0 0 0 5.99 9.996l-.252 1.388a.75.75 0 0 1-1.476 0L4.01 9.996A1.25 1.25 0 0 0 3.004 8.99l-1.388-.252a.75.75 0 0 1 0-1.476l1.388-.252A1.25 1.25 0 0 0 4.01 6.004l.252-1.388A.75.75 0 0 1 5 4ZM12 1a.75.75 0 0 1 .721.544l.195.682c.118.415.443.74.858.858l.682.195a.75.75 0 0 1 0 1.442l-.682.195a1.25 1.25 0 0 0-.858.858l-.195.682a.75.75 0 0 1-1.442 0l-.195-.682a1.25 1.25 0 0 0-.858-.858l-.682-.195a.75.75 0 0 1 0-1.442l.682-.195a1.25 1.25 0 0 0 .858-.858l.195-.682A.75.75 0 0 1 12 1ZM10 11a.75.75 0 0 1 .728.568l.258 1.022c.118.47.478.83.948.948l1.022.258a.75.75 0 0 1 0 1.456l-1.022.258a1.25 1.25 0 0 0-.948.948l-.258 1.022a.75.75 0 0 1-1.456 0l-.258-1.022a1.25 1.25 0 0 0-.948-.948l-1.022-.258a.75.75 0 0 1 0-1.456l1.022-.258a1.25 1.25 0 0 0 .948-.948l.258-1.022A.75.75 0 0 1 10 11Z" clipRule="evenodd" />
+          </svg>
+        }
+      >
+        <div className="grid gap-4 sm:grid-cols-2">
+          <InputField label="Estimert tid" required>
+            <input
+              type="text"
+              value={tourData.estimatedTime || ""}
+              onChange={(e) => onChange({ estimatedTime: e.target.value })}
+              placeholder="f.eks. 1-1.5 timer"
+              className={inputClasses}
+            />
+          </InputField>
+
+          <InputField label="Avstand" required>
+            <input
+              type="text"
+              value={tourData.distance || ""}
+              onChange={(e) => onChange({ distance: e.target.value })}
+              placeholder="f.eks. 2.5 km"
+              className={inputClasses}
+            />
+          </InputField>
+        </div>
+
+        <div className="mt-4">
+          <InputField label="Vanskelighetsgrad" required>
+            <div className="grid grid-cols-3 gap-2">
+              {(["lett", "moderat", "krevende"] as const).map((level) => (
+                <button
+                  key={level}
+                  type="button"
+                  onClick={() => onChange({ difficulty: level })}
+                  className={`px-3 py-2.5 rounded-lg border text-sm font-medium transition-all ${
+                    tourData.difficulty === level
+                      ? "bg-primary text-primary-foreground border-primary shadow-sm"
+                      : "bg-background border-border hover:border-primary/50 hover:bg-muted/50"
+                  }`}
+                >
+                  <span className="flex items-center justify-center gap-1.5">
+                    {level === "lett" && (
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="h-3.5 w-3.5">
+                        <path d="M8.5 4.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0ZM10.9 12.006c.11.542-.348.994-.9.994H2c-.553 0-1.01-.452-.902-.994a5.002 5.002 0 0 1 9.803 0ZM14.002 12h-1.59a2.556 2.556 0 0 0-.04-.29 6.476 6.476 0 0 0-1.167-2.603 3.002 3.002 0 0 1 3.633 1.911c.18.522-.283.982-.836.982ZM12 8a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z" />
+                      </svg>
+                    )}
+                    {level === "moderat" && (
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="h-3.5 w-3.5">
+                        <path d="M8.074.945A4.993 4.993 0 0 0 6 5v.032c.004.6.114 1.176.311 1.709.16.428-.204.91-.61.7a5.023 5.023 0 0 1-1.868-1.677c-.202-.304-.648-.363-.848-.058a6 6 0 1 0 10.399-1.06c-.229-.29-.688-.26-.863.052a5.019 5.019 0 0 1-1.735 1.757c-.39.202-.751-.279-.588-.703.186-.483.3-.986.342-1.505a5.018 5.018 0 0 0-.073-1.146A4.993 4.993 0 0 0 8.074.945ZM8 12a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z" />
+                      </svg>
+                    )}
+                    {level === "krevende" && (
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="h-3.5 w-3.5">
+                        <path fillRule="evenodd" d="M8 1.75a.75.75 0 0 1 .692.462l1.41 3.393 3.664.293a.75.75 0 0 1 .428 1.317l-2.791 2.39.853 3.575a.75.75 0 0 1-1.12.814L7.998 12.08l-3.134 1.915a.75.75 0 0 1-1.12-.814l.852-3.574-2.79-2.39a.75.75 0 0 1 .427-1.318l3.663-.293 1.41-3.393A.75.75 0 0 1 8 1.75Z" clipRule="evenodd" />
+                      </svg>
+                    )}
+                    {level.charAt(0).toUpperCase() + level.slice(1)}
+                  </span>
+                </button>
+              ))}
+            </div>
+          </InputField>
+        </div>
+      </FormSection>
 
       {/* Cover Image */}
-      <div>
-        <label className="block text-sm font-medium mb-2">Cover image URL *</label>
-        <input
-          type="url"
-          value={tourData.coverImage || ""}
-          onChange={(e) =>
-            onChange({ coverImage: e.target.value })
-          }
-          placeholder="https://..."
-          className="w-full px-3 py-2 rounded-lg border bg-background focus:outline-none focus:ring-2 focus:ring-primary"
-        />
+      <FormSection
+        title="Coverbilde"
+        description="Et bilde som representerer turen"
+        icon={
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="h-4 w-4">
+            <path fillRule="evenodd" d="M2 4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V4Zm10.5 5.707a.5.5 0 0 0-.146-.353l-1-1a.5.5 0 0 0-.708 0L9.354 9.646a.5.5 0 0 1-.708 0L6.354 7.354a.5.5 0 0 0-.708 0L3.5 9.5V4a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v5.707ZM12 5a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z" clipRule="evenodd" />
+          </svg>
+        }
+      >
+        <InputField label="Bilde-URL" required hint="Link til et bilde (f.eks. fra Unsplash)">
+          <input
+            type="url"
+            value={tourData.coverImage || ""}
+            onChange={(e) => onChange({ coverImage: e.target.value })}
+            placeholder="https://images.unsplash.com/..."
+            className={inputClasses}
+          />
+        </InputField>
         {tourData.coverImage && (
-          <div className="mt-3 rounded-lg overflow-hidden h-32">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="mt-4 rounded-xl overflow-hidden border"
+          >
             <img
               src={tourData.coverImage}
               alt="Cover preview"
-              className="w-full h-full object-cover"
+              className="w-full h-40 object-cover"
               crossOrigin="anonymous"
             />
-          </div>
+          </motion.div>
         )}
-      </div>
+      </FormSection>
 
-      {/* Map Center */}
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <label className="block text-sm font-medium mb-2">Map Latitude *</label>
-          <input
-            type="number"
-            step="0.0001"
-            value={tourData.mapCenter?.lat || ""}
-            onChange={(e) =>
-              onChange({
-                mapCenter: {
-                  ...tourData.mapCenter!,
-                  lat: parseFloat(e.target.value),
-                },
-              })
-            }
-            placeholder="63.111"
-            className="w-full px-3 py-2 rounded-lg border bg-background focus:outline-none focus:ring-2 focus:ring-primary"
-          />
+      {/* Map Settings */}
+      <FormSection
+        title="Kartinnstillinger"
+        description="Standard kartvisning for turen"
+        icon={
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="h-4 w-4">
+            <path fillRule="evenodd" d="m7.539 14.841.003.003.002.002a.755.755 0 0 0 .912 0l.002-.002.003-.003.012-.009a5.57 5.57 0 0 0 .19-.153 15.588 15.588 0 0 0 2.046-2.082c1.101-1.362 2.291-3.342 2.291-5.597A5 5 0 0 0 3 7c0 2.255 1.19 4.235 2.292 5.597a15.591 15.591 0 0 0 2.046 2.082 8.916 8.916 0 0 0 .189.153l.012.01ZM8 8.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z" clipRule="evenodd" />
+          </svg>
+        }
+      >
+        <div className="grid gap-4 sm:grid-cols-2">
+          <InputField label="Latitude" required hint="Breddegrad (nord/sor)">
+            <input
+              type="number"
+              step="0.0001"
+              value={tourData.mapCenter?.lat || ""}
+              onChange={(e) =>
+                onChange({
+                  mapCenter: {
+                    ...tourData.mapCenter!,
+                    lat: parseFloat(e.target.value),
+                  },
+                })
+              }
+              placeholder="63.111"
+              className={inputClasses}
+            />
+          </InputField>
+          <InputField label="Longitude" required hint="Lengdegrad (ost/vest)">
+            <input
+              type="number"
+              step="0.0001"
+              value={tourData.mapCenter?.lng || ""}
+              onChange={(e) =>
+                onChange({
+                  mapCenter: {
+                    ...tourData.mapCenter!,
+                    lng: parseFloat(e.target.value),
+                  },
+                })
+              }
+              placeholder="7.729"
+              className={inputClasses}
+            />
+          </InputField>
         </div>
-        <div>
-          <label className="block text-sm font-medium mb-2">Map Longitude *</label>
-          <input
-            type="number"
-            step="0.0001"
-            value={tourData.mapCenter?.lng || ""}
-            onChange={(e) =>
-              onChange({
-                mapCenter: {
-                  ...tourData.mapCenter!,
-                  lng: parseFloat(e.target.value),
-                },
-              })
-            }
-            placeholder="7.729"
-            className="w-full px-3 py-2 rounded-lg border bg-background focus:outline-none focus:ring-2 focus:ring-primary"
-          />
-        </div>
-      </div>
 
-      {/* Map Zoom */}
-      <div>
-        <label className="block text-sm font-medium mb-2">
-          Map Zoom Level ({tourData.mapZoom || 15})
-        </label>
-        <input
-          type="range"
-          min="1"
-          max="20"
-          value={tourData.mapZoom || 15}
-          onChange={(e) =>
-            onChange({ mapZoom: parseInt(e.target.value) })
-          }
-          className="w-full"
-        />
-      </div>
+        <div className="mt-4">
+          <InputField label={`Zoom-niva: ${tourData.mapZoom || 15}`} hint="Hvor nart kartet skal zoomes inn">
+            <div className="flex items-center gap-3">
+              <span className="text-xs text-muted-foreground">1</span>
+              <input
+                type="range"
+                min="1"
+                max="20"
+                value={tourData.mapZoom || 15}
+                onChange={(e) => onChange({ mapZoom: parseInt(e.target.value) })}
+                className="flex-1 accent-primary"
+              />
+              <span className="text-xs text-muted-foreground">20</span>
+            </div>
+          </InputField>
+        </div>
+      </FormSection>
     </div>
   );
 }
