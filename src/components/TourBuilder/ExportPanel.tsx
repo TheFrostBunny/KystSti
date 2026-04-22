@@ -54,16 +54,19 @@ ${tour.stops
   };
 
   const handleDownload = () => {
+    // Fallback filnavn hvis id mangler eller er ugyldig
+    let fileName = tourData.id ? tourData.id.replace(/[^a-zA-Z0-9_-]/g, "_") : "tour";
+    fileName = fileName || "tour";
+    const blob = new Blob([typeScriptCode], { type: "application/typescript;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
     const element = document.createElement("a");
-    element.setAttribute(
-      "href",
-      "data:text/plain;charset=utf-8," + encodeURIComponent(typeScriptCode)
-    );
-    element.setAttribute("download", `${tourData.id}.ts`);
+    element.href = url;
+    element.download = `${fileName}.ts`;
     element.style.display = "none";
     document.body.appendChild(element);
     element.click();
     document.body.removeChild(element);
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
   };
 
   const isValid = tourData.title && tourData.stops.length > 0;
