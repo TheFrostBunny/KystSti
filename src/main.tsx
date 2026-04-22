@@ -12,10 +12,12 @@ import TourStopsPage from "./pages/tur/[tourId]/stopp";
 import TourStopDetailPage from "./pages/tur/[tourId]/stopp/[stopId]";
 import TourMapPage from "./pages/tur/[tourId]/kart";
 import { appConfig } from "@/config";
+
 import AboutPage from "./pages/om";
 import TourBuilderPage from "./pages/lage";
 import NotFoundPage from "./pages/not-found";
 import { OnlineStatusBanner } from "@/components/OnlineStatusBanner";
+import ScanPage from "./pages/skann";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>

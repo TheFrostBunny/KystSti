@@ -1,5 +1,4 @@
 // Global konfigurasjon for å slå av/på funksjoner i appen
-// Endre verdiene til true/false for å aktivere/deaktivere funksjoner
 
 export const appConfig = {
   enableMap: true, // Vis kart-siden
@@ -11,6 +10,6 @@ export const appConfig = {
   activeTourId: "kristiansund-byvandring", // Sett ID-en til turen som skal være aktiv
   enableDebug: false, // Vis debug-informasjon i UI
   enableOnboarding: true, // Vis onboarding ved første besøk
-  enableQrScanner: false, // Vis QR-skanner-knapp og -side
+  enableQrScanner: true, // Vis QR-skanner-knapp og -side
   enableTourBuilder: true, // Vis "Lag tur" siden
 };
