@@ -94,9 +94,6 @@ export default function HomePage() {
             <Button asChild size="lg" className="h-12 sm:h-14 rounded-xl px-6 sm:px-8 text-base font-semibold shadow-lg hover:shadow-xl transition-shadow">
               <Link to={currentTour ? `/tur/${currentTour.id}/stopp` : '/turer'}>Start Turen</Link>
             </Button>
-            <Button asChild variant="outline" size="lg" className="h-12 sm:h-14 rounded-xl px-6 sm:px-8 text-base font-semibold hover:shadow-md transition-shadow">
-              <Link to="/skann">{uiText.scanQr}</Link>
-            </Button>
           </div>
         </motion.div>
       </div>
