@@ -10,6 +10,6 @@ export {
   getAllTours,
   uiText,
   mapColors,
-} from "./tours";
+} from "./tours/index";
 
-export type { Tour, TourStop } from "./tours";
+export type { Tour, TourStop } from "./tours/index";
