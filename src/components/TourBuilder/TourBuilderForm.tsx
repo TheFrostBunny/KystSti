@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
 import type { Tour } from "@/data/tours";
 
 interface TourBuilderFormProps {
@@ -65,6 +66,41 @@ function InputField({
 }
 
 export function TourBuilderForm({ tourData, onChange }: TourBuilderFormProps) {
+  // Local state for validation
+  const [latError, setLatError] = useState<string | null>(null);
+  const [lngError, setLngError] = useState<string | null>(null);
+  const mapRef = useRef<HTMLIFrameElement>(null);
+
+  // LocalStorage: last og lagre tourData
+  useEffect(() => {
+    const saved = localStorage.getItem("tourbuilder-data");
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (parsed && typeof parsed === "object") {
+          onChange(parsed);
+        }
+      } catch {}
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  useEffect(() => {
+    localStorage.setItem("tourbuilder-data", JSON.stringify(tourData));
+  }, [tourData]);
+
+  // Geolokasjon
+  const setUserLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((pos) => {
+        onChange({
+          mapCenter: {
+            lat: parseFloat(pos.coords.latitude.toFixed(5)),
+            lng: parseFloat(pos.coords.longitude.toFixed(5)),
+          },
+        });
+      });
+    }
+  };
   const generateId = (title: string) => {
     return title
       .toLowerCase()
@@ -290,41 +326,80 @@ export function TourBuilderForm({ tourData, onChange }: TourBuilderFormProps) {
         }
       >
         <div className="grid gap-4 sm:grid-cols-2">
-          <InputField label="Latitude" required hint="Breddegrad (nord/sor)">
+          <InputField label="Latitude" required hint="Breddegrad (nord/sør, -90 til 90)">
             <input
               type="number"
               step="0.0001"
               value={tourData.mapCenter?.lat || ""}
-              onChange={(e) =>
-                onChange({
-                  mapCenter: {
-                    ...tourData.mapCenter!,
-                    lat: parseFloat(e.target.value),
-                  },
-                })
-              }
+              onChange={(e) => {
+                const val = parseFloat(e.target.value);
+                if (isNaN(val) || val < -90 || val > 90) {
+                  setLatError("Ugyldig breddegrad (må være mellom -90 og 90)");
+                } else {
+                  setLatError(null);
+                  onChange({
+                    mapCenter: {
+                      ...tourData.mapCenter!,
+                      lat: val,
+                    },
+                  });
+                }
+              }}
               placeholder="63.111"
-              className={inputClasses}
+              className={inputClasses + (latError ? " border-destructive" : "")}
             />
+            {latError && <div className="text-xs text-destructive mt-1">{latError}</div>}
           </InputField>
-          <InputField label="Longitude" required hint="Lengdegrad (ost/vest)">
+          <InputField label="Longitude" required hint="Lengdegrad (øst/vest, -180 til 180)">
             <input
               type="number"
               step="0.0001"
               value={tourData.mapCenter?.lng || ""}
-              onChange={(e) =>
-                onChange({
-                  mapCenter: {
-                    ...tourData.mapCenter!,
-                    lng: parseFloat(e.target.value),
-                  },
-                })
-              }
+              onChange={(e) => {
+                const val = parseFloat(e.target.value);
+                if (isNaN(val) || val < -180 || val > 180) {
+                  setLngError("Ugyldig lengdegrad (må være mellom -180 og 180)");
+                } else {
+                  setLngError(null);
+                  onChange({
+                    mapCenter: {
+                      ...tourData.mapCenter!,
+                      lng: val,
+                    },
+                  });
+                }
+              }}
               placeholder="7.729"
-              className={inputClasses}
+              className={inputClasses + (lngError ? " border-destructive" : "")}
             />
+            {lngError && <div className="text-xs text-destructive mt-1">{lngError}</div>}
           </InputField>
         </div>
+        <div className="flex gap-2 mt-2">
+          <button
+            type="button"
+            className="px-3 py-2 rounded-lg border bg-muted text-xs hover:bg-primary/10"
+            onClick={setUserLocation}
+          >
+            Bruk min posisjon
+          </button>
+        </div>
+        {/* Kartforhåndsvisning med OpenStreetMap static map */}
+        {tourData.mapCenter?.lat && tourData.mapCenter?.lng && (
+          <div className="mt-4 rounded-xl overflow-hidden border">
+            <iframe
+              ref={mapRef}
+              title="Kartforhåndsvisning"
+              width="100%"
+              height="220"
+              style={{ border: 0 }}
+              loading="lazy"
+              src={`https://www.openstreetmap.org/export/embed.html?bbox=${tourData.mapCenter.lng-0.01},${tourData.mapCenter.lat-0.006},${tourData.mapCenter.lng+0.01},${tourData.mapCenter.lat+0.006}&layer=mapnik&marker=${tourData.mapCenter.lat},${tourData.mapCenter.lng}`}
+              allowFullScreen
+            />
+            <div className="text-xs text-muted-foreground p-2 bg-muted/50">Forhåndsvisning fra OpenStreetMap</div>
+          </div>
+        )}
 
         <div className="mt-4">
           <InputField label={`Zoom-niva: ${tourData.mapZoom || 15}`} hint="Hvor nart kartet skal zoomes inn">

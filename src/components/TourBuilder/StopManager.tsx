@@ -3,8 +3,58 @@ import { motion, AnimatePresence, Reorder } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import type { TourStop } from "@/data/tours";
 
+import QRCode from "react-qr-code";
+
+function StopQRCode({ stopId, index, url }: { stopId: string, index: number, url: string }) {
+  return (
+    <div className="mt-2 flex items-center gap-2">
+      <div id={`qr-container-${stopId}`} style={{ background: '#fff', padding: 4, borderRadius: 8 }}>
+        <QRCode value={url} size={64} />
+      </div>
+      <Button
+        type="button"
+        size="icon"
+        variant="outline"
+        title="Last ned QR-kode"
+        onClick={() => {
+          const svg = document.querySelector(`#qr-container-${stopId} svg`);
+          if (!svg) return;
+          const xml = new XMLSerializer().serializeToString(svg);
+          const svg64 = btoa(unescape(encodeURIComponent(xml)));
+          const image64 = `data:image/svg+xml;base64,${svg64}`;
+          const img = new window.Image();
+          img.onload = function () {
+            const canvas = document.createElement('canvas');
+            canvas.width = img.width;
+            canvas.height = img.height;
+            const ctx = canvas.getContext('2d');
+            if (ctx) {
+              ctx.fillStyle = '#fff';
+              ctx.fillRect(0, 0, canvas.width, canvas.height);
+              ctx.drawImage(img, 0, 0);
+              const pngUrl = canvas.toDataURL('image/png');
+              const a = document.createElement('a');
+              a.href = pngUrl;
+              a.download = `qr-${stopId || index}.png`;
+              document.body.appendChild(a);
+              a.click();
+              document.body.removeChild(a);
+            }
+          };
+          img.src = image64;
+        }}
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M12 16v-8m0 8l-3-3m3 3l3-3m6 2v4a2 2 0 01-2 2H6a2 2 0 01-2-2v-4" />
+        </svg>
+      </Button>
+    </div>
+  );
+}
+
 interface StopManagerProps {
   stops: TourStop[];
+  tourId: string;
   onAdd: (stop: TourStop) => void;
   onUpdate: (index: number, stop: TourStop) => void;
   onDelete: (index: number) => void;
@@ -292,7 +342,16 @@ function StopForm({
   );
 }
 
-export function StopManager({ stops, onAdd, onUpdate, onDelete }: StopManagerProps) {
+export function StopManager({ stops, tourId, onAdd, onUpdate, onDelete }: StopManagerProps) {
+  // Hvis tourId mangler, vis advarsel og blokker QR-koder
+  if (!tourId) {
+    return (
+      <div className="p-4 border rounded-xl bg-card text-center text-destructive">
+        <div className="font-semibold mb-2">Du må legge inn en Tittel*</div>
+        <div className="text-sm text-muted-foreground">Gå til "Turdetaljer" og fyll inn Tittel.</div>
+      </div>
+    );
+  }
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [isAdding, setIsAdding] = useState(false);
 
@@ -308,7 +367,6 @@ export function StopManager({ stops, onAdd, onUpdate, onDelete }: StopManagerPro
 
   return (
     <div className="space-y-4">
-      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h2 className="font-display text-xl font-semibold">Stopp</h2>
@@ -406,6 +464,13 @@ export function StopManager({ stops, onAdd, onUpdate, onDelete }: StopManagerPro
                         </span>
                       )}
                     </div>
+                    {(stop.id || tourId) && (
+                      <StopQRCode
+                        stopId={stop.id || tourId}
+                        index={index}
+                        url={window.location.origin + "/tur/" + tourId + "/stopp/" + (stop.id || tourId)}
+                      />
+                    )}
                   </div>
                   <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                     <Button
@@ -448,7 +513,6 @@ export function StopManager({ stops, onAdd, onUpdate, onDelete }: StopManagerPro
         )}
       </AnimatePresence>
 
-      {/* Add another button when there are stops */}
       {stops.length > 0 && !isAdding && editingIndex === null && (
         <Button
           variant="outline"
