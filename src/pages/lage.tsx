@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { BottomNav } from "@/components/BottomNav";
 import { TourBuilderForm } from "@/components/TourBuilder/TourBuilderForm";
@@ -39,20 +39,34 @@ const tabs = [
 
 export default function TourBuilderPage() {
   const [activeTab, setActiveTab] = useState<"tour" | "stops" | "export">("tour");
-  const [tourData, setTourData] = useState<Partial<Tour>>({
-    id: "",
-    title: "",
-    subtitle: "",
-    description: "",
-    howItWorks: "",
-    estimatedTime: "",
-    distance: "",
-    difficulty: "lett",
-    coverImage: "",
-    mapCenter: { lat: 63.111, lng: 7.729 },
-    mapZoom: 15,
-    stops: [],
+  const [tourData, setTourData] = useState<Partial<Tour>>(() => {
+    // Last fra localStorage ved første render
+    const saved = localStorage.getItem("tourbuilder-data");
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch {}
+    }
+    return {
+      id: "",
+      title: "",
+      subtitle: "",
+      description: "",
+      howItWorks: "",
+      estimatedTime: "",
+      distance: "",
+      difficulty: "lett",
+      coverImage: "",
+      mapCenter: { lat: 63.111, lng: 7.729 },
+      mapZoom: 15,
+      stops: [],
+    };
   });
+
+  // Lagre til localStorage hver gang tourData endres
+  useEffect(() => {
+    localStorage.setItem("tourbuilder-data", JSON.stringify(tourData));
+  }, [tourData]);
 
   const handleTourChange = (updates: Partial<Tour>) => {
     setTourData((prev) => ({ ...prev, ...updates }));

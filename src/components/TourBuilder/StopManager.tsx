@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence, Reorder } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import type { TourStop } from "@/data/tours";
@@ -100,7 +100,7 @@ function AddressSearch({ onSelect }: { onSelect: (lat: number, lng: number) => v
               handleSearch(e.target.value);
             }
           }}
-          placeholder="Sok etter adresse..."
+          placeholder="Søk etter adresse..."
           className="flex-1 px-3 py-2 rounded-lg border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
         />
         <Button type="button" size="sm" variant="secondary" onClick={() => handleSearch(query)} disabled={loading}>
@@ -278,6 +278,21 @@ function StopForm({
                 />
               </div>
             </div>
+            {/* Kartforhåndsvisning for valgt posisjon */}
+            {formData.lat && formData.lng && (
+              <div className="mt-3 rounded-xl overflow-hidden border">
+                <iframe
+                  title="Kartforhåndsvisning for stopp"
+                  width="100%"
+                  height="180"
+                  style={{ border: 0 }}
+                  loading="lazy"
+                  src={`https://www.openstreetmap.org/export/embed.html?mlat=${formData.lat}&mlon=${formData.lng}&zoom=16&marker=${formData.lat},${formData.lng}`}
+                  allowFullScreen
+                />
+                <div className="text-xs text-muted-foreground p-2 bg-muted/50">Forhåndsvisning fra OpenStreetMap</div>
+              </div>
+            )}
           </div>
 
           <div>
@@ -355,6 +370,27 @@ export function StopManager({ stops, tourId, onAdd, onUpdate, onDelete }: StopMa
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [isAdding, setIsAdding] = useState(false);
 
+  // Lagre stopp til localStorage hver gang stops endres
+  useEffect(() => {
+    localStorage.setItem("tourbuilder-stops", JSON.stringify(stops));
+  }, [stops]);
+
+  // Last stopp fra localStorage ved første render hvis tomt
+  useEffect(() => {
+    if ((!stops || stops.length === 0) && typeof window !== "undefined") {
+      const saved = localStorage.getItem("tourbuilder-stops");
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          if (Array.isArray(parsed)) {
+            parsed.forEach((stop: TourStop) => onAdd(stop));
+          }
+        } catch {}
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const handleAdd = (stop: TourStop) => {
     onAdd(stop);
     setIsAdding(false);
@@ -407,7 +443,7 @@ export function StopManager({ stops, tourId, onAdd, onUpdate, onDelete }: StopMa
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4 mr-1.5">
               <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
             </svg>
-            Legg til forste stopp
+            Legg til første stopp
           </Button>
         </motion.div>
       )}
