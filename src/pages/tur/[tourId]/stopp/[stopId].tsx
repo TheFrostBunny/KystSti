@@ -70,6 +70,9 @@ export default function StopDetailPage() {
 
   const distance = calculateDistance();
 
+  // Gjør stop-nummer-teksten enklere å bruke i JSX
+  const stopOfTotalText = t("stops.stopOfTotal", { order: stop.order, total: tour.stops.length }) || `Stop ${stop.order} of ${tour.stops.length}`;
+
   return (
     <div className="flex min-h-screen flex-col bg-background">
       {/* Header */}
@@ -140,9 +143,6 @@ export default function StopDetailPage() {
             <div className="space-y-4 lg:sticky lg:top-20 lg:h-fit">
               {/* Stop Header */}
               <div>
-                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
-                  {t("tourBuilder.stopOfTotal", { current: stop.order, total: tour.stops.length })}
-                </p>
                 <h2 className="font-display text-2xl lg:text-3xl font-bold mt-2">{stop.title}</h2>
               </div>
 
