@@ -161,7 +161,7 @@ function StopForm({
       images: [],
       lat: 63.111,
       lng: 7.729,
-      locationHint: "",
+      locationHint: { no: "", en: "" },
       audioUrl: "",
     }
   );
@@ -177,6 +177,10 @@ function StopForm({
       id: formData.id || generateId(formData.title.no),
       order: formData.order || index + 1,
       images: formData.images || [],
+      locationHint: {
+        no: typeof formData.locationHint === 'object' ? formData.locationHint.no : formData.locationHint || "",
+        en: typeof formData.locationHint === 'object' ? formData.locationHint.en : "",
+      },
     } as TourStop);
   };
 
@@ -283,11 +287,31 @@ function StopForm({
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1.5">{t("tourBuilder.form.locationHintLabel")}</label>
+            <label className="block text-sm font-medium mb-1.5">{t("tourBuilder.form.locationHintLabel")} (NO)</label>
             <input
               type="text"
-              value={formData.locationHint || ""}
-              onChange={(e) => setFormData((prev) => ({ ...prev, locationHint: e.target.value }))}
+              value={typeof formData.locationHint === 'object' ? formData.locationHint.no : formData.locationHint || ""}
+              onChange={(e) => setFormData((prev) => ({
+                ...prev,
+                locationHint: {
+                  no: e.target.value,
+                  en: typeof prev.locationHint === 'object' ? prev.locationHint.en : "",
+                },
+              }))}
+              placeholder={t("tourBuilder.form.locationHintPlaceholder")}
+              className="w-full px-3 py-2 rounded-lg border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+            />
+            <label className="block text-sm font-medium mb-1.5 mt-2">{t("tourBuilder.form.locationHintLabel")} (EN)</label>
+            <input
+              type="text"
+              value={typeof formData.locationHint === 'object' ? formData.locationHint.en : ""}
+              onChange={(e) => setFormData((prev) => ({
+                ...prev,
+                locationHint: {
+                  no: typeof prev.locationHint === 'object' ? prev.locationHint.no : prev.locationHint || "",
+                  en: e.target.value,
+                },
+              }))}
               placeholder={t("tourBuilder.form.locationHintPlaceholder")}
               className="w-full px-3 py-2 rounded-lg border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
             />

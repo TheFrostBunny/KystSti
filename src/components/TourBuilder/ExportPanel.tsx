@@ -41,7 +41,7 @@ ${(tour.stops || [])
       description: { no: "${escape(safe(stop.description, 'no'))}", en: "${escape(safe(stop.description, 'en'))}" },
       images: [${(stop.images || []).map((img: string) => `"${escape(img)}"`).join(", ")}],
       lat: ${stop.lat ?? 0},
-      lng: ${stop.lng ?? 0},${stop.audioUrl ? `\n      audioUrl: "${escape(stop.audioUrl)}",` : ""}${stop.locationHint ? `\n      locationHint: "${escape(stop.locationHint)}"` : ""}
+      lng: ${stop.lng ?? 0},${stop.audioUrl ? `\n      audioUrl: "${escape(stop.audioUrl)}",` : ""}${stop.locationHint ? `\n      locationHint: { no: "${escape(safe(stop.locationHint, 'no'))}", en: "${escape(safe(stop.locationHint, 'en'))}" }` : ""}
     }`
   )
   .join(",\n")}

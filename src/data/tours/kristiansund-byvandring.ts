@@ -46,7 +46,7 @@ const tour: Tour = {
       ],
       lat: 63.1107,
       lng: 7.7278,
-      locationHint: "Ved kirken på Kirkelandet",
+      locationHint: { no: "Ved kirken på Kirkelandet", en: "By the church on Kirkelandet" },
       audioUrl: "/audio/kirkelandet-kirke.mp3",
     },
     {
@@ -66,7 +66,7 @@ const tour: Tour = {
       ],
       lat: 63.112,
       lng: 7.734,
-      locationHint: "Ved det gamle verftet på Innlandet",
+      locationHint: { no: "Ved det gamle verftet på Innlandet", en: "By the old shipyard on Innlandet" },
       audioUrl: "/audio/mellemvaerftet.mp3",
     },
     {
@@ -86,7 +86,7 @@ const tour: Tour = {
       ],
       lat: 63.1098,
       lng: 7.731,
-      locationHint: "Ved Sundbåtbrygga",
+      locationHint: { no: "Ved Sundbåtbrygga", en: "By the Sundbåten ferry dock" },
       audioUrl: "/audio/sundbaten.mp3",
     },
     {
@@ -106,7 +106,7 @@ const tour: Tour = {
       ],
       lat: 63.1112,
       lng: 7.7265,
-      locationHint: "Ved havnen, nær fiskebrygga",
+      locationHint: { no: "Ved havnen, nær fiskebrygga", en: "By the harbor, near the fish wharf" },
       audioUrl: "/audio/woldbrygga.mp3",
     },
     {
@@ -126,7 +126,7 @@ const tour: Tour = {
       ],
       lat: 63.1135,
       lng: 7.722,
-      locationHint: "I den gamle trehusbebyggelsen på Innlandet",
+      locationHint: { no: "I den gamle trehusbebyggelsen på Innlandet", en: "In the old wooden house district on Innlandet" },
       audioUrl: "/audio/innlandet.mp3",
     },
     {
@@ -146,7 +146,7 @@ const tour: Tour = {
       ],
       lat: 63.1102,
       lng: 7.7295,
-      locationHint: "Ved operahuset i sentrum",
+      locationHint: { no: "Ved operahuset i sentrum", en: "By the opera house in the city center" },
       audioUrl: "/audio/festiviteten.mp3",
     },
   ],
