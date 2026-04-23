@@ -141,7 +141,7 @@ export default function StopDetailPage() {
               {/* Stop Header */}
               <div>
                 <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
-                  {uiText.stopOfTotal(stop.order, tour.stops.length)}
+                  {t("tourBuilder.stopOfTotal", { current: stop.order, total: tour.stops.length })}
                 </p>
                 <h2 className="font-display text-2xl lg:text-3xl font-bold mt-2">{stop.title}</h2>
               </div>
@@ -185,7 +185,7 @@ export default function StopDetailPage() {
                 
                 {distance !== null && (
                   <p className="text-sm mb-3 text-muted-foreground">
-                    {uiText.distanceLabel(distance)}
+                    {t("tourBuilder.distanceLabel", { distance: distance.toFixed(2) })}
                   </p>
                 )}
 
@@ -197,7 +197,7 @@ export default function StopDetailPage() {
                     disabled={loadingLocation}
                     className="w-full"
                   >
-                    {loadingLocation ? uiText.fetchingLocation : uiText.showDistance}
+                    {loadingLocation ? t("tourBuilder.fetchingLocation") : t("tourBuilder.showDistance")}
                   </Button>
                   <Button
                     variant="outline"
@@ -210,7 +210,7 @@ export default function StopDetailPage() {
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      {uiText.openInMaps}
+                      {t("tourBuilder.openInMaps")}
                     </a>
                   </Button>
                 </div>
@@ -225,7 +225,7 @@ export default function StopDetailPage() {
                   className="rounded-xl border bg-muted/50 p-4"
                 >
                   <p className="text-xs font-semibold text-muted-foreground uppercase">
-                    {uiText.nextStopLabel}
+                    {t("tourBuilder.nextStopLabel")}
                   </p>
                   <p className="mt-2 font-display text-lg font-bold">{nextStop.title}</p>
                   {nextStop.locationHint && (
@@ -242,7 +242,7 @@ export default function StopDetailPage() {
                   size="sm"
                   className="w-full"
                 >
-                  <Link to={`/tur/${tour.id}/stopp`}>Tilbake til stopp</Link>
+                  <Link to={`/tur/${tour.id}/stopp`}>{t("tourBuilder.backToStops")}</Link>
                 </Button>
               </div>
             </div>
