@@ -2,12 +2,14 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import Button from "@/components/ui/button";
 import type { Tour } from "@/data/tours";
+import { useTranslation } from "@/context/LanguageContext";
 
 interface ExportPanelProps {
   tourData: Tour;
 }
 
 export function ExportPanel({ tourData }: ExportPanelProps) {
+  const { t } = useTranslation();
   const [copied, setCopied] = useState(false);
   const [downloaded, setDownloaded] = useState(false);
 
@@ -78,11 +80,11 @@ export default tour;
   const isValid = tourData.title && tourData.stops.length > 0;
 
   const checks = [
-    { label: "Tittel", ok: !!tourData.title },
-    { label: "Undertittel", ok: !!tourData.subtitle },
-    { label: "Beskrivelse", ok: !!tourData.description },
-    { label: "Minst ett stopp", ok: tourData.stops.length > 0 },
-    { label: "Coverbilde", ok: !!tourData.coverImage },
+    { label: t("tourBuilder.form.titleLabel"), ok: !!tourData.title },
+    { label: t("tourBuilder.form.subtitleLabel"), ok: !!tourData.subtitle },
+    { label: t("tourBuilder.form.descriptionLabel"), ok: !!tourData.description },
+    { label: t("tourBuilder.form.stopsLabel"), ok: tourData.stops.length > 0 },
+    { label: t("tourBuilder.form.coverImageLabel"), ok: !!tourData.coverImage },
   ];
 
   const passedChecks = checks.filter((c) => c.ok).length;
@@ -117,12 +119,12 @@ export default tour;
           </div>
           <div className="flex-1">
             <h3 className="font-display text-lg font-semibold">
-              {isValid ? "Klar til eksport!" : "Nesten der..."}
+              {isValid ? t("tourBuilder.export.status.ready") : t("tourBuilder.export.status.incomplete")}
             </h3>
             <p className="text-sm text-muted-foreground mt-1">
               {isValid
-                ? "Turen din er komplett og klar til a lastes ned."
-                : "Fyll ut de gjenvarende feltene for a fullfare."}
+                ? t("tourBuilder.export.status.ready")
+                : t("tourBuilder.export.status.incomplete")}
             </p>
 
             {/* Checklist */}
@@ -171,14 +173,14 @@ export default tour;
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-5 w-5 text-primary">
             <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a.75.75 0 000 1.5h.253a.25.25 0 01.244.304l-.459 2.066A1.75 1.75 0 0010.747 15H11a.75.75 0 000-1.5h-.253a.25.25 0 01-.244-.304l.459-2.066A1.75 1.75 0 009.253 9H9z" clipRule="evenodd" />
           </svg>
-          Slik bruker du filen
+          {t("tourBuilder.export.instructions")}
         </h3>
         <ol className="mt-4 space-y-3">
           {[
-            { step: "1", text: "Last ned filen eller kopier koden" },
-            { step: "2", text: "Legg filen i src/data/tours/ mappen" },
-            { step: "3", text: "Apne src/data/tours/index.ts og importer din tur" },
-            { step: "4", text: "Legg til turen i tourModules array" },
+            { step: "1", text: t("tourBuilder.export.step1") },
+            { step: "2", text: t("tourBuilder.export.step2") },
+            { step: "3", text: t("tourBuilder.export.step3") },
+            { step: "4", text: t("tourBuilder.export.step4") },
           ].map((item) => (
             <li key={item.step} className="flex items-start gap-3">
               <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">
@@ -190,7 +192,6 @@ export default tour;
         </ol>
       </motion.div>
 
-      {/* File Info */}
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
@@ -208,7 +209,7 @@ export default tour;
               {tourData.id || "din-tur"}.ts
             </p>
             <p className="text-xs text-muted-foreground mt-0.5">
-              TypeScript fil med {tourData.stops.length} stopp
+              {t("tourBuilder.export.fileInfo", { count: tourData.stops.length })}
             </p>
           </div>
         </div>
@@ -284,14 +285,14 @@ export default tour;
             <path d="M7 3.5A1.5 1.5 0 018.5 2h3.879a1.5 1.5 0 011.06.44l3.122 3.12A1.5 1.5 0 0117 6.622V12.5a1.5 1.5 0 01-1.5 1.5h-1v-3.379a3 3 0 00-.879-2.121L10.5 5.379A3 3 0 008.379 4.5H7v-1z" />
             <path d="M4.5 6A1.5 1.5 0 003 7.5v9A1.5 1.5 0 004.5 18h7a1.5 1.5 0 001.5-1.5v-5.879a1.5 1.5 0 00-.44-1.06L9.44 6.44A1.5 1.5 0 008.378 6H4.5z" />
           </svg>
-          {copied ? "Kopiert!" : "Kopier kode"}
+          {copied ? t("tourBuilder.export.copied") : t("tourBuilder.export.copy")}
         </Button>
         <Button onClick={handleDownload} disabled={!isValid} className="flex-1 h-12">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4 mr-2">
             <path d="M10.75 2.75a.75.75 0 00-1.5 0v8.614L6.295 8.235a.75.75 0 10-1.09 1.03l4.25 4.5a.75.75 0 001.09 0l4.25-4.5a.75.75 0 00-1.09-1.03l-2.955 3.129V2.75z" />
             <path d="M3.5 12.75a.75.75 0 00-1.5 0v2.5A2.75 2.75 0 004.75 18h10.5A2.75 2.75 0 0018 15.25v-2.5a.75.75 0 00-1.5 0v2.5c0 .69-.56 1.25-1.25 1.25H4.75c-.69 0-1.25-.56-1.25-1.25v-2.5z" />
           </svg>
-          {downloaded ? "Lastet ned!" : "Last ned fil"}
+          {downloaded ? t("tourBuilder.export.downloaded") : t("tourBuilder.export.download")}
         </Button>
       </motion.div>
     </div>

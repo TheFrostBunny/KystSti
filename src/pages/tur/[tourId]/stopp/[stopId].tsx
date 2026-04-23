@@ -7,8 +7,10 @@ import { BottomNav } from "@/components/BottomNav";
 import Button from "@/components/ui/button";
 import { AudioPlayer } from "@/components/AudioPlayer";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "@/context/LanguageContext";
 
 export default function StopDetailPage() {
+  const { t } = useTranslation();
   const { tourId, stopId } = useParams<{ tourId: string; stopId: string }>();
   const navigate = useNavigate();
   const { isStopUnlocked, unlockStop } = useTour();
@@ -29,10 +31,10 @@ export default function StopDetailPage() {
   if (!tour || !stop) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center p-6 text-center">
-        <h1 className="font-display text-2xl font-bold">{uiText.stopNotFound}</h1>
-        <p className="mt-2 text-muted-foreground">{uiText.stopNotFoundDesc}</p>
+        <h1 className="font-display text-2xl font-bold">{t("tourBuilder.stopNotFound")}</h1>
+        <p className="mt-2 text-muted-foreground">{t("tourBuilder.stopNotFoundDesc")}</p>
         <Button asChild className="mt-4">
-          <Link to="/turer">Se alle turer</Link>
+          <Link to="/turer">{t("tourBuilder.seAlleTurer")}</Link>
         </Button>
       </div>
     );
@@ -162,7 +164,7 @@ export default function StopDetailPage() {
                 className="rounded-xl bg-card border p-4 space-y-2"
               >
                 <p className="text-xs font-semibold text-muted-foreground uppercase">
-                  Om stedet
+                  {t("tourBuilder.aboutStop")}
                 </p>
                 <p className="text-sm leading-relaxed text-foreground">{stop.description}</p>
               </motion.div>
@@ -177,7 +179,7 @@ export default function StopDetailPage() {
                 <div className="flex items-center gap-2 mb-3">
                   <MapPinIcon className="h-4 w-4 text-primary" />
                   <span className="text-xs font-semibold text-muted-foreground uppercase">
-                    Posisjon
+                    {t("tourBuilder.position")}
                   </span>
                 </div>
                 

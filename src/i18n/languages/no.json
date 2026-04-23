@@ -131,6 +131,12 @@
     "estimatedTimePlaceholder": "Estimert tid for å fullføre turen (f.eks. 2 timer)",
     "distancePlaceholder": "Total avstand for turen (f.eks. 5 km)",
     "titlePlaceholder": "En fengende tittel for turen din",
+    "yourTourId": "Kyststi",
+    "difficultyLevels": {
+      "lett": "Lett",
+      "moderat": "Moderat",
+      "krevende": "Krevende"
+    },
     "tabs": {
       "tourDetails": "Turdetaljer",
       "stops": "Stopp",
@@ -157,7 +163,7 @@
       "deleteStop": "Slett",
       "stopOf": "Stopp {order} av {total}",
       "images": "bilde(r)",
-      "audioIncluded": "Audio",
+      "audioIncluded": "Lyd",
       "modalTitle": "Legg til stopp",
       "modalEditTitle": "Rediger stopp",
       "cancelButton": "Avbryt",

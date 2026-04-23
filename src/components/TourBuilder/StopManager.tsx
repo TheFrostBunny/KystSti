@@ -1,13 +1,12 @@
-import { useTranslation } from "@/context/LanguageContext";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence, Reorder } from "framer-motion";
 import Button from "@/components/ui/button";
 import type { TourStop } from "@/data/tours";
+import { useTranslation } from "@/context/LanguageContext";
 
 import QRCode from "react-qr-code";
 
 function StopQRCode({ stopId, index, url }: { stopId: string, index: number, url: string }) {
-  const { t } = useTranslation();
   return (
     <div className="mt-2 flex items-center gap-2">
       <div id={`qr-container-${stopId}`} style={{ background: '#fff', padding: 4, borderRadius: 8 }}>
@@ -17,7 +16,7 @@ function StopQRCode({ stopId, index, url }: { stopId: string, index: number, url
         type="button"
         size="icon"
         variant="outline"
-        title={t("tourBuilder.downloadQR")}
+        title="Last ned QR-kode"
         onClick={() => {
           const svg = document.querySelector(`#qr-container-${stopId} svg`);
           if (!svg) return;
@@ -70,10 +69,10 @@ interface NominatimResult {
 }
 
 function AddressSearch({ onSelect }: { onSelect: (lat: number, lng: number) => void }) {
-  const { t } = useTranslation();
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<NominatimResult[]>([]);
   const [loading, setLoading] = useState(false);
+  const { t } = useTranslation();
 
   const handleSearch = async (searchQuery: string) => {
     if (!searchQuery) return;
@@ -103,7 +102,7 @@ function AddressSearch({ onSelect }: { onSelect: (lat: number, lng: number) => v
               handleSearch(e.target.value);
             }
           }}
-          placeholder={t("tourBuilder.searchAddress")}
+          placeholder={t("tourBuilder.form.searchLocationPlaceholder")}
           className="flex-1 px-3 py-2 rounded-lg border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
         />
         <Button type="button" size="sm" variant="secondary" onClick={() => handleSearch(query)} disabled={loading}>
@@ -211,13 +210,13 @@ function StopForm({
             {index + 1}
           </div>
           <h3 className="font-display text-lg font-semibold">
-            {stop ? t("tourBuilder.editStop") : t("tourBuilder.newStop")}
+            {stop ? t("tourBuilder.modalEditTitle") : t("tourBuilder.modalTitle")}
           </h3>
         </div>
 
         <div className="grid gap-4">
           <div>
-            <label className="block text-sm font-medium mb-1.5">{t("tourBuilder.title")} *</label>
+            <label className="block text-sm font-medium mb-1.5">{t("tourBuilder.form.titleLabel")} *</label>
             <input
               type="text"
               value={formData.title || ""}
@@ -228,41 +227,41 @@ function StopForm({
                   id: generateId(e.target.value),
                 }))
               }
-              placeholder={t("tourBuilder.titlePlaceholder")}
+              placeholder="f.eks. Kirkelandet kirke"
               className="w-full px-3 py-2 rounded-lg border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1.5">{t("tourBuilder.description")} *</label>
+            <label className="block text-sm font-medium mb-1.5">{t("tourBuilder.form.descriptionLabel")} *</label>
             <textarea
               value={formData.description || ""}
               onChange={(e) => setFormData((prev) => ({ ...prev, description: e.target.value }))}
-              placeholder={t("tourBuilder.descriptionPlaceholder")}
+              placeholder={t("tourBuilder.form.descriptionPlaceholder")}
               rows={3}
               className="w-full px-3 py-2 rounded-lg border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 resize-none"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1.5">{t("tourBuilder.locationHint")}</label>
+            <label className="block text-sm font-medium mb-1.5">{t("tourBuilder.form.locationHintLabel")}</label>
             <input
               type="text"
               value={formData.locationHint || ""}
               onChange={(e) => setFormData((prev) => ({ ...prev, locationHint: e.target.value }))}
-              placeholder={t("tourBuilder.locationHintPlaceholder")}
+              placeholder={t("tourBuilder.form.locationHintPlaceholder")}
               className="w-full px-3 py-2 rounded-lg border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1.5">{t("tourBuilder.position")}</label>
+            <label className="block text-sm font-medium mb-1.5">{t("tourBuilder.form.positionLabel")}</label>
             <AddressSearch
               onSelect={(lat, lng) => setFormData((prev) => ({ ...prev, lat, lng }))}
             />
             <div className="grid grid-cols-2 gap-2 mt-2">
               <div className="flex items-center gap-2">
-                <span className="text-xs text-muted-foreground">{t("tourBuilder.lat")}</span>
+                <span className="text-xs text-muted-foreground">{t("tourBuilder.form.mapLatLabel")}:</span>
                 <input
                   type="number"
                   step="0.0001"
@@ -272,7 +271,7 @@ function StopForm({
                 />
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-xs text-muted-foreground">{t("tourBuilder.lng")}</span>
+                <span className="text-xs text-muted-foreground">{t("tourBuilder.form.mapLngLabel")}:</span>
                 <input
                   type="number"
                   step="0.0001"
@@ -294,19 +293,19 @@ function StopForm({
                   src={`https://www.openstreetmap.org/export/embed.html?mlat=${formData.lat}&mlon=${formData.lng}&zoom=16&marker=${formData.lat},${formData.lng}`}
                   allowFullScreen
                 />
-                <div className="text-xs text-muted-foreground p-2 bg-muted/50">{t("tourBuilder.mapPreview")}</div>
+                <div className="text-xs text-muted-foreground p-2 bg-muted/50">Forhåndsvisning fra OpenStreetMap</div>
               </div>
             )}
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1.5">{t("tourBuilder.images")}</label>
+            <label className="block text-sm font-medium mb-1.5">{t("tourBuilder.form.imagesLabel")}</label>
             <div className="flex gap-2">
               <input
                 type="url"
                 value={imageInput}
                 onChange={(e) => setImageInput(e.target.value)}
-                placeholder={t("tourBuilder.imagePlaceholder")}
+                placeholder="https://..."
                 className="flex-1 px-3 py-2 rounded-lg border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
                 onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), addImage())}
               />
@@ -337,12 +336,12 @@ function StopForm({
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1.5">{t("tourBuilder.audioUrl")}</label>
+            <label className="block text-sm font-medium mb-1.5">{t("tourBuilder.form.audioUrlLabel")}</label>
             <input
               type="url"
               value={formData.audioUrl || ""}
               onChange={(e) => setFormData((prev) => ({ ...prev, audioUrl: e.target.value }))}
-              placeholder={t("tourBuilder.audioUrlPlaceholder")}
+              placeholder={t("tourBuilder.form.audioUrlPlaceholder")}
               className="w-full px-3 py-2 rounded-lg border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
             />
           </div>
@@ -350,7 +349,7 @@ function StopForm({
 
         <div className="flex gap-2 pt-2">
           <Button onClick={handleSubmit} disabled={!formData.title} className="flex-1">
-            {stop ? t("tourBuilder.saveChanges") : t("tourBuilder.addStop")}
+            {stop ? t("common.saveChanges") : t("common.addStop")}
           </Button>
           <Button variant="outline" onClick={onCancel}>
             {t("common.cancel")}
@@ -363,7 +362,6 @@ function StopForm({
 
 export function StopManager({ stops, tourId, onAdd, onUpdate, onDelete }: StopManagerProps) {
   const { t } = useTranslation();
-  // Hvis tourId mangler, vis advarsel og blokker QR-koder
   if (!tourId) {
     return (
       <div className="p-4 border rounded-xl bg-card text-center text-destructive">
@@ -375,12 +373,10 @@ export function StopManager({ stops, tourId, onAdd, onUpdate, onDelete }: StopMa
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [isAdding, setIsAdding] = useState(false);
 
-  // Lagre stopp til localStorage hver gang stops endres
   useEffect(() => {
     localStorage.setItem("tourbuilder-stops", JSON.stringify(stops));
   }, [stops]);
 
-  // Last stopp fra localStorage ved første render hvis tomt
   useEffect(() => {
     if ((!stops || stops.length === 0) && typeof window !== "undefined") {
       const saved = localStorage.getItem("tourbuilder-stops");
@@ -393,7 +389,6 @@ export function StopManager({ stops, tourId, onAdd, onUpdate, onDelete }: StopMa
         } catch {}
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleAdd = (stop: TourStop) => {
@@ -410,11 +405,11 @@ export function StopManager({ stops, tourId, onAdd, onUpdate, onDelete }: StopMa
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="font-display text-xl font-semibold">{t("tourBuilder.stops")}</h2>
+          <h2 className="font-display text-xl font-semibold">Stopp</h2>
           <p className="text-sm text-muted-foreground mt-0.5">
             {stops.length === 0
-              ? t("tourBuilder.noStopsYet")
-              : t("tourBuilder.stopsInTour", { count: stops.length })}
+              ? t("tourBuilder.addFirstStopHelper")
+              : `${stops.length} ${t("tourBuilder.stops")} i turen`}
           </p>
         </div>
         {!isAdding && editingIndex === null && (
@@ -442,7 +437,7 @@ export function StopManager({ stops, tourId, onAdd, onUpdate, onDelete }: StopMa
           </div>
           <h3 className="font-medium">{t("tourBuilder.noStopsYet")}</h3>
           <p className="text-sm text-muted-foreground mt-1">
-            {t("tourBuilder.addFirstStopHelp")}
+            {t("tourBuilder.addFirstStopHelper")}
           </p>
           <Button onClick={() => setIsAdding(true)} size="sm" className="mt-4">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4 mr-1.5">
@@ -493,7 +488,7 @@ export function StopManager({ stops, tourId, onAdd, onUpdate, onDelete }: StopMa
                           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="h-3.5 w-3.5">
                             <path fillRule="evenodd" d="M2 4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V4Zm10.5 5.707a.5.5 0 0 0-.146-.353l-1-1a.5.5 0 0 0-.708 0L9.354 9.646a.5.5 0 0 1-.708 0L6.354 7.354a.5.5 0 0 0-.708 0L3.5 9.5V4a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v5.707ZM12 5a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z" clipRule="evenodd" />
                           </svg>
-                          {stop.images.length} {t("tourBuilder.imagesCount")}
+                          {stop.images.length} bilder
                         </span>
                       )}
                       {stop.audioUrl && (
@@ -501,7 +496,7 @@ export function StopManager({ stops, tourId, onAdd, onUpdate, onDelete }: StopMa
                           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="h-3.5 w-3.5">
                             <path d="M3 3.732a1.5 1.5 0 0 1 2.305-1.265l6.706 4.267a1.5 1.5 0 0 1 0 2.531l-6.706 4.268A1.5 1.5 0 0 1 3 12.267V3.732Z" />
                           </svg>
-                          {t("tourBuilder.audio")}
+                          Audio
                         </span>
                       )}
                     </div>

@@ -6,7 +6,10 @@
     "of": "of",
     "stops": "stops",
     "previous": "Previous",
-    "next": "Next"
+    "next": "Next",
+    "saveChanges": "Save changes",
+    "addStop": "Add stop",
+    "cancel": "Cancel"
   },
   "nav": {
     "home": "Home",
@@ -132,6 +135,17 @@
     "estimatedTimePlaceholder": "Estimated time to complete the tour (e.g. 2 hours)",
     "distancePlaceholder": "Total distance of the tour (e.g. 5 km)",
     "titlePlaceholder": "A catchy title for your tour",
+    "yourTourId": "Kyststi",
+    "addStop":"Add stop",
+    "addFirstStopHelper": "No stops added yet. Click the button above to add the first stop.",
+    "addFirstStop": "Add first stop",
+    "noStopsYet": "No stops yet",
+    "startTour": "Start tour",
+    "difficultyLevels": {
+      "lett": "Easy",
+      "moderat": "Medium",
+      "krevende": "Hard"
+    },
     "tabs": {
       "tourDetails": "Tour Details",
       "stops": "Stops",
@@ -149,7 +163,16 @@
       "coverImageLabel": "Cover image URL",
       "mapLatLabel": "Map Latitude",
       "mapLngLabel": "Map Longitude",
-      "mapZoomLabel": "Map Zoom Level"
+      "mapZoomLabel": "Map Zoom Level",
+      "locationHintLabel": "Location hint",
+      "descriptionPlaceholder": "Describe the stop in detail. What can users expect to see or learn at this stop?",
+      "locationHintPlaceholder": "e.g. By the church on Kirkelandet",
+      "searchLocationPlaceholder": "Search for an address...",
+      "positionLabel": "Position",
+      "imagesLabel": "Images",
+      "audioUrlLabel": "Audio URL (optional)",
+      "audioUrlPlaceholder": "/audio/my-stop.mp3",
+      "stopsLabel": "Stops"
     },
     "stops": {
       "addStop": "+ Add stop",
@@ -175,6 +198,9 @@
       "unlocked": "{unlocked} of {total} stops unlocked"
     },
     "export": {
+      "downloaded": "Tour exported!",
+      "download": "Export tour",
+      "copy": "Copy code",
       "status": {
         "ready": "Tour is ready to export",
         "incomplete": "Fill in all required fields and add at least one stop",
