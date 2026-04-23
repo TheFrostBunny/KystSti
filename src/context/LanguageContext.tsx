@@ -59,13 +59,9 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     return value;
   };
 
-  if (!isInitialized) {
-    return null;
-  }
-
   return (
     <LanguageContext.Provider value={{ language, setLanguage, t }}>
-      {children}
+      {!isInitialized ? null : children}
     </LanguageContext.Provider>
   );
 }

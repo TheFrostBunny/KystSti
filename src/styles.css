@@ -51,16 +51,16 @@
 }
 
 @font-face {
-  font-family: 'DM Serif Display';
+  font-family: 'Merriweather';
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('https://fonts.gstatic.com/s/dmseriftisplay/v15/rnCQoGX4OW3c4g9UZ3Q3T1b5OCb.woff2') format('woff2');
+  src: url('https://fonts.gstatic.com/s/merriweather/v30/u-440qyriQwlOrhSvowK_l52xwNZWMf_.woff2') format('woff2');
 }
 
 :root {
   --radius: 0.75rem;
-  --font-display: 'DM Serif Display', Georgia, serif;
+  --font-display: 'Merriweather', Georgia, serif;
   --font-body: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
 
   /* Warm exploration palette */
