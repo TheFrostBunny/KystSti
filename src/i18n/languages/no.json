@@ -143,6 +143,8 @@
     "distancePlaceholder": "Total lengde på turen (f.eks. 5 km)",
     "titlePlaceholder": "En fengende tittel for turen",
     "yourTourId": "Kyststi",
+    "tourId": "Tur-ID",
+    "generatedAutomatically": "Genereres automatisk",
     "addStop": "Legg til stopp",
     "addFirstStopHelper": "Ingen stopp lagt til ennå. Klikk på knappen over for å legge til det første stoppet.",
     "addFirstStop": "Legg til første stopp",
@@ -236,6 +238,7 @@
     "zoomLabel": "Zoomnivå",
     "setLocation": "Sett posisjon",
     "unlocked": "Låst opp",
-    "locked": "Låst"
+    "locked": "Låst",
+    "map": "Kart"
   }
 }

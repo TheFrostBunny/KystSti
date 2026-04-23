@@ -143,6 +143,8 @@
     "distancePlaceholder": "Total distance of the tour (e.g. 5 km)",
     "titlePlaceholder": "A catchy title for your tour",
     "yourTourId": "Kyststi",
+    "tourId": "Tour ID",
+    "generatedAutomatically": "Generated automatically",
     "addStop":"Add stop",
     "addFirstStopHelper": "No stops added yet. Click the button above to add the first stop.",
     "addFirstStop": "Add first stop",
@@ -236,6 +238,7 @@
       "zoomLabel": "Zoom level",
       "setLocation": "Set location",
       "unlocked": "Unlocked",
-      "locked": "Locked"
+      "locked": "Locked",
+      "map":"Map"
        }
 }

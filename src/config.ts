@@ -7,7 +7,7 @@ export const appConfig = {
   enableDistance: false, // Vis avstand fra bruker
   enableAudio: false, // Aktiver lydavspilling på stopp
   enableMultiLang: false, // Aktiver støtte for flere språk
-  activeTourId: "kristiansund-byvandring", // Sett ID-en til turen som skal være aktiv
+  activeTourId: "hi", // Sett ID-en til turen som skal være aktiv
   enableDebug: false, // Vis debug-informasjon i UI
   enableOnboarding: true, // Vis onboarding ved første besøk
   enableQrScanner: false, // Vis QR-skanner-knapp og -side

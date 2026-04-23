@@ -6,8 +6,14 @@
 export interface TourStop {
   id: string;
   order: number;
-  title: string;
-  description: string;
+  title: {
+    no: string;
+    en: string;
+  };
+  description: {
+    no: string;
+    en: string;
+  };
   images: string[];
   lat: number;
   lng: number;
@@ -17,10 +23,22 @@ export interface TourStop {
 
 export interface Tour {
   id: string;
-  title: string;
-  subtitle: string;
-  description: string;
-  howItWorks: string;
+  title: {
+    no: string;
+    en: string;
+  };
+  subtitle: {
+    no: string;
+    en: string;
+  };
+  description: {
+    no: string;
+    en: string;
+  };
+  howItWorks: {
+    no: string;
+    en: string;
+  };
   estimatedTime: string;
   distance: string;
   difficulty: "lett" | "moderat" | "krevende";
