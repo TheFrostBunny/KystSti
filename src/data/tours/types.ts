@@ -18,7 +18,10 @@ export interface TourStop {
   lat: number;
   lng: number;
   audioUrl?: string;
-  locationHint?: string;
+  locationHint?: {
+    no: string;
+    en: string;
+  };
 }
 
 export interface Tour {
