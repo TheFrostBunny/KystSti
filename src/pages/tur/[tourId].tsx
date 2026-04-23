@@ -1,6 +1,7 @@
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { getTourById, uiText } from "@/data/tours";
+import { useTranslation } from "@/context/LanguageContext";
 import { useTour } from "@/context/TourContext";
 import { BottomNav } from "@/components/BottomNav";
 import Button from "@/components/ui/button";
@@ -10,6 +11,7 @@ export default function TourDetailPage() {
   const { tourId } = useParams<{ tourId: string }>();
   const navigate = useNavigate();
   const { setCurrentTour, getProgress, currentTourId } = useTour();
+  const { t } = useTranslation();
   const tour = tourId ? getTourById(tourId) : null;
 
   if (!tour) {
@@ -31,6 +33,8 @@ export default function TourDetailPage() {
 
   const progress = getProgress();
   const progressPercent = progress.total > 0 ? (progress.unlocked / progress.total) * 100 : 0;
+
+  const stopsText = tour ? (t("stops.stopCount", { count: tour.stops.length }) || `${tour.stops.length} stopp`) : "";
 
   return (
     <div className="flex min-h-screen flex-col pb-20">
@@ -91,7 +95,7 @@ export default function TourDetailPage() {
             </div>
             <div className="flex items-center gap-1.5 text-muted-foreground">
               <MapPinIcon className="h-4 w-4" />
-              {tour.stops.length} stopp
+              {stopsText}
             </div>
           </div>
         </motion.div>
