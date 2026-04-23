@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { getTourById, getStopById, uiText } from "@/data/tours";
 import { useTour } from "@/context/TourContext";
 import { BottomNav } from "@/components/BottomNav";
-import { Button } from "@/components/ui/button";
+import Button from "@/components/ui/button";
 import { AudioPlayer } from "@/components/AudioPlayer";
 import { cn } from "@/lib/utils";
 
@@ -98,7 +98,7 @@ export default function StopDetailPage() {
                 key={currentImageIndex}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="relative overflow-hidden rounded-2xl bg-muted aspect-video lg:aspect-auto lg:h-[500px]"
+                className="relative overflow-hidden rounded-2xl bg-muted aspect-video lg:aspect-auto lg:h-125"
               >
                 <img
                   src={stop.images[currentImageIndex]}
@@ -116,7 +116,7 @@ export default function StopDetailPage() {
                       key={index}
                       onClick={() => setCurrentImageIndex(index)}
                       className={cn(
-                        "h-20 w-20 flex-shrink-0 rounded-lg overflow-hidden border-2 transition-all hover:border-muted-foreground",
+                        "h-20 w-20 shrink-0 rounded-lg overflow-hidden border-2 transition-all hover:border-muted-foreground",
                         currentImageIndex === index
                           ? "border-primary"
                           : "border-muted"

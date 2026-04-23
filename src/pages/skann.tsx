@@ -6,7 +6,7 @@ import { useTour } from "@/context/TourContext";
 import { useTranslation } from "@/context/LanguageContext";
 import { getTourById } from "@/data/tours";
 import { BottomNav } from "@/components/BottomNav";
-import { Button } from "@/components/ui/button";
+import Button from "@/components/ui/button";
 
 type ScanStatus = "idle" | "scanning" | "success" | "error";
 

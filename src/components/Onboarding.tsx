@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MapPin, QrCode, Volume2, ChevronRight, X } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import Button  from "@/components/ui/button";
 import { appConfig } from "@/config";
 
 const ONBOARDING_KEY = "kyststi-onboarding-complete";

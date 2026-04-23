@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Button } from "@/components/ui/button";
+import Button from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { uiText } from "@/data/tours";
 import { appConfig } from "@/config";

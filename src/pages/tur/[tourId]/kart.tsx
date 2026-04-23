@@ -4,8 +4,9 @@ import { MapContainer, TileLayer, Marker, Polyline, useMap } from "react-leaflet
 import L from "leaflet";
 import { getTourById, mapColors, TourStop } from "@/data/tours";
 import { useTour } from "@/context/TourContext";
+import { useTranslation } from "@/context/LanguageContext";
 import { BottomNav } from "@/components/BottomNav";
-import { Button } from "@/components/ui/button";
+import Button from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import "leaflet/dist/leaflet.css";
 
@@ -38,6 +39,7 @@ export default function TourMapPage() {
   const { tourId } = useParams<{ tourId: string }>();
   const navigate = useNavigate();
   const { isStopUnlocked } = useTour();
+  const { t } = useTranslation();
   const [selectedStop, setSelectedStop] = useState<TourStop | null>(null);
   
   const tour = tourId ? getTourById(tourId) : null;
@@ -57,7 +59,6 @@ export default function TourMapPage() {
     .sort((a, b) => a.order - b.order)
     .map((stop) => [stop.lat, stop.lng]);
 
-  // Filter stops: show only unlocked stops and next locked stop
   const visibleStops = tour.stops.filter((stop) => {
     const isUnlocked = isStopUnlocked(stop.id) || stop.order === 1;
     if (isUnlocked) return true;
@@ -78,7 +79,7 @@ export default function TourMapPage() {
   return (
     <div className="flex min-h-screen flex-col">
       {/* Header */}
-      <header className="sticky top-0 z-[1000] border-b bg-background/95 backdrop-blur-md">
+      <header className="sticky top-0 z-1000 border-b bg-background/95 backdrop-blur-md">
         <div className="flex h-14 items-center px-4">
           <button onClick={() => navigate(`/tur/${tour.id}`)} className="mr-3">
             <ArrowLeftIcon className="h-5 w-5" />
@@ -130,15 +131,15 @@ export default function TourMapPage() {
         </MapContainer>
 
         {/* Legend */}
-        <div className="absolute bottom-20 left-4 z-[1000] rounded-lg bg-white/95 backdrop-blur-sm p-3 shadow-lg">
+        <div className="absolute bottom-20 left-4 z-1000 rounded-lg bg-white/95 backdrop-blur-sm p-3 shadow-lg">
           <div className="flex items-center gap-2 text-xs">
             <div className="flex items-center gap-1.5">
               <div className="w-3 h-3 rounded-full" style={{ backgroundColor: mapColors.unlockedPin }} />
-              <span>Opplåst</span>
+              <span>{t("map.unlocked")}</span>
             </div>
             <div className="flex items-center gap-1.5">
               <div className="w-3 h-3 rounded-full" style={{ backgroundColor: mapColors.lockedPin }} />
-              <span>Låst</span>
+              <span>{t("map.locked")}</span>
             </div>
           </div>
         </div>
@@ -156,7 +157,7 @@ export default function TourMapPage() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setSelectedStop(null)}
-              className="fixed inset-0 z-[1001] bg-black/40"
+              className="fixed inset-0 z-1001 bg-black/40"
             />
 
             {/* Bottom Sheet */}
@@ -165,7 +166,7 @@ export default function TourMapPage() {
               animate={{ y: 0 }}
               exit={{ y: "100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              className="fixed bottom-16 left-0 right-0 z-[1002] rounded-t-2xl bg-card border-t"
+              className="fixed bottom-16 left-0 right-0 z-1002 rounded-t-2xl bg-card border-t"
             >
               <div className="p-4">
                 <div className="flex flex-col items-center gap-3">

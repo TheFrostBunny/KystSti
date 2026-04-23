@@ -13,18 +13,15 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
   const [language, setLanguageState] = useState<Language>("no");
   const [isInitialized, setIsInitialized] = useState(false);
 
-  // Initialize language from localStorage or detect from browser
   useEffect(() => {
     const savedLanguage = localStorage.getItem("kyststi-language") as Language | null;
     if (savedLanguage && (savedLanguage === "en" || savedLanguage === "no")) {
       setLanguageState(savedLanguage);
     } else {
-      // Detect from browser language
       const browserLang = navigator.language.split("-")[0];
       if (browserLang === "en") {
         setLanguageState("en");
       } else {
-        // Default to Norwegian for anything else
         setLanguageState("no");
       }
     }
@@ -36,8 +33,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem("kyststi-language", lang);
   };
 
-  // Helper function to traverse nested translation keys
-  const t = (path: string, ...args: any[]): any => {
+  const t = (path: string, vars?: Record<string, any>): any => {
     const keys = path.split(".");
     let value: any = translations[language];
 
@@ -50,16 +46,21 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
       }
     }
 
-    // If it's a function (like for dynamic text), call it with args
     if (typeof value === "function") {
-      return value(...args);
+      return value(vars);
+    }
+
+    if (typeof value === "string" && vars && Object.keys(vars).length > 0) {
+      return value.replace(/\{(\w+)\}/g, (_, k) =>
+        vars[k] !== undefined ? vars[k] : `{${k}}`
+      );
     }
 
     return value;
   };
 
   if (!isInitialized) {
-    return null; // or a loading spinner
+    return null;
   }
 
   return (

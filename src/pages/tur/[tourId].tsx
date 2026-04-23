@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { getTourById, uiText } from "@/data/tours";
 import { useTour } from "@/context/TourContext";
 import { BottomNav } from "@/components/BottomNav";
-import { Button } from "@/components/ui/button";
+import Button from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 
 export default function TourDetailPage() {
@@ -42,7 +42,7 @@ export default function TourDetailPage() {
           className="w-full h-full object-cover"
           crossOrigin="anonymous"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
+        <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/30 to-transparent" />
         <button
           onClick={() => navigate("/turer")}
           className="absolute top-4 left-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm text-white"

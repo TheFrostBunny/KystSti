@@ -1,0 +1,165 @@
+{
+  "common": {
+    "back": "Tilbake",
+    "progress": "Din fremgang"
+  },
+  "nav": {
+    "home": "Hjem",
+    "stops": "Stopp",
+    "map": "Kart",
+    "scan": "Skann",
+    "about": "Om",
+    "createTour": "Lag tur"
+  },
+  "home": {
+    "title": "KystSti",
+    "subtitle": "Opplev kysten på en ny måte",
+    "description": "Utforsk vakre kyststier med interaktive turer, QR-koder og lydguider.",
+    "stops": "stopp",
+    "estimatedTime": "min",
+    "yourProgress": "Din fremgang",
+    "seeAllStops": "Se alle stopp",
+    "howItWorks": "Slik virker det",
+    "startTour": "Start turen"
+  },
+  "tour": {
+    "stopNotFound": "Stopp ikke funnet",
+    "stopNotFoundDescription": "Stoppet du leter etter finnes ikke.",
+    "nextStop": "Neste stopp",
+    "unlockedBanner": "er nå låst opp!"
+  },
+  "stop": {
+    "stopLabel": "Stopp {order}",
+    "unlockedCount": "{unlocked} av {total} stopp låst opp",
+    "locationHint": "Lokasjonshint",
+    "distanceLabel": "{distance} km unna",
+    "fetchingLocation": "Henter plassering...",
+    "showDistance": "Vis avstand",
+    "openInMaps": "Åpne i Kart",
+    "stopOfTotal": "Stopp {order} av {total}"
+  },
+  "scanner": {
+    "title": "Skann QR-kode",
+    "cameraPermission": "Kameratilgang nektet",
+    "scanning": "Manuell innmatting",
+    "scanInstructions": "Hold telefonen din over QR-koden ved hvert stopp for å låse opp innhold."
+  },
+  "about": {
+    "title": "Om KystSti",
+    "description": "Utforsk vakre kyststier og byvandringer med interaktive turer. Skann QR-koder ved hvert stopp for å låse opp historier, bilder og lydguider.",
+    "stats": {
+      "toursLabel": "turer",
+      "stopsLabel": "stopp totalt",
+      "freeLabel": "Gratis",
+      "freeToUse": "å bruke"
+    },
+    "howToUse": "Slik bruker du appen",
+    "steps": [
+      "Velg en tur fra turlisten",
+      "Gå til startpunktet for turen",
+      "Finn QR-koden som er plassert ved stoppet",
+      "Skann QR-koden med kameraet - innholdet låses opp!",
+      "Hør på lydguiden og les historien",
+      "Følg veien til neste stopp"
+    ],
+    "features": "Funksjoner",
+    "featuresList": [
+      "Flere turer å velge mellom",
+      "QR-skanning for å låse opp stopp",
+      "Lydguide på hvert stopp",
+      "Interaktivt kart med rute",
+      "Fremgangsindikator"
+    ],
+    "privacy": "Denne appen samler ikke inn personlig informasjon.",
+    "privacyLocation": "Posisjonen din brukes kun lokalt for å vise avstand.",
+    "builtBy": "Laget av David. Se kildekoden på",
+    "github": "GitHub"
+  },
+  "onboarding": {
+    "exploreTours": "Utforsk turer",
+    "exploreTourDesc": "Velg mellom flere turer i Kristiansund-området. Hver tur har unike stopp med historier og informasjon.",
+    "scanQr": "Skann QR-koder",
+    "scanQrDesc": "Ved hvert stopp finner du en QR-kode. Skann den for å låse opp innhold og registrere fremgangen din.",
+    "listenStories": "Lytt til historiene",
+    "listenStoriesDesc": "Mange stopp har lydguider som forteller deg mer om stedet. Bare trykk play og lytt mens du utforsker.",
+    "skip": "Hopp over",
+    "next": "Neste",
+    "getStarted": "Kom i gang"
+  },
+  "tourBuilder": {
+    "title": "Lag en tur",
+    "subtitle": "Opprett en interaktiv tur med stopp og QR-koder",
+    "tabs": {
+      "tourDetails": "Turdetaljer",
+      "stops": "Stopp",
+      "export": "Eksporter"
+    },
+    "form": {
+      "tourIdLabel": "Tour ID (Auto-generert)",
+      "titleLabel": "Tittel",
+      "subtitleLabel": "Undertittel",
+      "descriptionLabel": "Beskrivelse",
+      "howItWorksLabel": "Hvordan fungerer det?",
+      "estimatedTimeLabel": "Estimert tid",
+      "distanceLabel": "Avstand",
+      "difficultyLabel": "Vanskelighetsgrad",
+      "coverImageLabel": "Cover image URL",
+      "mapLatLabel": "Map Latitude",
+      "mapLngLabel": "Map Longitude",
+      "mapZoomLabel": "Map Zoom Level"
+    },
+    "stops": {
+      "addStop": "+ Legg til stopp",
+      "noStops": "Ingen stopp lagt til ennå. Klikk på knappen ovenfor for å legge til det første stoppet.",
+      "editStop": "Rediger",
+      "deleteStop": "Slett",
+      "stopOf": "Stopp {order} av {total}",
+      "images": "bilde(r)",
+      "audioIncluded": "Audio",
+      "modalTitle": "Legg til stopp",
+      "modalEditTitle": "Rediger stopp",
+      "cancelButton": "Avbryt",
+      "addButton": "Legg til stopp",
+      "updateButton": "Oppdater stopp",
+      "stopTitle": "Tittel",
+      "stopDescription": "Beskrivelse",
+      "stopLocationHint": "Stedshint",
+      "stopImages": "Bilder (URL-er, atskilt med komma)",
+      "stopLatitude": "Latitude",
+      "stopLongitude": "Longitude",
+      "stopAudioUrl": "Lyd-URL (valgfritt)",
+      "showAll": "Vis alle stopp",
+      "unlocked": "{unlocked} av {total} stopp låst opp"
+    },
+    "export": {
+      "status": {
+        "ready": "Turen er klar til eksport",
+        "incomplete": "Fyll inn alle påkrevde felt og legg til minst et stopp",
+        "titleRequired": "Tittel",
+        "stopsRequired": "Stopp"
+      },
+      "instructions": "Hvordan bruke eksportert kode:",
+      "step1": "Kopier koden eller last ned filen nedenfor",
+      "step2": "Åpne src/data/tours.ts",
+      "step3": "Legg til turen i tours-arrayen",
+      "step4": "Sørg for at alle bilde-URL-er er tilgjengelige",
+      "step5": "Test turen på siden din!",
+      "codeLabel": "Generert kode:",
+      "copyButton": "Kopier kode",
+      "copied": "Kopiert!",
+      "downloadButton": "Last ned som .ts fil",
+      "fileInfo": "Filinfo",
+      "fileName": "Filnavn",
+      "tourId": "Tour ID",
+      "stopCount": "Antall stopp"
+    }
+  },
+  "map": {
+      "latitudeLabel": "Breddegrad",
+      "longitudeLabel": "Lengdegrad",
+      "zoomLabel": "Zoomnivå",
+      "setLocation": "Angi posisjon",
+      "unlocked": "Låst opp",
+      "locked": "Låst"
+       }
+}

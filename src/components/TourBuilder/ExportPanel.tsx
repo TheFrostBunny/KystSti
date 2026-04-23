@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
+import Button from "@/components/ui/button";
 import type { Tour } from "@/data/tours";
 
 interface ExportPanelProps {
@@ -95,8 +95,8 @@ export default tour;
         animate={{ opacity: 1, y: 0 }}
         className={`rounded-xl border p-5 ${
           isValid
-            ? "bg-gradient-to-br from-primary/5 to-primary/10 border-primary/20"
-            : "bg-gradient-to-br from-accent/5 to-accent/10 border-accent/20"
+            ? "bg-linear-to-br from-primary/5 to-primary/10 border-primary/20"
+            : "bg-linear-to-br from-accent/5 to-accent/10 border-accent/20"
         }`}
       >
         <div className="flex items-start gap-4">

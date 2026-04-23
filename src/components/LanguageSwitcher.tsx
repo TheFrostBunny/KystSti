@@ -1,11 +1,17 @@
 import { useTranslation } from "@/context/LanguageContext";
-import { Button } from "@/components/ui/button";
+import Button from "@/components/ui/button";
+import React from "react";
 
-export function LanguageSwitcher() {
+interface LanguageSwitcherProps {
+  center?: boolean;
+  className?: string;
+}
+
+export function LanguageSwitcher({ center, className }: LanguageSwitcherProps) {
   const { language, setLanguage } = useTranslation();
 
-  return (
-    <div className="flex gap-1 bg-muted rounded-lg p-1">
+  const content = (
+    <div className={"flex gap-1 bg-muted rounded-lg p-1 " + (className || "")}> 
       <Button
         variant={language === "no" ? "default" : "ghost"}
         size="sm"
@@ -24,4 +30,8 @@ export function LanguageSwitcher() {
       </Button>
     </div>
   );
+  if (center) {
+    return <div className="flex justify-center">{content}</div>;
+  }
+  return content;
 }
