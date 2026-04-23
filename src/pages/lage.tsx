@@ -4,41 +4,45 @@ import { BottomNav } from "@/components/BottomNav";
 import { TourBuilderForm } from "@/components/TourBuilder/TourBuilderForm";
 import { StopManager } from "@/components/TourBuilder/StopManager";
 import { ExportPanel } from "@/components/TourBuilder/ExportPanel";
+import { useTranslation } from "@/context/LanguageContext";
 import type { Tour, TourStop } from "@/data/tours";
-
-const tabs = [
-  {
-    id: "tour" as const,
-    label: "Turdetaljer",
-    icon: (
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4">
-        <path fillRule="evenodd" d="M4.5 2A1.5 1.5 0 003 3.5v13A1.5 1.5 0 004.5 18h11a1.5 1.5 0 001.5-1.5V7.621a1.5 1.5 0 00-.44-1.06l-4.12-4.122A1.5 1.5 0 0011.378 2H4.5zm2.25 8.5a.75.75 0 000 1.5h6.5a.75.75 0 000-1.5h-6.5zm0 3a.75.75 0 000 1.5h6.5a.75.75 0 000-1.5h-6.5z" clipRule="evenodd" />
-      </svg>
-    ),
-  },
-  {
-    id: "stops" as const,
-    label: "Stopp",
-    icon: (
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4">
-        <path fillRule="evenodd" d="m9.69 18.933.003.001C9.89 19.02 10 19 10 19s.11.02.308-.066l.002-.001.006-.003.018-.008a5.741 5.741 0 00.281-.14c.186-.096.446-.24.757-.433.62-.384 1.445-.966 2.274-1.765C15.302 14.988 17 12.493 17 9A7 7 0 103 9c0 3.492 1.698 5.988 3.355 7.584a13.731 13.731 0 002.273 1.765 11.842 11.842 0 00.976.544l.062.029.018.008.006.003zM10 11.25a2.25 2.25 0 100-4.5 2.25 2.25 0 000 4.5z" clipRule="evenodd" />
-      </svg>
-    ),
-  },
-  {
-    id: "export" as const,
-    label: "Eksporter",
-    icon: (
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4">
-        <path d="M10.75 2.75a.75.75 0 00-1.5 0v8.614L6.295 8.235a.75.75 0 10-1.09 1.03l4.25 4.5a.75.75 0 001.09 0l4.25-4.5a.75.75 0 00-1.09-1.03l-2.955 3.129V2.75z" />
-        <path d="M3.5 12.75a.75.75 0 00-1.5 0v2.5A2.75 2.75 0 004.75 18h10.5A2.75 2.75 0 0018 15.25v-2.5a.75.75 0 00-1.5 0v2.5c0 .69-.56 1.25-1.25 1.25H4.75c-.69 0-1.25-.56-1.25-1.25v-2.5z" />
-      </svg>
-    ),
-  },
-];
+import { TourNavButtons } from "@/components/TourBuilder/TourNavButtons";
 
 export default function TourBuilderPage() {
   const [activeTab, setActiveTab] = useState<"tour" | "stops" | "export">("tour");
+  const { t } = useTranslation();
+
+
+  const tabs = [
+    {
+      id: "tour" as const,
+      label: t('tourBuilder.tabs.tourDetails'),
+      icon: (
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4">
+          <path fillRule="evenodd" d="M4.5 2A1.5 1.5 0 003 3.5v13A1.5 1.5 0 004.5 18h11a1.5 1.5 0 001.5-1.5V7.621a1.5 1.5 0 00-.44-1.06l-4.12-4.122A1.5 1.5 0 0011.378 2H4.5zm2.25 8.5a.75.75 0 000 1.5h6.5a.75.75 0 000-1.5h-6.5zm0 3a.75.75 0 000 1.5h6.5a.75.75 0 000-1.5h-6.5z" clipRule="evenodd" />
+        </svg>
+      ),
+    },
+    {
+      id: "stops" as const,
+      label: t('tourBuilder.tabs.stops'),
+      icon: (
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4">
+          <path fillRule="evenodd" d="m9.69 18.933.003.001C9.89 19.02 10 19 10 19s.11.02.308-.066l.002-.001.006-.003.018-.008a5.741 5.741 0 00.281-.14c.186-.096.446-.24.757-.433.62-.384 1.445-.966 2.274-1.765C15.302 14.988 17 12.493 17 9A7 7 0 103 9c0 3.492 1.698 5.988 3.355 7.584a13.731 13.731 0 002.273 1.765 11.842 11.842 0 00.976.544l.062.029.018.008.006.003zM10 11.25a2.25 2.25 0 100-4.5 2.25 2.25 0 000 4.5z" clipRule="evenodd" />
+        </svg>
+      ),
+    },
+    {
+      id: "export" as const,
+      label: t('tourBuilder.tabs.export'),
+      icon: (
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4">
+          <path d="M10.75 2.75a.75.75 0 00-1.5 0v8.614L6.295 8.235a.75.75 0 10-1.09 1.03l4.25 4.5a.75.75 0 001.09 0l4.25-4.5a.75.75 0 00-1.09-1.03l-2.955 3.129V2.75z" />
+          <path d="M3.5 12.75a.75.75 0 00-1.5 0v2.5A2.75 2.75 0 004.75 18h10.5A2.75 2.75 0 0018 15.25v-2.5a.75.75 0 00-1.5 0v2.5c0 .69-.56 1.25-1.25 1.25H4.75c-.69 0-1.25-.56-1.25-1.25v-2.5z" />
+        </svg>
+      ),
+    },
+  ];
   const [tourData, setTourData] = useState<Partial<Tour>>(() => {
     // Last fra localStorage ved første render
     const saved = localStorage.getItem("tourbuilder-data");
@@ -63,7 +67,6 @@ export default function TourBuilderPage() {
     };
   });
 
-  // Lagre til localStorage hver gang tourData endres
   useEffect(() => {
     localStorage.setItem("tourbuilder-data", JSON.stringify(tourData));
   }, [tourData]);
@@ -116,19 +119,18 @@ export default function TourBuilderPage() {
             </div>
             <div className="flex-1 min-w-0">
               <h1 className="font-display text-2xl lg:text-3xl font-bold text-balance">
-                Lag din egen tur
+                {t('tourBuilder.createYourOwnTour')}
               </h1>
               <p className="text-muted-foreground mt-1">
-                Opprett en interaktiv tur med stopp, bilder og QR-koder
+                {t('tourBuilder.subtitle')}
               </p>
             </div>
           </div>
-          
-          {/* Progress indicator */}
+    
           <div className="mt-6">
             <div className="flex items-center justify-between text-xs text-muted-foreground mb-2">
-              <span>Fremgang</span>
-              <span>{completedSteps}/4 fullfort</span>
+              <span>{t('common.progress')}</span>
+              <span>{completedSteps}/4 {t('common.completed')}</span>
             </div>
             <div className="h-2 rounded-full bg-muted overflow-hidden">
               <motion.div
@@ -195,8 +197,8 @@ export default function TourBuilderPage() {
                       {tabs[0].icon}
                     </div>
                     <div>
-                      <h2 className="font-display text-xl font-semibold">Turdetaljer</h2>
-                      <p className="text-sm text-muted-foreground">Fyll ut informasjon om turen</p>
+                      <h2 className="font-display text-xl font-semibold">{t('tourBuilder.tourDetails')}</h2>
+                      <p className="text-sm text-muted-foreground">{t('tourBuilder.fillOutTourInfo')}</p>
                     </div>
                   </div>
                   <TourBuilderForm tourData={tourData} onChange={handleTourChange} />
@@ -217,40 +219,19 @@ export default function TourBuilderPage() {
         </div>
       </main>
 
-      {/* Navigation hints */}
-      <div className="fixed bottom-20 left-0 right-0 px-4 pb-4 pointer-events-none">
+      <div className="fixed bottom-20 left-0 right-0 px-4 pb-4 pointer-events-none sm:hidden">
         <div className="mx-auto max-w-4xl">
           <div className="flex justify-between pointer-events-auto">
-            {activeTab !== "tour" && (
-              <motion.button
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                onClick={() => setActiveTab(activeTab === "export" ? "stops" : "tour")}
-                className="flex items-center gap-1.5 rounded-full bg-card border px-4 py-2 text-sm font-medium shadow-lg hover:shadow-xl transition-shadow"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="h-4 w-4">
-                  <path fillRule="evenodd" d="M14 8a.75.75 0 0 1-.75.75H4.56l3.22 3.22a.75.75 0 1 1-1.06 1.06l-4.5-4.5a.75.75 0 0 1 0-1.06l4.5-4.5a.75.75 0 0 1 1.06 1.06L4.56 7.25h8.69A.75.75 0 0 1 14 8Z" clipRule="evenodd" />
-                </svg>
-                Forrige
-              </motion.button>
-            )}
-            <div /> {/* Spacer */}
-            {activeTab !== "export" && (
-              <motion.button
-                initial={{ opacity: 0, x: 10 }}
-                animate={{ opacity: 1, x: 0 }}
-                onClick={() => setActiveTab(activeTab === "tour" ? "stops" : "export")}
-                className="flex items-center gap-1.5 rounded-full bg-primary text-primary-foreground px-4 py-2 text-sm font-medium shadow-lg hover:shadow-xl transition-shadow"
-              >
-                Neste
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="h-4 w-4">
-                  <path fillRule="evenodd" d="M2 8a.75.75 0 0 1 .75-.75h8.69L8.22 4.03a.75.75 0 0 1 1.06-1.06l4.5 4.5a.75.75 0 0 1 0 1.06l-4.5 4.5a.75.75 0 0 1-1.06-1.06l3.22-3.22H2.75A.75.75 0 0 1 2 8Z" clipRule="evenodd" />
-                </svg>
-              </motion.button>
-            )}
+            <TourNavButtons
+              activeTab={activeTab}
+              setActiveTab={setActiveTab}
+              prevLabel={t('common.previous')}
+              nextLabel={t('common.next')}
+            />
           </div>
         </div>
       </div>
+
 
       <BottomNav />
     </div>

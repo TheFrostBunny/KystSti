@@ -1,20 +1,32 @@
+import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useTour } from "@/context/TourContext";
 import { useTranslation } from "@/context/LanguageContext";
 import { cn } from "@/lib/utils";
 import { appConfig } from "@/config";
 
+
+type NavItem = {
+  to: string;
+  label: any;
+  icon: React.FC<{ className?: string }>;
+  exact?: boolean;
+  matchPaths?: string[];
+  highlight?: boolean;
+  disabled?: boolean;
+};
+
 export function BottomNav() {
   const location = useLocation();
   const { currentTourId } = useTour();
   const { t } = useTranslation();
 
-  const baseNavItems = [
+  const baseNavItems: NavItem[] = [
     { to: "/", label: t('nav.home'), icon: HomeIcon, exact: true },
     { to: "/stopp", label: t('nav.stops'), icon: RouteIcon, matchPaths: ["/tur", "/stopp"] },
     { to: "/kart", label: t('nav.map'), icon: MapIcon },
     { to: "/skann", label: t('nav.scan'), icon: QrCodeIcon, highlight: true },
-    { to: "/lage", label: "Lag tur", icon: PlusIcon },
+    { to: "/lage", label: t('nav.createTour'), icon: PlusIcon },
     { to: "/om", label: t('nav.about'), icon: InfoIcon },
   ];
 
@@ -36,7 +48,7 @@ export function BottomNav() {
   }).filter(item => {
     if (item.label === t('nav.map') && item.disabled) return false;
     if (item.label === t('nav.scan') && !appConfig.enableQrScanner) return false;
-    if (item.label === "Lag tur" && !appConfig.enableTourBuilder) return false;
+    if (item.label === t('nav.createTour') && !appConfig.enableTourBuilder) return false;
     return true;
   });
 
@@ -55,7 +67,7 @@ export function BottomNav() {
               <Link
                 key={item.to}
                 to={item.to}
-                className="flex flex-col items-center gap-0.5 min-w-[3.5rem]"
+                className="flex flex-col items-center gap-0.5 min-w-14"
               >
                 <div className={cn(
                   "flex h-10 w-10 items-center justify-center rounded-full transition-colors",
@@ -78,7 +90,7 @@ export function BottomNav() {
               key={item.to}
               to={item.to}
               className={cn(
-                "flex flex-col items-center gap-0.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-colors min-w-[3.5rem]",
+                "flex flex-col items-center gap-0.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-colors min-w-14",
                 active
                   ? "text-primary"
                   : "text-muted-foreground hover:text-foreground"

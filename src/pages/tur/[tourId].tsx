@@ -1,15 +1,17 @@
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { getTourById, uiText } from "@/data/tours";
+import { useTranslation } from "@/context/LanguageContext";
 import { useTour } from "@/context/TourContext";
 import { BottomNav } from "@/components/BottomNav";
-import { Button } from "@/components/ui/button";
+import Button from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 
 export default function TourDetailPage() {
   const { tourId } = useParams<{ tourId: string }>();
   const navigate = useNavigate();
   const { setCurrentTour, getProgress, currentTourId } = useTour();
+  const { t } = useTranslation();
   const tour = tourId ? getTourById(tourId) : null;
 
   if (!tour) {
@@ -32,6 +34,8 @@ export default function TourDetailPage() {
   const progress = getProgress();
   const progressPercent = progress.total > 0 ? (progress.unlocked / progress.total) * 100 : 0;
 
+  const stopsText = tour ? (t("stops.stopCount", { count: tour.stops.length }) || `${tour.stops.length} stopp`) : "";
+
   return (
     <div className="flex min-h-screen flex-col pb-20">
       {/* Hero Image */}
@@ -42,7 +46,7 @@ export default function TourDetailPage() {
           className="w-full h-full object-cover"
           crossOrigin="anonymous"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
+        <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/30 to-transparent" />
         <button
           onClick={() => navigate("/turer")}
           className="absolute top-4 left-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm text-white"
@@ -91,7 +95,7 @@ export default function TourDetailPage() {
             </div>
             <div className="flex items-center gap-1.5 text-muted-foreground">
               <MapPinIcon className="h-4 w-4" />
-              {tour.stops.length} stopp
+              {stopsText}
             </div>
           </div>
         </motion.div>

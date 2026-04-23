@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import type { Tour } from "@/data/tours";
+import { useTranslation } from "@/context/LanguageContext";
 
 interface TourBuilderFormProps {
   tourData: Partial<Tour>;
@@ -70,8 +71,8 @@ export function TourBuilderForm({ tourData, onChange }: TourBuilderFormProps) {
   const [latError, setLatError] = useState<string | null>(null);
   const [lngError, setLngError] = useState<string | null>(null);
   const mapRef = useRef<HTMLIFrameElement>(null);
+  const { t } = useTranslation();
 
-  // LocalStorage: last og lagre tourData
   useEffect(() => {
     const saved = localStorage.getItem("tourbuilder-data");
     if (saved) {
@@ -82,7 +83,6 @@ export function TourBuilderForm({ tourData, onChange }: TourBuilderFormProps) {
         }
       } catch {}
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   useEffect(() => {
     localStorage.setItem("tourbuilder-data", JSON.stringify(tourData));
@@ -137,18 +137,18 @@ export function TourBuilderForm({ tourData, onChange }: TourBuilderFormProps) {
         </div>
         <div className="flex-1 min-w-0">
           <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
-            Tour ID (genereres automatisk)
+            {t('tourBuilder.tourId')} ({t('tourBuilder.generatedAutomatically')})
           </p>
           <p className="font-mono text-sm font-medium truncate mt-0.5">
-            {tourData.id || "din-tur-id"}
+            {tourData.id || t('tourBuilder.yourTourId')}
           </p>
         </div>
       </motion.div>
 
       {/* Basic Info */}
       <FormSection
-        title="Grunnleggende informasjon"
-        description="Gi turen et navn og en beskrivelse"
+        title={t('tourBuilder.basicInfo')}
+        description={t('tourBuilder.basicInfoDescription')}
         icon={
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="h-4 w-4">
             <path d="M8 2a.75.75 0 0 1 .75.75v1.69l2.22-2.22a.75.75 0 0 1 1.06 1.06L9.81 5.5h1.69a.75.75 0 0 1 0 1.5H2.75a.75.75 0 0 1 0-1.5h1.69L2.22 3.28a.75.75 0 0 1 1.06-1.06l2.22 2.22V2.75A.75.75 0 0 1 8 2ZM2 9.25a.75.75 0 0 1 .75-.75h10.5a.75.75 0 0 1 0 1.5H2.75A.75.75 0 0 1 2 9.25ZM2.75 12a.75.75 0 0 0 0 1.5h10.5a.75.75 0 0 0 0-1.5H2.75Z" />
@@ -156,31 +156,31 @@ export function TourBuilderForm({ tourData, onChange }: TourBuilderFormProps) {
         }
       >
         <div className="space-y-4">
-          <InputField label="Tittel" required hint="Navnet som vises for brukerne">
+          <InputField label={t('tourBuilder.title')} required hint={t('tourBuilder.titleHint')}>
             <input
               type="text"
               value={tourData.title || ""}
               onChange={(e) => handleTitleChange(e.target.value)}
-              placeholder="f.eks. Kristiansund Byvandring"
+              placeholder={t('tourBuilder.titlePlaceholder')}
               className={inputClasses}
             />
           </InputField>
 
-          <InputField label="Undertittel" required hint="En kort og fengende tagline">
+          <InputField label={t('tourBuilder.subtitle')} required hint={t('tourBuilder.subtitleHint')}>
             <input
               type="text"
               value={tourData.subtitle || ""}
               onChange={(e) => onChange({ subtitle: e.target.value })}
-              placeholder="f.eks. Opplev byen mellom havene"
+              placeholder={t('tourBuilder.subtitlePlaceholder')}
               className={inputClasses}
             />
           </InputField>
 
-          <InputField label="Beskrivelse" required hint="Beskriv hva brukerne kan forvente">
+          <InputField label={t('tourBuilder.description')} required hint={t('tourBuilder.descriptionHint')}>
             <textarea
               value={tourData.description || ""}
               onChange={(e) => onChange({ description: e.target.value })}
-              placeholder="En detaljert beskrivelse av turen..."
+              placeholder={t('tourBuilder.descriptionPlaceholder')}
               rows={4}
               className={textareaClasses}
             />
@@ -190,19 +190,19 @@ export function TourBuilderForm({ tourData, onChange }: TourBuilderFormProps) {
 
       {/* Instructions */}
       <FormSection
-        title="Instruksjoner"
-        description="Forklar hvordan turen fungerer"
+        title={t('tourBuilder.instructions')}
+        description={t('tourBuilder.instructionsDescription')}
         icon={
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="h-4 w-4">
             <path fillRule="evenodd" d="M15 8A7 7 0 1 1 1 8a7 7 0 0 1 14 0ZM9 5a1 1 0 1 1-2 0 1 1 0 0 1 2 0ZM6.75 8a.75.75 0 0 0 0 1.5h.75v1.75a.75.75 0 0 0 1.5 0v-2.5A.75.75 0 0 0 8.25 8h-1.5Z" clipRule="evenodd" />
           </svg>
         }
       >
-        <InputField label="Hvordan fungerer det?" required hint="Instruksjoner for brukerne">
+        <InputField label={t('tourBuilder.howItWorks')} required hint={t('tourBuilder.howItWorksHint')}>
           <textarea
             value={tourData.howItWorks || ""}
             onChange={(e) => onChange({ howItWorks: e.target.value })}
-            placeholder="Finn QR-kodene ved hvert stopp for a lase opp historier..."
+            placeholder={t('tourBuilder.howItWorksPlaceholder')}
             rows={3}
             className={textareaClasses}
           />
@@ -211,8 +211,8 @@ export function TourBuilderForm({ tourData, onChange }: TourBuilderFormProps) {
 
       {/* Tour Details */}
       <FormSection
-        title="Turdetaljer"
-        description="Praktisk informasjon om turen"
+        title={t('tourBuilder.tourDetails')}
+        description={t('tourBuilder.tourDetailsDescription')}
         icon={
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="h-4 w-4">
             <path fillRule="evenodd" d="M5 4a.75.75 0 0 1 .738.616l.252 1.388A1.25 1.25 0 0 0 6.996 7.01l1.388.252a.75.75 0 0 1 0 1.476l-1.388.252A1.25 1.25 0 0 0 5.99 9.996l-.252 1.388a.75.75 0 0 1-1.476 0L4.01 9.996A1.25 1.25 0 0 0 3.004 8.99l-1.388-.252a.75.75 0 0 1 0-1.476l1.388-.252A1.25 1.25 0 0 0 4.01 6.004l.252-1.388A.75.75 0 0 1 5 4ZM12 1a.75.75 0 0 1 .721.544l.195.682c.118.415.443.74.858.858l.682.195a.75.75 0 0 1 0 1.442l-.682.195a1.25 1.25 0 0 0-.858.858l-.195.682a.75.75 0 0 1-1.442 0l-.195-.682a1.25 1.25 0 0 0-.858-.858l-.682-.195a.75.75 0 0 1 0-1.442l.682-.195a1.25 1.25 0 0 0 .858-.858l.195-.682A.75.75 0 0 1 12 1ZM10 11a.75.75 0 0 1 .728.568l.258 1.022c.118.47.478.83.948.948l1.022.258a.75.75 0 0 1 0 1.456l-1.022.258a1.25 1.25 0 0 0-.948.948l-.258 1.022a.75.75 0 0 1-1.456 0l-.258-1.022a1.25 1.25 0 0 0-.948-.948l-1.022-.258a.75.75 0 0 1 0-1.456l1.022-.258a1.25 1.25 0 0 0 .948-.948l.258-1.022A.75.75 0 0 1 10 11Z" clipRule="evenodd" />
@@ -220,29 +220,29 @@ export function TourBuilderForm({ tourData, onChange }: TourBuilderFormProps) {
         }
       >
         <div className="grid gap-4 sm:grid-cols-2">
-          <InputField label="Estimert tid" required>
+          <InputField label={t('tourBuilder.estimatedTime')} required>
             <input
               type="text"
               value={tourData.estimatedTime || ""}
               onChange={(e) => onChange({ estimatedTime: e.target.value })}
-              placeholder="f.eks. 1-1.5 timer"
+              placeholder={t('tourBuilder.estimatedTimePlaceholder')}
               className={inputClasses}
             />
           </InputField>
 
-          <InputField label="Avstand" required>
+          <InputField label={t('tourBuilder.distance')} required>
             <input
               type="text"
               value={tourData.distance || ""}
               onChange={(e) => onChange({ distance: e.target.value })}
-              placeholder="f.eks. 2.5 km"
+              placeholder={t('tourBuilder.distancePlaceholder')}
               className={inputClasses}
             />
           </InputField>
         </div>
 
         <div className="mt-4">
-          <InputField label="Vanskelighetsgrad" required>
+          <InputField label={t('tourBuilder.difficulty')} required>
             <div className="grid grid-cols-3 gap-2">
               {(["lett", "moderat", "krevende"] as const).map((level) => (
                 <button
@@ -271,7 +271,7 @@ export function TourBuilderForm({ tourData, onChange }: TourBuilderFormProps) {
                         <path fillRule="evenodd" d="M8 1.75a.75.75 0 0 1 .692.462l1.41 3.393 3.664.293a.75.75 0 0 1 .428 1.317l-2.791 2.39.853 3.575a.75.75 0 0 1-1.12.814L7.998 12.08l-3.134 1.915a.75.75 0 0 1-1.12-.814l.852-3.574-2.79-2.39a.75.75 0 0 1 .427-1.318l3.663-.293 1.41-3.393A.75.75 0 0 1 8 1.75Z" clipRule="evenodd" />
                       </svg>
                     )}
-                    {level.charAt(0).toUpperCase() + level.slice(1)}
+                    {t(`tourBuilder.difficultyLevels.${level}`)}
                   </span>
                 </button>
               ))}
@@ -282,20 +282,20 @@ export function TourBuilderForm({ tourData, onChange }: TourBuilderFormProps) {
 
       {/* Cover Image */}
       <FormSection
-        title="Coverbilde"
-        description="Et bilde som representerer turen"
+        title={t('tourBuilder.coverImage')}
+        description={t('tourBuilder.coverImageDescription')}
         icon={
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="h-4 w-4">
             <path fillRule="evenodd" d="M2 4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V4Zm10.5 5.707a.5.5 0 0 0-.146-.353l-1-1a.5.5 0 0 0-.708 0L9.354 9.646a.5.5 0 0 1-.708 0L6.354 7.354a.5.5 0 0 0-.708 0L3.5 9.5V4a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v5.707ZM12 5a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z" clipRule="evenodd" />
           </svg>
         }
       >
-        <InputField label="Bilde-URL" required hint="Link til et bilde (f.eks. fra Unsplash)">
+        <InputField label={t('tourBuilder.coverImageUrl')} required hint={t('tourBuilder.coverImageHint')}>
           <input
             type="url"
             value={tourData.coverImage || ""}
             onChange={(e) => onChange({ coverImage: e.target.value })}
-            placeholder="https://images.unsplash.com/..."
+            placeholder={t('tourBuilder.coverImagePlaceholder')}
             className={inputClasses}
           />
         </InputField>
@@ -317,8 +317,8 @@ export function TourBuilderForm({ tourData, onChange }: TourBuilderFormProps) {
 
       {/* Map Settings */}
       <FormSection
-        title="Kartinnstillinger"
-        description="Standard kartvisning for turen"
+        title={t('tourBuilder.mapSettings')}
+        description={t('tourBuilder.mapSettingsDescription')}
         icon={
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="h-4 w-4">
             <path fillRule="evenodd" d="m7.539 14.841.003.003.002.002a.755.755 0 0 0 .912 0l.002-.002.003-.003.012-.009a5.57 5.57 0 0 0 .19-.153 15.588 15.588 0 0 0 2.046-2.082c1.101-1.362 2.291-3.342 2.291-5.597A5 5 0 0 0 3 7c0 2.255 1.19 4.235 2.292 5.597a15.591 15.591 0 0 0 2.046 2.082 8.916 8.916 0 0 0 .189.153l.012.01ZM8 8.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z" clipRule="evenodd" />
@@ -326,7 +326,7 @@ export function TourBuilderForm({ tourData, onChange }: TourBuilderFormProps) {
         }
       >
         <div className="grid gap-4 sm:grid-cols-2">
-          <InputField label="Latitude" required hint="Breddegrad (nord/sør, -90 til 90)">
+          <InputField label={t('tourBuilder.latitude')} required hint={t('tourBuilder.latitudeHint')}>
             <input
               type="number"
               step="0.0001"
@@ -334,7 +334,7 @@ export function TourBuilderForm({ tourData, onChange }: TourBuilderFormProps) {
               onChange={(e) => {
                 const val = parseFloat(e.target.value);
                 if (isNaN(val) || val < -90 || val > 90) {
-                  setLatError("Ugyldig breddegrad (må være mellom -90 og 90)");
+                  setLatError(t('tourBuilder.invalidLatitude'));
                 } else {
                   setLatError(null);
                   onChange({
@@ -350,7 +350,7 @@ export function TourBuilderForm({ tourData, onChange }: TourBuilderFormProps) {
             />
             {latError && <div className="text-xs text-destructive mt-1">{latError}</div>}
           </InputField>
-          <InputField label="Longitude" required hint="Lengdegrad (øst/vest, -180 til 180)">
+          <InputField label={t('tourBuilder.longitude')} required hint={t('tourBuilder.longitudeHint')}>
             <input
               type="number"
               step="0.0001"
@@ -358,7 +358,7 @@ export function TourBuilderForm({ tourData, onChange }: TourBuilderFormProps) {
               onChange={(e) => {
                 const val = parseFloat(e.target.value);
                 if (isNaN(val) || val < -180 || val > 180) {
-                  setLngError("Ugyldig lengdegrad (må være mellom -180 og 180)");
+                  setLngError(t('tourBuilder.invalidLongitude'));
                 } else {
                   setLngError(null);
                   onChange({
@@ -421,7 +421,7 @@ export function TourBuilderForm({ tourData, onChange }: TourBuilderFormProps) {
         )}
 
         <div className="mt-4">
-          <InputField label={`Zoom-niva: ${tourData.mapZoom || 15}`} hint="Hvor nart kartet skal zoomes inn">
+          <InputField label={t('tourBuilder.zoomLevel', { zoom: tourData.mapZoom || 15 })} hint={t('tourBuilder.zoomLevelHint')}>
             <div className="flex items-center gap-3">
               <span className="text-xs text-muted-foreground">1</span>
               <input

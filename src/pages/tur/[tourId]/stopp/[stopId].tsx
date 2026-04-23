@@ -4,11 +4,13 @@ import { useState, useEffect } from "react";
 import { getTourById, getStopById, uiText } from "@/data/tours";
 import { useTour } from "@/context/TourContext";
 import { BottomNav } from "@/components/BottomNav";
-import { Button } from "@/components/ui/button";
+import Button from "@/components/ui/button";
 import { AudioPlayer } from "@/components/AudioPlayer";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "@/context/LanguageContext";
 
 export default function StopDetailPage() {
+  const { t } = useTranslation();
   const { tourId, stopId } = useParams<{ tourId: string; stopId: string }>();
   const navigate = useNavigate();
   const { isStopUnlocked, unlockStop } = useTour();
@@ -29,10 +31,10 @@ export default function StopDetailPage() {
   if (!tour || !stop) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center p-6 text-center">
-        <h1 className="font-display text-2xl font-bold">{uiText.stopNotFound}</h1>
-        <p className="mt-2 text-muted-foreground">{uiText.stopNotFoundDesc}</p>
+        <h1 className="font-display text-2xl font-bold">{t("tourBuilder.stopNotFound")}</h1>
+        <p className="mt-2 text-muted-foreground">{t("tourBuilder.stopNotFoundDesc")}</p>
         <Button asChild className="mt-4">
-          <Link to="/turer">Se alle turer</Link>
+          <Link to="/turer">{t("tourBuilder.seAlleTurer")}</Link>
         </Button>
       </div>
     );
@@ -68,6 +70,9 @@ export default function StopDetailPage() {
 
   const distance = calculateDistance();
 
+  // Gjør stop-nummer-teksten enklere å bruke i JSX
+  const stopOfTotalText = t("stops.stopOfTotal", { order: stop.order, total: tour.stops.length }) || `Stop ${stop.order} of ${tour.stops.length}`;
+
   return (
     <div className="flex min-h-screen flex-col bg-background">
       {/* Header */}
@@ -98,7 +103,7 @@ export default function StopDetailPage() {
                 key={currentImageIndex}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="relative overflow-hidden rounded-2xl bg-muted aspect-video lg:aspect-auto lg:h-[500px]"
+                className="relative overflow-hidden rounded-2xl bg-muted aspect-video lg:aspect-auto lg:h-125"
               >
                 <img
                   src={stop.images[currentImageIndex]}
@@ -116,7 +121,7 @@ export default function StopDetailPage() {
                       key={index}
                       onClick={() => setCurrentImageIndex(index)}
                       className={cn(
-                        "h-20 w-20 flex-shrink-0 rounded-lg overflow-hidden border-2 transition-all hover:border-muted-foreground",
+                        "h-20 w-20 shrink-0 rounded-lg overflow-hidden border-2 transition-all hover:border-muted-foreground",
                         currentImageIndex === index
                           ? "border-primary"
                           : "border-muted"
@@ -138,9 +143,6 @@ export default function StopDetailPage() {
             <div className="space-y-4 lg:sticky lg:top-20 lg:h-fit">
               {/* Stop Header */}
               <div>
-                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
-                  {uiText.stopOfTotal(stop.order, tour.stops.length)}
-                </p>
                 <h2 className="font-display text-2xl lg:text-3xl font-bold mt-2">{stop.title}</h2>
               </div>
 
@@ -162,7 +164,7 @@ export default function StopDetailPage() {
                 className="rounded-xl bg-card border p-4 space-y-2"
               >
                 <p className="text-xs font-semibold text-muted-foreground uppercase">
-                  Om stedet
+                  {t("tourBuilder.aboutStop")}
                 </p>
                 <p className="text-sm leading-relaxed text-foreground">{stop.description}</p>
               </motion.div>
@@ -177,13 +179,13 @@ export default function StopDetailPage() {
                 <div className="flex items-center gap-2 mb-3">
                   <MapPinIcon className="h-4 w-4 text-primary" />
                   <span className="text-xs font-semibold text-muted-foreground uppercase">
-                    Posisjon
+                    {t("tourBuilder.position")}
                   </span>
                 </div>
                 
                 {distance !== null && (
                   <p className="text-sm mb-3 text-muted-foreground">
-                    {uiText.distanceLabel(distance)}
+                    {t("tourBuilder.distanceLabel", { distance: distance.toFixed(2) })}
                   </p>
                 )}
 
@@ -195,7 +197,7 @@ export default function StopDetailPage() {
                     disabled={loadingLocation}
                     className="w-full"
                   >
-                    {loadingLocation ? uiText.fetchingLocation : uiText.showDistance}
+                    {loadingLocation ? t("tourBuilder.fetchingLocation") : t("tourBuilder.showDistance")}
                   </Button>
                   <Button
                     variant="outline"
@@ -208,7 +210,7 @@ export default function StopDetailPage() {
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      {uiText.openInMaps}
+                      {t("tourBuilder.openInMaps")}
                     </a>
                   </Button>
                 </div>
@@ -223,7 +225,7 @@ export default function StopDetailPage() {
                   className="rounded-xl border bg-muted/50 p-4"
                 >
                   <p className="text-xs font-semibold text-muted-foreground uppercase">
-                    {uiText.nextStopLabel}
+                    {t("tourBuilder.nextStopLabel")}
                   </p>
                   <p className="mt-2 font-display text-lg font-bold">{nextStop.title}</p>
                   {nextStop.locationHint && (
@@ -240,7 +242,7 @@ export default function StopDetailPage() {
                   size="sm"
                   className="w-full"
                 >
-                  <Link to={`/tur/${tour.id}/stopp`}>Tilbake til stopp</Link>
+                  <Link to={`/tur/${tour.id}/stopp`}>{t("tourBuilder.backToStops")}</Link>
                 </Button>
               </div>
             </div>

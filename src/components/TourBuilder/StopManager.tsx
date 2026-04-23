@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence, Reorder } from "framer-motion";
-import { Button } from "@/components/ui/button";
+import Button from "@/components/ui/button";
 import type { TourStop } from "@/data/tours";
+import { useTranslation } from "@/context/LanguageContext";
 
 import QRCode from "react-qr-code";
 
@@ -71,6 +72,7 @@ function AddressSearch({ onSelect }: { onSelect: (lat: number, lng: number) => v
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<NominatimResult[]>([]);
   const [loading, setLoading] = useState(false);
+  const { t } = useTranslation();
 
   const handleSearch = async (searchQuery: string) => {
     if (!searchQuery) return;
@@ -100,7 +102,7 @@ function AddressSearch({ onSelect }: { onSelect: (lat: number, lng: number) => v
               handleSearch(e.target.value);
             }
           }}
-          placeholder="Søk etter adresse..."
+          placeholder={t("tourBuilder.form.searchLocationPlaceholder")}
           className="flex-1 px-3 py-2 rounded-lg border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
         />
         <Button type="button" size="sm" variant="secondary" onClick={() => handleSearch(query)} disabled={loading}>
@@ -149,6 +151,7 @@ function StopForm({
   onSave: (stop: TourStop) => void;
   onCancel: () => void;
 }) {
+  const { t } = useTranslation();
   const [formData, setFormData] = useState<Partial<TourStop>>(
     stop || {
       id: "",
@@ -207,13 +210,13 @@ function StopForm({
             {index + 1}
           </div>
           <h3 className="font-display text-lg font-semibold">
-            {stop ? "Rediger stopp" : "Nytt stopp"}
+            {stop ? t("tourBuilder.modalEditTitle") : t("tourBuilder.modalTitle")}
           </h3>
         </div>
 
         <div className="grid gap-4">
           <div>
-            <label className="block text-sm font-medium mb-1.5">Tittel *</label>
+            <label className="block text-sm font-medium mb-1.5">{t("tourBuilder.form.titleLabel")} *</label>
             <input
               type="text"
               value={formData.title || ""}
@@ -230,35 +233,35 @@ function StopForm({
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1.5">Beskrivelse *</label>
+            <label className="block text-sm font-medium mb-1.5">{t("tourBuilder.form.descriptionLabel")} *</label>
             <textarea
               value={formData.description || ""}
               onChange={(e) => setFormData((prev) => ({ ...prev, description: e.target.value }))}
-              placeholder="Beskriv stoppet..."
+              placeholder={t("tourBuilder.form.descriptionPlaceholder")}
               rows={3}
               className="w-full px-3 py-2 rounded-lg border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 resize-none"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1.5">Lokasjonshint</label>
+            <label className="block text-sm font-medium mb-1.5">{t("tourBuilder.form.locationHintLabel")}</label>
             <input
               type="text"
               value={formData.locationHint || ""}
               onChange={(e) => setFormData((prev) => ({ ...prev, locationHint: e.target.value }))}
-              placeholder="f.eks. Ved kirken pa Kirkelandet"
+              placeholder={t("tourBuilder.form.locationHintPlaceholder")}
               className="w-full px-3 py-2 rounded-lg border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1.5">Posisjon</label>
+            <label className="block text-sm font-medium mb-1.5">{t("tourBuilder.form.positionLabel")}</label>
             <AddressSearch
               onSelect={(lat, lng) => setFormData((prev) => ({ ...prev, lat, lng }))}
             />
             <div className="grid grid-cols-2 gap-2 mt-2">
               <div className="flex items-center gap-2">
-                <span className="text-xs text-muted-foreground">Lat:</span>
+                <span className="text-xs text-muted-foreground">{t("tourBuilder.form.mapLatLabel")}:</span>
                 <input
                   type="number"
                   step="0.0001"
@@ -268,7 +271,7 @@ function StopForm({
                 />
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-xs text-muted-foreground">Lng:</span>
+                <span className="text-xs text-muted-foreground">{t("tourBuilder.form.mapLngLabel")}:</span>
                 <input
                   type="number"
                   step="0.0001"
@@ -296,7 +299,7 @@ function StopForm({
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1.5">Bilder</label>
+            <label className="block text-sm font-medium mb-1.5">{t("tourBuilder.form.imagesLabel")}</label>
             <div className="flex gap-2">
               <input
                 type="url"
@@ -333,12 +336,12 @@ function StopForm({
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1.5">Audio URL (valgfritt)</label>
+            <label className="block text-sm font-medium mb-1.5">{t("tourBuilder.form.audioUrlLabel")}</label>
             <input
               type="url"
               value={formData.audioUrl || ""}
               onChange={(e) => setFormData((prev) => ({ ...prev, audioUrl: e.target.value }))}
-              placeholder="/audio/mitt-stopp.mp3"
+              placeholder={t("tourBuilder.form.audioUrlPlaceholder")}
               className="w-full px-3 py-2 rounded-lg border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
             />
           </div>
@@ -346,10 +349,10 @@ function StopForm({
 
         <div className="flex gap-2 pt-2">
           <Button onClick={handleSubmit} disabled={!formData.title} className="flex-1">
-            {stop ? "Lagre endringer" : "Legg til stopp"}
+            {stop ? t("common.saveChanges") : t("common.addStop")}
           </Button>
           <Button variant="outline" onClick={onCancel}>
-            Avbryt
+            {t("common.cancel")}
           </Button>
         </div>
       </div>
@@ -358,24 +361,22 @@ function StopForm({
 }
 
 export function StopManager({ stops, tourId, onAdd, onUpdate, onDelete }: StopManagerProps) {
-  // Hvis tourId mangler, vis advarsel og blokker QR-koder
+  const { t } = useTranslation();
   if (!tourId) {
     return (
       <div className="p-4 border rounded-xl bg-card text-center text-destructive">
-        <div className="font-semibold mb-2">Du må legge inn en Tittel*</div>
-        <div className="text-sm text-muted-foreground">Gå til "Turdetaljer" og fyll inn Tittel.</div>
+        <div className="font-semibold mb-2">{t("tourBuilder.missingTitle")}</div>
+        <div className="text-sm text-muted-foreground">{t("tourBuilder.goToTourDetails")}</div>
       </div>
     );
   }
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [isAdding, setIsAdding] = useState(false);
 
-  // Lagre stopp til localStorage hver gang stops endres
   useEffect(() => {
     localStorage.setItem("tourbuilder-stops", JSON.stringify(stops));
   }, [stops]);
 
-  // Last stopp fra localStorage ved første render hvis tomt
   useEffect(() => {
     if ((!stops || stops.length === 0) && typeof window !== "undefined") {
       const saved = localStorage.getItem("tourbuilder-stops");
@@ -388,7 +389,6 @@ export function StopManager({ stops, tourId, onAdd, onUpdate, onDelete }: StopMa
         } catch {}
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleAdd = (stop: TourStop) => {
@@ -408,8 +408,8 @@ export function StopManager({ stops, tourId, onAdd, onUpdate, onDelete }: StopMa
           <h2 className="font-display text-xl font-semibold">Stopp</h2>
           <p className="text-sm text-muted-foreground mt-0.5">
             {stops.length === 0
-              ? "Ingen stopp lagt til enna"
-              : `${stops.length} stopp i turen`}
+              ? t("tourBuilder.addFirstStopHelper")
+              : `${stops.length} ${t("tourBuilder.stops")} i turen`}
           </p>
         </div>
         {!isAdding && editingIndex === null && (
@@ -417,7 +417,7 @@ export function StopManager({ stops, tourId, onAdd, onUpdate, onDelete }: StopMa
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4 mr-1.5">
               <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
             </svg>
-            Legg til stopp
+            {t("tourBuilder.addStop")}
           </Button>
         )}
       </div>
@@ -435,15 +435,15 @@ export function StopManager({ stops, tourId, onAdd, onUpdate, onDelete }: StopMa
               <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
             </svg>
           </div>
-          <h3 className="font-medium">Ingen stopp enna</h3>
+          <h3 className="font-medium">{t("tourBuilder.noStopsYet")}</h3>
           <p className="text-sm text-muted-foreground mt-1">
-            Legg til ditt forste stopp for a komme i gang.
+            {t("tourBuilder.addFirstStopHelper")}
           </p>
           <Button onClick={() => setIsAdding(true)} size="sm" className="mt-4">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4 mr-1.5">
               <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
             </svg>
-            Legg til første stopp
+            {t("tourBuilder.addFirstStop")}
           </Button>
         </motion.div>
       )}
