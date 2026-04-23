@@ -11,7 +11,7 @@ export default function TourDetailPage() {
   const { tourId } = useParams<{ tourId: string }>();
   const navigate = useNavigate();
   const { setCurrentTour, getProgress, currentTourId } = useTour();
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
   const tour = tourId ? getTourById(tourId) : null;
 
   if (!tour) {
@@ -42,7 +42,7 @@ export default function TourDetailPage() {
       <div className="relative h-56 overflow-hidden">
         <img
           src={tour.coverImage}
-          alt={tour.title}
+          alt={typeof tour.title === 'object' ? tour.title[language] : tour.title}
           className="w-full h-full object-cover"
           crossOrigin="anonymous"
         />
@@ -54,8 +54,8 @@ export default function TourDetailPage() {
           <ArrowLeftIcon className="h-5 w-5" />
         </button>
         <div className="absolute bottom-4 left-4 right-4">
-          <h1 className="font-display text-2xl font-bold text-white">{tour.title}</h1>
-          <p className="text-white/80">{tour.subtitle}</p>
+          <h1 className="font-display text-2xl font-bold text-white">{typeof tour.title === 'object' ? tour.title[language] : tour.title}</h1>
+          <p className="text-white/80">{typeof tour.subtitle === 'object' ? tour.subtitle[language] : tour.subtitle}</p>
         </div>
       </div>
 
@@ -82,7 +82,7 @@ export default function TourDetailPage() {
           transition={{ delay: 0.1 }}
           className="mb-6"
         >
-          <p className="text-muted-foreground">{tour.description}</p>
+          <p className="text-muted-foreground">{typeof tour.description === 'object' ? tour.description[language] : tour.description}</p>
           
           <div className="mt-4 flex gap-4 text-sm">
             <div className="flex items-center gap-1.5 text-muted-foreground">
@@ -108,7 +108,7 @@ export default function TourDetailPage() {
           className="mb-6 rounded-xl bg-muted/50 border p-4"
         >
           <p className="font-medium text-foreground">{uiText.howItWorksLabel}</p>
-          <p className="mt-1 text-sm text-muted-foreground">{tour.howItWorks}</p>
+          <p className="mt-1 text-sm text-muted-foreground">{typeof tour.howItWorks === 'object' ? tour.howItWorks[language] : tour.howItWorks}</p>
         </motion.div>
 
         {/* Actions */}

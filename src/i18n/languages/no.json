@@ -54,36 +54,54 @@
     "scanInstructions": "Hold telefonen over QR-koden ved hvert stopp for å låse opp innhold."
   },
   "about": {
-    "title": "Om KystSti",
-    "description": "Utforsk vakre kyststier og byvandringer med interaktive turer. Skann QR-koder ved hvert stopp for å låse opp historier, bilder og lydguider.",
-    "stats": {
-      "toursLabel": "turer",
-      "stopsLabel": "stopp",
-      "freeLabel": "Gratis",
-      "freeToUse": "å bruke"
-    },
-    "howToUse": "Slik bruker du appen",
-    "steps": [
-      "Velg en tur fra turlisten",
-      "Gå til startpunktet for turen",
-      "Finn QR-koden ved stoppet",
-      "Skann QR-koden med kameraet - innholdet låses opp!",
-      "Lytt til lydguiden og les historien",
-      "Følg stien til neste stopp"
-    ],
-    "features": "Funksjoner",
-    "featuresList": [
-      "Flere turer å velge mellom",
-      "QR-skanning for å låse opp stopp",
-      "Lydguide ved hvert stopp",
-      "Interaktivt kart med rute",
-      "Fremdriftsindikator"
-    ],
-    "privacy": "Denne appen samler ikke inn personlig informasjon.",
-    "privacyLocation": "Posisjonen din brukes kun lokalt for å vise avstand.",
-    "builtBy": "Laget av David. Se kildekoden på",
-    "github": "GitHub"
-  },
+ "title": "Om KystSti",
+"intro": "Utforsk vakre kyststier og byvandringer med interaktive turer. Skann QR-koder ved hvert stopp for å låse opp fortellinger, bilder og lydguider.",
+"free": "Gratis å bruke",
+"tours": "turer",
+"stopsTotal": "Totalt antall stopp",
+"step1": "Velg en tur fra listen",
+"step2": "Gå til startpunktet for turen",
+"step3": "Finn QR-koden ved stoppet",
+"step4": "Skann QR-koden med kameraet for å låse opp innhold",
+"step5": "Lytt til lydguiden og les historien",
+"step6": "Følg stien til neste stopp",
+"feature1": "Flere turer å velge mellom",
+"feature2": "QR-skanning for å låse opp stopp",
+"feature3": "Lydguide ved hvert stopp",
+"feature4": "Interaktivt kart med rute",
+"feature5": "Fremdriftsindikator",
+"appName": "KystSti",
+"madeBy": "Bygget av David. Se kildekoden på",
+"positionLocal": "Din posisjon brukes kun lokalt for å vise avstand.",
+"description": "Utforsk vakre kyststier og byvandringer med interaktive turer. Skann QR-koder ved hvert stopp for å låse opp fortellinger, bilder og lydguider.",
+"stats": {
+"toursLabel": "turer",
+"stopsLabel": "stopp",
+"freeLabel": "Gratis",
+"freeToUse": "å bruke"
+},
+"howToUse": "Hvordan bruke appen",
+"steps": [
+"Velg en tur fra turlisten",
+"Gå til startpunktet for turen",
+"Finn QR-koden plassert ved stoppet",
+"Skann QR-koden med kameraet - innholdet er låst opp!",
+"Lytt til lydguiden og les historien",
+"Følg stien til neste stopp"
+],
+"features": "Funksjoner",
+"featuresList": [
+"Flere turer å velge mellom",
+"QR-skanning for å låse opp stopp",
+"Lydguide ved hvert stopp",
+"Interaktivt kart med rute",
+"Fremdriftsindikator"
+],
+"privacy": "Denne appen samler ikke inn personlig informasjon.",
+"privacyLocation": "Din posisjon brukes kun lokalt for å vise avstand.",
+"builtBy": "Bygget av David. Se kildekoden på",
+"github": "GitHub"
+},
   "onboarding": {
     "exploreTours": "Utforsk turer",
     "exploreTourDesc": "Velg mellom flere turer i Kristiansund-området. Hver tur har unike stopp med historier og informasjon.",
@@ -143,6 +161,8 @@
     "distancePlaceholder": "Total lengde på turen (f.eks. 5 km)",
     "titlePlaceholder": "En fengende tittel for turen",
     "yourTourId": "Kyststi",
+    "tourId": "Tur-ID",
+    "generatedAutomatically": "Genereres automatisk",
     "addStop": "Legg til stopp",
     "addFirstStopHelper": "Ingen stopp lagt til ennå. Klikk på knappen over for å legge til det første stoppet.",
     "addFirstStop": "Legg til første stopp",
@@ -236,6 +256,7 @@
     "zoomLabel": "Zoomnivå",
     "setLocation": "Sett posisjon",
     "unlocked": "Låst opp",
-    "locked": "Låst"
+    "locked": "Låst",
+    "map": "Kart"
   }
 }

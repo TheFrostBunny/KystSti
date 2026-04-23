@@ -4,7 +4,7 @@ import { MapContainer, TileLayer, Marker, Polyline, useMap } from "react-leaflet
 import L from "leaflet";
 import { getTourById, mapColors, TourStop } from "@/data/tours";
 import { useTour } from "@/context/TourContext";
-import { useTranslation } from "@/context/LanguageContext";
+import { useTranslation  } from "@/context/LanguageContext";
 import { BottomNav } from "@/components/BottomNav";
 import Button from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
@@ -39,7 +39,7 @@ export default function TourMapPage() {
   const { tourId } = useParams<{ tourId: string }>();
   const navigate = useNavigate();
   const { isStopUnlocked } = useTour();
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
   const [selectedStop, setSelectedStop] = useState<TourStop | null>(null);
   
   const tour = tourId ? getTourById(tourId) : null;
@@ -47,9 +47,9 @@ export default function TourMapPage() {
   if (!tour) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center p-6 text-center">
-        <h1 className="font-display text-2xl font-bold">Tur ikke funnet</h1>
+        <h1 className="font-display text-2xl font-bold">{t("map.tourNotFound")}</h1>
         <Button asChild className="mt-4">
-          <Link to="/turer">Se alle turer</Link>
+          <Link to="/turer">{t("map.backToTours")}</Link>
         </Button>
       </div>
     );
@@ -84,7 +84,7 @@ export default function TourMapPage() {
           <button onClick={() => navigate(`/tur/${tour.id}`)} className="mr-3">
             <ArrowLeftIcon className="h-5 w-5" />
           </button>
-          <h1 className="font-display text-lg font-bold">{tour.title} - Kart</h1>
+          <h1 className="font-display text-lg font-bold">{tour.title?.[language] || tour.title?.no || tour.title?.en || ''} - {t("map.map")}</h1>
         </div>
       </header>
 
@@ -175,7 +175,7 @@ export default function TourMapPage() {
 
                   {/* Title */}
                   <h2 className="font-display text-lg font-bold text-center">
-                    {selectedStop.title}
+                    {selectedStop.title?.[language] || selectedStop.title?.no || selectedStop.title?.en || ''}
                   </h2>
 
                   {/* Status chip */}

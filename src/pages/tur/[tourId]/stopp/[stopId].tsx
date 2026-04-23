@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils";
 import { useTranslation } from "@/context/LanguageContext";
 
 export default function StopDetailPage() {
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
   const { tourId, stopId } = useParams<{ tourId: string; stopId: string }>();
   const navigate = useNavigate();
   const { isStopUnlocked, unlockStop } = useTour();
@@ -85,7 +85,7 @@ export default function StopDetailPage() {
             <ArrowLeftIcon className="h-5 w-5" />
           </button>
           <h1 className="font-display text-lg font-bold truncate flex-1 mx-4">
-            {stop.title}
+            {typeof stop.title === 'object' ? stop.title[language as 'no' | 'en'] : stop.title}
           </h1>
           <div className="w-9" />
         </div>
@@ -107,7 +107,7 @@ export default function StopDetailPage() {
               >
                 <img
                   src={stop.images[currentImageIndex]}
-                  alt={stop.title}
+                  alt={typeof stop.title === 'object' ? stop.title[language as 'no' | 'en'] : stop.title}
                   className="w-full h-full object-cover"
                   crossOrigin="anonymous"
                 />
@@ -143,7 +143,7 @@ export default function StopDetailPage() {
             <div className="space-y-4 lg:sticky lg:top-20 lg:h-fit">
               {/* Stop Header */}
               <div>
-                <h2 className="font-display text-2xl lg:text-3xl font-bold mt-2">{stop.title}</h2>
+                <h2 className="font-display text-2xl lg:text-3xl font-bold mt-2">{typeof stop.title === 'object' ? stop.title[language as 'no' | 'en'] : stop.title}</h2>
               </div>
 
               {/* Audio Player */}
@@ -152,7 +152,7 @@ export default function StopDetailPage() {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                 >
-                  <AudioPlayer audioUrl={stop.audioUrl} title={stop.title} />
+                  <AudioPlayer audioUrl={stop.audioUrl} title={typeof stop.title === 'object' ? stop.title[language as 'no' | 'en'] : stop.title} />
                 </motion.div>
               )}
 
@@ -166,7 +166,7 @@ export default function StopDetailPage() {
                 <p className="text-xs font-semibold text-muted-foreground uppercase">
                   {t("tourBuilder.aboutStop")}
                 </p>
-                <p className="text-sm leading-relaxed text-foreground">{stop.description}</p>
+                <p className="text-sm leading-relaxed text-foreground">{typeof stop.description === 'object' ? stop.description[language as 'no' | 'en'] : stop.description}</p>
               </motion.div>
 
               {/* Location Card */}
@@ -227,9 +227,9 @@ export default function StopDetailPage() {
                   <p className="text-xs font-semibold text-muted-foreground uppercase">
                     {t("tourBuilder.nextStopLabel")}
                   </p>
-                  <p className="mt-2 font-display text-lg font-bold">{nextStop.title}</p>
+                  <p className="mt-2 font-display text-lg font-bold">{typeof nextStop.title === 'object' ? nextStop.title[language as 'no' | 'en'] : nextStop.title}</p>
                   {nextStop.locationHint && (
-                    <p className="mt-1 text-xs text-muted-foreground">{nextStop.locationHint}</p>
+                    <p className="mt-1 text-xs text-muted-foreground">{typeof nextStop.locationHint === 'object' ? nextStop.locationHint[language as 'no' | 'en'] : nextStop.locationHint}</p>
                   )}
                 </motion.div>
               )}

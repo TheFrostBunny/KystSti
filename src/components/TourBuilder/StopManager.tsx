@@ -156,12 +156,12 @@ function StopForm({
     stop || {
       id: "",
       order: index + 1,
-      title: "",
-      description: "",
+      title: { no: "", en: "" },
+      description: { no: "", en: "" },
       images: [],
       lat: 63.111,
       lng: 7.729,
-      locationHint: "",
+      locationHint: { no: "", en: "" },
       audioUrl: "",
     }
   );
@@ -171,12 +171,16 @@ function StopForm({
     title.toLowerCase().trim().replace(/\s+/g, "-").replace(/[^\w-]/g, "");
 
   const handleSubmit = () => {
-    if (!formData.title) return;
+    if (!formData.title?.no || !formData.title?.en) return;
     onSave({
       ...formData,
-      id: formData.id || generateId(formData.title || ""),
+      id: formData.id || generateId(formData.title.no),
       order: formData.order || index + 1,
       images: formData.images || [],
+      locationHint: {
+        no: typeof formData.locationHint === 'object' ? formData.locationHint.no : formData.locationHint || "",
+        en: typeof formData.locationHint === 'object' ? formData.locationHint.en : "",
+      },
     } as TourStop);
   };
 
@@ -216,27 +220,66 @@ function StopForm({
 
         <div className="grid gap-4">
           <div>
-            <label className="block text-sm font-medium mb-1.5">{t("tourBuilder.form.titleLabel")} *</label>
+            <label className="block text-sm font-medium mb-1.5">{t("tourBuilder.form.titleLabel")} (NO) *</label>
             <input
               type="text"
-              value={formData.title || ""}
+              value={formData.title?.no || ""}
               onChange={(e) =>
                 setFormData((prev) => ({
                   ...prev,
-                  title: e.target.value,
+                  title: {
+                    no: e.target.value,
+                    en: typeof prev.title?.en === 'string' ? prev.title.en : "",
+                  },
                   id: generateId(e.target.value),
                 }))
               }
               placeholder="f.eks. Kirkelandet kirke"
               className="w-full px-3 py-2 rounded-lg border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
             />
+            <label className="block text-sm font-medium mb-1.5 mt-2">{t("tourBuilder.form.titleLabel")} (EN) *</label>
+            <input
+              type="text"
+              value={formData.title?.en || ""}
+              onChange={(e) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  title: {
+                    no: typeof prev.title?.no === 'string' ? prev.title.no : "",
+                    en: e.target.value,
+                  },
+                }))
+              }
+              placeholder="e.g. Kirkelandet Church"
+              className="w-full px-3 py-2 rounded-lg border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+            />
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1.5">{t("tourBuilder.form.descriptionLabel")} *</label>
+            <label className="block text-sm font-medium mb-1.5">{t("tourBuilder.form.descriptionLabel")} (NO) *</label>
             <textarea
-              value={formData.description || ""}
-              onChange={(e) => setFormData((prev) => ({ ...prev, description: e.target.value }))}
+              value={formData.description?.no || ""}
+              onChange={(e) => setFormData((prev) => ({
+                ...prev,
+                description: {
+                  no: e.target.value,
+                  en: typeof prev.description?.en === 'string' ? prev.description.en : "",
+                },
+              }))}
+              placeholder={t("tourBuilder.form.descriptionPlaceholder")}
+              rows={3}
+              className="w-full px-3 py-2 rounded-lg border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 resize-none"
+            />
+            <label className="block text-sm font-medium mb-1.5 mt-2">{t("tourBuilder.form.descriptionLabel")} (EN) *</label>
+            <textarea
+              value={formData.description?.en || ""}
+              onChange={(e) => setFormData((prev) => ({
+                ...prev,
+                description: {
+                  no: typeof prev.description?.no === 'string' ? prev.description.no : "",
+                  en: e.target.value,
+                },
+              }))}
               placeholder={t("tourBuilder.form.descriptionPlaceholder")}
               rows={3}
               className="w-full px-3 py-2 rounded-lg border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 resize-none"
@@ -244,11 +287,31 @@ function StopForm({
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1.5">{t("tourBuilder.form.locationHintLabel")}</label>
+            <label className="block text-sm font-medium mb-1.5">{t("tourBuilder.form.locationHintLabel")} (NO)</label>
             <input
               type="text"
-              value={formData.locationHint || ""}
-              onChange={(e) => setFormData((prev) => ({ ...prev, locationHint: e.target.value }))}
+              value={typeof formData.locationHint === 'object' ? formData.locationHint.no : formData.locationHint || ""}
+              onChange={(e) => setFormData((prev) => ({
+                ...prev,
+                locationHint: {
+                  no: e.target.value,
+                  en: typeof prev.locationHint === 'object' ? prev.locationHint.en : "",
+                },
+              }))}
+              placeholder={t("tourBuilder.form.locationHintPlaceholder")}
+              className="w-full px-3 py-2 rounded-lg border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+            />
+            <label className="block text-sm font-medium mb-1.5 mt-2">{t("tourBuilder.form.locationHintLabel")} (EN)</label>
+            <input
+              type="text"
+              value={typeof formData.locationHint === 'object' ? formData.locationHint.en : ""}
+              onChange={(e) => setFormData((prev) => ({
+                ...prev,
+                locationHint: {
+                  no: typeof prev.locationHint === 'object' ? prev.locationHint.no : prev.locationHint || "",
+                  en: e.target.value,
+                },
+              }))}
               placeholder={t("tourBuilder.form.locationHintPlaceholder")}
               className="w-full px-3 py-2 rounded-lg border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
             />
@@ -472,9 +535,9 @@ export function StopManager({ stops, tourId, onAdd, onUpdate, onDelete }: StopMa
                     {index + 1}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h3 className="font-medium truncate">{stop.title}</h3>
+                    <h3 className="font-medium truncate">{typeof stop.title === 'object' ? stop.title.no : stop.title}</h3>
                     <p className="text-sm text-muted-foreground line-clamp-2 mt-0.5">
-                      {stop.description}
+                      {typeof stop.description === 'object' ? stop.description.no : stop.description}
                     </p>
                     <div className="flex items-center gap-3 mt-2 text-xs text-muted-foreground">
                       <span className="flex items-center gap-1">

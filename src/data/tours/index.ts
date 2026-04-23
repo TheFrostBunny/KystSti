@@ -18,7 +18,7 @@ import atlanterhavsvegen from "./atlanterhavsvegen";
 const tourModules: Tour[] = [
   kristiansundByvandring,
   kyststiNordlandet,
-  atlanterhavsvegen,
+  atlanterhavsvegen
 ];
 
 // --- EKSPORTER ALLE TURER ---

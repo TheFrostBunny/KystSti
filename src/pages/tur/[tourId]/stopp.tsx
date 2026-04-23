@@ -2,12 +2,14 @@ import { useParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { getTourById, uiText } from "@/data/tours";
 import { useTour } from "@/context/TourContext";
+import { useTranslation } from "@/context/LanguageContext";
 import { BottomNav } from "@/components/BottomNav";
 import Button from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Progress } from "@/components/ui/progress";
 
 export default function TourStopsPage() {
+  const { t, language } = useTranslation();
   const { tourId } = useParams<{ tourId: string }>();
   const { isStopUnlocked, getProgress } = useTour();
   const tour = tourId ? getTourById(tourId) : null;
@@ -34,7 +36,7 @@ export default function TourStopsPage() {
             <ArrowLeftIcon className="h-5 w-5" />
           </Link>
           <div className="flex-1">
-            <h1 className="font-display text-lg font-bold truncate">{tour.title}</h1>
+            <h1 className="font-display text-lg font-bold truncate">{typeof tour.title === 'object' ? tour.title[language] : tour.title}</h1>
           </div>
           <Button asChild variant="ghost" size="icon" className="w-10 h-10">
             <Link to={`/tur/${tour.id}/kart`}>
@@ -94,7 +96,7 @@ export default function TourStopsPage() {
                         <div className="flex-1 min-w-0">
                           <p className="text-xs text-muted-foreground">Stopp {stop.order}</p>
                           <h3 className="font-medium truncate mt-0.5">
-                            {stop.title}
+                            {typeof stop.title === 'object' ? stop.title[language] : stop.title}
                           </h3>
                         </div>
                         <div className="ml-4 shrink-0">
@@ -111,7 +113,7 @@ export default function TourStopsPage() {
                       </div>
                       {(unlocked || isFirst) && (
                         <p className="text-xs text-muted-foreground mt-2 truncate">
-                          {stop.description}
+                          {typeof stop.description === 'object' ? stop.description[language] : stop.description}
                         </p>
                       )}
                     </Link>

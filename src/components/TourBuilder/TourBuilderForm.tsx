@@ -1,11 +1,11 @@
 import { motion } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
-import type { Tour } from "@/data/tours";
+import { useState, useRef, useEffect } from "react";
 import { useTranslation } from "@/context/LanguageContext";
 
+// Helper components
 interface TourBuilderFormProps {
-  tourData: Partial<Tour>;
-  onChange: (updates: Partial<Tour>) => void;
+  tourData: any;
+  onChange: (updates: any) => void;
 }
 
 function FormSection({
@@ -65,13 +65,11 @@ function InputField({
     </div>
   );
 }
-
 export function TourBuilderForm({ tourData, onChange }: TourBuilderFormProps) {
-  // Local state for validation
+  const { t } = useTranslation();
   const [latError, setLatError] = useState<string | null>(null);
   const [lngError, setLngError] = useState<string | null>(null);
   const mapRef = useRef<HTMLIFrameElement>(null);
-  const { t } = useTranslation();
 
   useEffect(() => {
     const saved = localStorage.getItem("tourbuilder-data");
@@ -88,7 +86,6 @@ export function TourBuilderForm({ tourData, onChange }: TourBuilderFormProps) {
     localStorage.setItem("tourbuilder-data", JSON.stringify(tourData));
   }, [tourData]);
 
-  // Geolokasjon
   const setUserLocation = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((pos) => {
@@ -108,14 +105,16 @@ export function TourBuilderForm({ tourData, onChange }: TourBuilderFormProps) {
       .replace(/\s+/g, "-")
       .replace(/[^\w-]/g, "");
   };
-
-  const handleTitleChange = (title: string) => {
+  const handleTitleChange = (lang: "no" | "en", value: string) => {
     onChange({
-      title,
-      id: generateId(title),
+      title: {
+        no: tourData.title?.no || "",
+        en: tourData.title?.en || "",
+        [lang]: value,
+      },
+      id: generateId(value),
     });
   };
-
   const inputClasses =
     "w-full px-3 py-2.5 rounded-lg border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 transition-shadow";
   const textareaClasses =
@@ -156,35 +155,66 @@ export function TourBuilderForm({ tourData, onChange }: TourBuilderFormProps) {
         }
       >
         <div className="space-y-4">
-          <InputField label={t('tourBuilder.title')} required hint={t('tourBuilder.titleHint')}>
-            <input
-              type="text"
-              value={tourData.title || ""}
-              onChange={(e) => handleTitleChange(e.target.value)}
-              placeholder={t('tourBuilder.titlePlaceholder')}
-              className={inputClasses}
-            />
-          </InputField>
-
-          <InputField label={t('tourBuilder.subtitle')} required hint={t('tourBuilder.subtitleHint')}>
-            <input
-              type="text"
-              value={tourData.subtitle || ""}
-              onChange={(e) => onChange({ subtitle: e.target.value })}
-              placeholder={t('tourBuilder.subtitlePlaceholder')}
-              className={inputClasses}
-            />
-          </InputField>
-
-          <InputField label={t('tourBuilder.description')} required hint={t('tourBuilder.descriptionHint')}>
-            <textarea
-              value={tourData.description || ""}
-              onChange={(e) => onChange({ description: e.target.value })}
-              placeholder={t('tourBuilder.descriptionPlaceholder')}
-              rows={4}
-              className={textareaClasses}
-            />
-          </InputField>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <InputField label={t('tourBuilder.title') + ' (NO)'} required>
+              <input
+                type="text"
+                value={tourData.title?.no || ""}
+                onChange={(e) => handleTitleChange("no", e.target.value)}
+                placeholder={t('tourBuilder.titlePlaceholder')}
+                className={inputClasses}
+              />
+            </InputField>
+            <InputField label={t('tourBuilder.title') + ' (EN)'} required>
+              <input
+                type="text"
+                value={tourData.title?.en || ""}
+                onChange={(e) => handleTitleChange("en", e.target.value)}
+                placeholder={t('tourBuilder.titlePlaceholder')}
+                className={inputClasses}
+              />
+            </InputField>
+          </div>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <InputField label={t('tourBuilder.subtitle') + ' (NO)'}>
+              <input
+                type="text"
+                value={tourData.subtitle?.no || ""}
+                onChange={(e) => onChange({ subtitle: { no: e.target.value, en: tourData.subtitle?.en || "" } })}
+                placeholder={t('tourBuilder.subtitlePlaceholder')}
+                className={inputClasses}
+              />
+            </InputField>
+            <InputField label={t('tourBuilder.subtitle') + ' (EN)'}>
+              <input
+                type="text"
+                value={tourData.subtitle?.en || ""}
+                onChange={(e) => onChange({ subtitle: { no: tourData.subtitle?.no || "", en: e.target.value } })}
+                placeholder={t('tourBuilder.subtitlePlaceholder')}
+                className={inputClasses}
+              />
+            </InputField>
+          </div>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <InputField label={t('tourBuilder.description') + ' (NO)'}>
+              <textarea
+                value={tourData.description?.no || ""}
+                onChange={(e) => onChange({ description: { no: e.target.value, en: tourData.description?.en || "" } })}
+                placeholder={t('tourBuilder.descriptionPlaceholder')}
+                rows={3}
+                className={textareaClasses}
+              />
+            </InputField>
+            <InputField label={t('tourBuilder.description') + ' (EN)'}>
+              <textarea
+                value={tourData.description?.en || ""}
+                onChange={(e) => onChange({ description: { no: tourData.description?.no || "", en: e.target.value } })}
+                placeholder={t('tourBuilder.descriptionPlaceholder')}
+                rows={3}
+                className={textareaClasses}
+              />
+            </InputField>
+          </div>
         </div>
       </FormSection>
 
@@ -198,15 +228,26 @@ export function TourBuilderForm({ tourData, onChange }: TourBuilderFormProps) {
           </svg>
         }
       >
-        <InputField label={t('tourBuilder.howItWorks')} required hint={t('tourBuilder.howItWorksHint')}>
-          <textarea
-            value={tourData.howItWorks || ""}
-            onChange={(e) => onChange({ howItWorks: e.target.value })}
-            placeholder={t('tourBuilder.howItWorksPlaceholder')}
-            rows={3}
-            className={textareaClasses}
-          />
-        </InputField>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <InputField label={t('tourBuilder.howItWorks') + ' (NO)'}>
+            <textarea
+              value={tourData.howItWorks?.no || ""}
+              onChange={(e) => onChange({ howItWorks: { no: e.target.value, en: tourData.howItWorks?.en || "" } })}
+              placeholder={t('tourBuilder.howItWorksPlaceholder')}
+              rows={2}
+              className={textareaClasses}
+            />
+          </InputField>
+          <InputField label={t('tourBuilder.howItWorks') + ' (EN)'}>
+            <textarea
+              value={tourData.howItWorks?.en || ""}
+              onChange={(e) => onChange({ howItWorks: { no: tourData.howItWorks?.no || "", en: e.target.value } })}
+              placeholder={t('tourBuilder.howItWorksPlaceholder')}
+              rows={2}
+              className={textareaClasses}
+            />
+          </InputField>
+        </div>
       </FormSection>
 
       {/* Tour Details */}
@@ -220,17 +261,27 @@ export function TourBuilderForm({ tourData, onChange }: TourBuilderFormProps) {
         }
       >
         <div className="grid gap-4 sm:grid-cols-2">
-          <InputField label={t('tourBuilder.estimatedTime')} required>
+          <InputField label={t('tourBuilder.estimatedTime') + ' (NO)'}>
             <input
               type="text"
-              value={tourData.estimatedTime || ""}
-              onChange={(e) => onChange({ estimatedTime: e.target.value })}
+              value={tourData.estimatedTime?.no || ""}
+              onChange={(e) => onChange({ estimatedTime: { no: e.target.value, en: tourData.estimatedTime?.en || "" } })}
               placeholder={t('tourBuilder.estimatedTimePlaceholder')}
               className={inputClasses}
             />
           </InputField>
-
-          <InputField label={t('tourBuilder.distance')} required>
+          <InputField label={t('tourBuilder.estimatedTime') + ' (EN)'}>
+            <input
+              type="text"
+              value={tourData.estimatedTime?.en || ""}
+              onChange={(e) => onChange({ estimatedTime: { no: tourData.estimatedTime?.no || "", en: e.target.value } })}
+              placeholder={t('tourBuilder.estimatedTimePlaceholder')}
+              className={inputClasses}
+            />
+          </InputField>
+        </div>
+        <div className="grid gap-4 sm:grid-cols-2 mt-4">
+          <InputField label={t('tourBuilder.distance')}>
             <input
               type="text"
               value={tourData.distance || ""}
@@ -239,10 +290,7 @@ export function TourBuilderForm({ tourData, onChange }: TourBuilderFormProps) {
               className={inputClasses}
             />
           </InputField>
-        </div>
-
-        <div className="mt-4">
-          <InputField label={t('tourBuilder.difficulty')} required>
+          <InputField label={t('tourBuilder.difficulty')}>
             <div className="grid grid-cols-3 gap-2">
               {(["lett", "moderat", "krevende"] as const).map((level) => (
                 <button
