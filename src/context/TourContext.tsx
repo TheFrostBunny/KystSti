@@ -90,7 +90,7 @@ export function TourProvider({ children }: { children: ReactNode }) {
     setCurrentTourId(null);
   };
 
-  const qrActive = appConfig.enableQrScanner;
+  const qrActive = appConfig.enableQrScanner; // Hent QR-skanner status fra konfigurasjonen
 
   return (
     <TourContext.Provider
