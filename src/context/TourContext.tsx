@@ -2,7 +2,7 @@ import { createContext, useContext, useState, useEffect, ReactNode } from "react
 import { Tour, TourStop, getTourById } from "@/data/tours";
 import { appConfig } from "@/config";
 
-interface TourContextType {
+export interface TourContextType {
   currentTourId: string | null;
   currentTour: Tour | null;
   unlockedStops: Set<string>;
@@ -11,9 +11,10 @@ interface TourContextType {
   isStopUnlocked: (stopId: string) => boolean;
   getProgress: () => { unlocked: number; total: number };
   clearTour: () => void;
+  qrActive?: boolean;
 }
 
-const TourContext = createContext<TourContextType | undefined>(undefined);
+export const TourContext = createContext<TourContextType | undefined>(undefined);
 
 const STORAGE_KEY_TOUR = "kyststi-current-tour";
 const STORAGE_KEY_UNLOCKED = "kyststi-unlocked-stops";
@@ -21,7 +22,6 @@ const STORAGE_KEY_UNLOCKED = "kyststi-unlocked-stops";
 export function TourProvider({ children }: { children: ReactNode }) {
   const [currentTourId, setCurrentTourId] = useState<string | null>(() => {
     if (typeof window !== "undefined") {
-      // Bruk aktiv tur fra config som fallback hvis ingenting er i localStorage
       return localStorage.getItem(STORAGE_KEY_TOUR) || appConfig.activeTourId;
     }
     return appConfig.activeTourId;
@@ -63,7 +63,7 @@ export function TourProvider({ children }: { children: ReactNode }) {
     if (!currentTour) return;
     const stop = currentTour.stops.find((s) => s.id === stopId);
     if (!stop) return;
-    // Only allow unlocking if all previous stops are unlocked
+
     if (stop.order === 1) {
       setUnlockedStops((prev) => new Set([...prev, stopId]));
       return;
@@ -90,6 +90,8 @@ export function TourProvider({ children }: { children: ReactNode }) {
     setCurrentTourId(null);
   };
 
+  const qrActive = appConfig.enableQrScanner;
+
   return (
     <TourContext.Provider
       value={{
@@ -101,6 +103,7 @@ export function TourProvider({ children }: { children: ReactNode }) {
         isStopUnlocked,
         getProgress,
         clearTour,
+        qrActive,
       }}
     >
       {children}

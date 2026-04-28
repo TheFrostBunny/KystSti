@@ -1,4 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+// Importer TourContext for å sjekke om QR-skanner skal være aktiv
+import { TourContext } from "@/context/TourContext";
+
 import { motion, AnimatePresence } from "framer-motion";
 import { MapPin, QrCode, Volume2, ChevronRight, X } from "lucide-react";
 import Button  from "@/components/ui/button";
@@ -12,30 +15,42 @@ interface OnboardingStep {
   description: string;
 }
 
-const steps: OnboardingStep[] = [
-  {
-    icon: <MapPin className="h-12 w-12" />,
-    title: "Utforsk turer",
-    description:
-      "Velg mellom flere turer i Kristiansund-området. Hver tur har unike stopp med historier og informasjon.",
-  },
-  {
-    icon: <QrCode className="h-12 w-12" />,
-    title: "Skann QR-koder",
-    description:
-      "Ved hvert stopp finner du en QR-kode. Skann den for å låse opp innhold og registrere fremgangen din.",
-  },
-  {
-    icon: <Volume2 className="h-12 w-12" />,
-    title: "Lytt til historiene",
-    description:
-      "Mange stopp har lydguider som forteller deg mer om stedet. Bare trykk play og lytt mens du utforsker.",
-  },
-];
+
+function getSteps(qrActive: boolean): OnboardingStep[] {
+  const baseSteps: OnboardingStep[] = [
+    {
+      icon: <MapPin className="h-12 w-12" />,
+      title: "Utforsk turer",
+      description:
+        "Velg mellom flere turer i Kristiansund-området. Hver tur har unike stopp med historier og informasjon.",
+    },
+    {
+      icon: <Volume2 className="h-12 w-12" />,
+      title: "Lytt til historiene",
+      description:
+        "Mange stopp har lydguider som forteller deg mer om stedet. Bare trykk play og lytt mens du utforsker.",
+    },
+  ];
+  if (qrActive) {
+    baseSteps.splice(1, 0, {
+      icon: <QrCode className="h-12 w-12" />,
+      title: "Skann QR-koder",
+      description:
+        "Ved hvert stopp finner du en QR-kode. Skann den for å låse opp innhold og registrere fremgangen din.",
+    });
+  }
+  return baseSteps;
+}
+
 
 export function Onboarding() {
   const [isOpen, setIsOpen] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
+  // Hent fra context om QR-skanner er aktiv
+  const tourContext = useContext(TourContext) as {
+    qrActive?: boolean;
+  } | undefined;
+  const qrActive = tourContext?.qrActive ?? true; // fallback true hvis ikke definert
 
   useEffect(() => {
     if (!appConfig.enableOnboarding) return;
@@ -63,8 +78,10 @@ export function Onboarding() {
     handleComplete();
   };
 
-  if (!appConfig.enableOnboarding || !isOpen) return null;
+  // Skjul onboarding hvis QR ikke er aktiv
+  if (!appConfig.enableOnboarding || !isOpen || !qrActive) return null;
 
+  const steps = getSteps(qrActive);
   const step = steps[currentStep];
   const isLastStep = currentStep === steps.length - 1;
 
