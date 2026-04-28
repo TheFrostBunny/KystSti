@@ -14,7 +14,7 @@ export function ExportPanel({ tourData }: ExportPanelProps) {
   const [downloaded, setDownloaded] = useState(false);
 
   const generateTypeScriptCode = (tour: Tour): string => {
-    const escape = (str: string) => str.replace(/"/g, '\"').replace(/\n/g, '\\n');
+    const escape = (str: any) => String(str ?? "").replace(/"/g, '\"').replace(/\n/g, '\\n');
     // Helper to safely access multilingual fields
     const safe = (obj: any, key: string) => (obj && typeof obj[key] === "string" ? obj[key] : "");
     const tourCode = `import type { Tour } from "./types";
