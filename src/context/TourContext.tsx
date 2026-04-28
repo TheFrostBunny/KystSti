@@ -1,6 +1,5 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { Tour, TourStop, getTourById } from "@/data/tours";
-import { appConfig } from "@/config";
 
 export interface TourContextType {
   currentTourId: string | null;
@@ -21,10 +20,11 @@ const STORAGE_KEY_UNLOCKED = "kyststi-unlocked-stops";
 
 export function TourProvider({ children }: { children: ReactNode }) {
   const [currentTourId, setCurrentTourId] = useState<string | null>(() => {
+    const envTourId = import.meta.env.VITE_ACTIVE_TOUR_ID || "kristiansund-byvandring";
     if (typeof window !== "undefined") {
-      return localStorage.getItem(STORAGE_KEY_TOUR) || appConfig.activeTourId;
+      return localStorage.getItem(STORAGE_KEY_TOUR) || envTourId;
     }
-    return appConfig.activeTourId;
+    return envTourId;
   });
 
   const [unlockedStops, setUnlockedStops] = useState<Set<string>>(() => {
@@ -90,7 +90,7 @@ export function TourProvider({ children }: { children: ReactNode }) {
     setCurrentTourId(null);
   };
 
-  const qrActive = appConfig.enableQrScanner; // Hent QR-skanner status fra konfigurasjonen
+  const qrActive = import.meta.env.VITE_ENABLE_QR_SCANNER === "true"; // Hent QR-skanner status fra miljøvariabelen
 
   return (
     <TourContext.Provider

@@ -3,7 +3,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import Button from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { uiText } from "@/data/tours";
-import { appConfig } from "@/config";
 
 interface AudioPlayerProps {
   audioUrl: string;
@@ -105,7 +104,7 @@ export function AudioPlayer({ audioUrl, title }: AudioPlayerProps) {
   }
 
   // Returner null hvis lyd er deaktivert i config
-  if (!appConfig.enableAudio) {
+  if (import.meta.env.VITE_ENABLE_AUDIO !== "true") {
     return null;
   }
 

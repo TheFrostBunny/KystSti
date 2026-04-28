@@ -16,6 +16,11 @@ const pwaConfig: Partial<VitePWAOptions> = {
         sizes: "192x192",
         type: "image/ico"
       },
+      {
+        src: "/favicon.ico",
+        sizes: "512x512",
+        type: "image/png"
+      }
     ]
   },
   workbox: {

@@ -7,7 +7,6 @@ import { useTranslation } from "@/context/LanguageContext";
 import { BottomNav } from "@/components/BottomNav";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import  Button  from "@/components/ui/button";
-import { appConfig } from "@/config";
 import { LogoIconContainer } from "@/components/LogoIconContainer";
 import { TourStats } from "@/components/TourStats";
 import { TourProgress } from "@/components/TourProgress";
@@ -18,8 +17,9 @@ export default function HomePage() {
   const { language } = useTranslation();
 
   // Set active tour if not already set
-  if (currentTour?.id !== appConfig.activeTourId) {
-    setCurrentTour(appConfig.activeTourId);
+  const envTourId = import.meta.env.VITE_ACTIVE_TOUR_ID || "kristiansund-byvandring";
+  if (currentTour?.id !== envTourId) {
+    setCurrentTour(envTourId);
   }
 
   const progress = getProgress();
@@ -49,7 +49,11 @@ export default function HomePage() {
           {currentTour && (
             <TourStats
               stops={currentTour.stops.length}
-              estimatedTime={currentTour.estimatedTime}
+              estimatedTime={
+                typeof currentTour.estimatedTime === 'object'
+                  ? currentTour.estimatedTime[language as 'no' | 'en']
+                  : currentTour.estimatedTime
+              }
             />
           )}
 

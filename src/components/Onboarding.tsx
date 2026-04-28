@@ -1,11 +1,8 @@
 import { useState, useEffect, useContext } from "react";
-// Importer TourContext for å sjekke om QR-skanner skal være aktiv
 import { TourContext } from "@/context/TourContext";
-
 import { motion, AnimatePresence } from "framer-motion";
 import { MapPin, QrCode, Volume2, ChevronRight, X } from "lucide-react";
 import Button  from "@/components/ui/button";
-import { appConfig } from "@/config";
 
 const ONBOARDING_KEY = "kyststi-onboarding-complete";
 
@@ -53,7 +50,8 @@ export function Onboarding() {
   const qrActive = tourContext?.qrActive ?? true; // fallback true hvis ikke definert
 
   useEffect(() => {
-    if (!appConfig.enableOnboarding) return;
+    const enableOnboarding = import.meta.env.VITE_ENABLE_ONBOARDING === "true";
+    if (!enableOnboarding) return;
 
     const hasCompleted = localStorage.getItem(ONBOARDING_KEY);
     if (!hasCompleted) {
@@ -78,89 +76,112 @@ export function Onboarding() {
     handleComplete();
   };
 
+
+
+  // Debug-knapp for å resette onboarding
+  let debugReset = null;
+  const enableDebug = import.meta.env.VITE_ENABLE_DEBUG === "true";
+  if (enableDebug) {
+    debugReset = (
+      <button
+        style={{ position: "fixed", bottom: 16, right: 16, zIndex: 10000, background: "#eee", border: "1px solid #ccc", borderRadius: 8, padding: 8 }}
+        onClick={() => {
+          localStorage.removeItem(ONBOARDING_KEY);
+          window.location.reload();
+        }}
+      >
+        Reset onboarding
+      </button>
+    );
+  }
+
   // Skjul onboarding hvis QR ikke er aktiv
-  if (!appConfig.enableOnboarding || !isOpen || !qrActive) return null;
+  const enableOnboarding = import.meta.env.VITE_ENABLE_ONBOARDING === "true";
+  if (!enableOnboarding || !isOpen || !qrActive) return debugReset;
 
   const steps = getSteps(qrActive);
   const step = steps[currentStep];
   const isLastStep = currentStep === steps.length - 1;
 
   return (
-    <AnimatePresence>
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/60 backdrop-blur-sm p-4"
-      >
+    <>
+      <AnimatePresence>
         <motion.div
-          initial={{ scale: 0.9, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          exit={{ scale: 0.9, opacity: 0 }}
-          className="relative w-full max-w-sm bg-card rounded-2xl shadow-xl overflow-hidden"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/60 backdrop-blur-sm p-4"
         >
-          {/* Skip button */}
-          <button
-            onClick={handleSkip}
-            className="absolute top-4 right-4 p-2 text-muted-foreground hover:text-foreground transition-colors"
-            aria-label="Hopp over"
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.9, opacity: 0 }}
+            className="relative w-full max-w-sm bg-card rounded-2xl shadow-xl overflow-hidden"
           >
-            <X className="h-5 w-5" />
-          </button>
-
-          {/* Content */}
-          <div className="p-8 pt-12">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={currentStep}
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                transition={{ duration: 0.2 }}
-                className="flex flex-col items-center text-center"
-              >
-                <div className="mb-6 p-4 rounded-full bg-primary/10 text-primary">
-                  {step.icon}
-                </div>
-                <h2 className="text-2xl font-semibold mb-3 text-foreground">
-                  {step.title}
-                </h2>
-                <p className="text-muted-foreground leading-relaxed">
-                  {step.description}
-                </p>
-              </motion.div>
-            </AnimatePresence>
-          </div>
-
-          {/* Progress dots */}
-          <div className="flex justify-center gap-2 pb-4">
-            {steps.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => setCurrentStep(index)}
-                className={`h-2 rounded-full transition-all duration-300 ${
-                  index === currentStep
-                    ? "w-6 bg-primary"
-                    : "w-2 bg-muted-foreground/30"
-                }`}
-                aria-label={`Gå til steg ${index + 1}`}
-              />
-            ))}
-          </div>
-
-          {/* Actions */}
-          <div className="p-4 pt-0">
-            <Button
-              onClick={handleNext}
-              className="w-full gap-2"
-              size="lg"
+            {/* Skip button */}
+            <button
+              onClick={handleSkip}
+              className="absolute top-4 right-4 p-2 text-muted-foreground hover:text-foreground transition-colors"
+              aria-label="Hopp over"
             >
-              {isLastStep ? "Kom i gang" : "Neste"}
-              {!isLastStep && <ChevronRight className="h-4 w-4" />}
-            </Button>
-          </div>
+              <X className="h-5 w-5" />
+            </button>
+
+            {/* Content */}
+            <div className="p-8 pt-12">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={currentStep}
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  transition={{ duration: 0.2 }}
+                  className="flex flex-col items-center text-center"
+                >
+                  <div className="mb-6 p-4 rounded-full bg-primary/10 text-primary">
+                    {step.icon}
+                  </div>
+                  <h2 className="text-2xl font-semibold mb-3 text-foreground">
+                    {step.title}
+                  </h2>
+                  <p className="text-muted-foreground leading-relaxed">
+                    {step.description}
+                  </p>
+                </motion.div>
+              </AnimatePresence>
+            </div>
+
+            {/* Progress dots */}
+            <div className="flex justify-center gap-2 pb-4">
+              {steps.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentStep(index)}
+                  className={`h-2 rounded-full transition-all duration-300 ${
+                    index === currentStep
+                      ? "w-6 bg-primary"
+                      : "w-2 bg-muted-foreground/30"
+                  }`}
+                  aria-label={`Gå til steg ${index + 1}`}
+                />
+              ))}
+            </div>
+
+            {/* Actions */}
+            <div className="p-4 pt-0">
+              <Button
+                onClick={handleNext}
+                className="w-full gap-2"
+                size="lg"
+              >
+                {isLastStep ? "Kom i gang" : "Neste"}
+                {!isLastStep && <ChevronRight className="h-4 w-4" />}
+              </Button>
+            </div>
+          </motion.div>
         </motion.div>
-      </motion.div>
-    </AnimatePresence>
+      </AnimatePresence>
+      {debugReset}
+    </>
   );
 }

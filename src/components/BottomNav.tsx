@@ -3,7 +3,6 @@ import { Link, useLocation } from "react-router-dom";
 import { useTour } from "@/context/TourContext";
 import { useTranslation } from "@/context/LanguageContext";
 import { cn } from "@/lib/utils";
-import { appConfig } from "@/config";
 
 
 type NavItem = {
@@ -47,8 +46,8 @@ export function BottomNav() {
     return item;
   }).filter(item => {
     if (item.label === t('nav.map') && item.disabled) return false;
-    if (item.label === t('nav.scan') && !appConfig.enableQrScanner) return false;
-    if (item.label === t('nav.createTour') && !appConfig.enableTourBuilder) return false;
+    if (item.label === t('nav.scan') && import.meta.env.VITE_ENABLE_QR_SCANNER !== "true") return false;
+    if (item.label === t('nav.createTour') && import.meta.env.VITE_ENABLE_TOUR_BUILDER !== "true") return false;
     return true;
   });
 
