@@ -74,13 +74,13 @@
     "madeBy": "Built by David. See the source code on",
     "positionLocal": "Your position is only used locally to show distance.",
     "description": "Explore beautiful coastal trails and city walks with interactive tours. Scan QR codes at each stop to unlock stories, images and audio guides.",
-    "toUse": "How to use the app",
+    "toUse": "Always",
     "stats": {
       "toursLabel": "tours",
       "stopsLabel": "stops",
-      "freeLabel": "Free",
-      "freeToUse": "to use"
+      "freeLabel": "Free"
     },
+    "freeToUse": "to use",
     "howToUse": "How to use the app",
     "steps": [
       "Choose a tour from the tour list",
