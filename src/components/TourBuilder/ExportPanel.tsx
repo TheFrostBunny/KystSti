@@ -17,6 +17,10 @@ export function ExportPanel({ tourData }: ExportPanelProps) {
     const escape = (str: any) => String(str ?? "").replace(/"/g, '\"').replace(/\n/g, '\\n');
     // Helper to safely access multilingual fields
     const safe = (obj: any, key: string) => (obj && typeof obj[key] === "string" ? obj[key] : "");
+    // Håndter estimatedTime som kan være objekt eller streng, og eksporter begge språk
+    const estimatedTimeNo = typeof tour.estimatedTime === "object" ? tour.estimatedTime.no || "" : tour.estimatedTime || "";
+    const estimatedTimeEn = typeof tour.estimatedTime === "object" ? tour.estimatedTime.en || "" : tour.estimatedTime || "";
+
     const tourCode = `import type { Tour } from "./types";
 
 const tour: Tour = {
@@ -25,7 +29,7 @@ const tour: Tour = {
   subtitle: { no: "${escape(safe(tour.subtitle, 'no'))}", en: "${escape(safe(tour.subtitle, 'en'))}" },
   description: { no: "${escape(safe(tour.description, 'no'))}", en: "${escape(safe(tour.description, 'en'))}" },
   howItWorks: { no: "${escape(safe(tour.howItWorks, 'no'))}", en: "${escape(safe(tour.howItWorks, 'en'))}" },
-  estimatedTime: "${escape(tour.estimatedTime)}",
+  estimatedTime: { no: "${escape(estimatedTimeNo)}", en: "${escape(estimatedTimeEn)}" },
   distance: "${escape(tour.distance)}",
   difficulty: "${escape(tour.difficulty)}",
   coverImage: "${escape(tour.coverImage)}",

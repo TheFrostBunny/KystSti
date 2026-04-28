@@ -42,7 +42,10 @@ export interface Tour {
     no: string;
     en: string;
   };
-  estimatedTime: string;
+  estimatedTime: {
+    no: string;
+    en: string;
+  };
   distance: string;
   difficulty: "lett" | "moderat" | "krevende";
   coverImage: string;
