@@ -171,6 +171,7 @@
     "startTour": "Start tur",
     "fetchingLocation": "Henter posisjon...",
     "distanceLabel": "{distance} km unna",
+    "coverImageDescription": "Legg til et forsidebilde for å gjøre turen mer attraktiv. Du kan bruke gratis bildehosting-tjenester som Unsplash for å finne vakre bilder.",
     "difficultyLevels": {
       "lett": "Lett",
       "moderat": "Moderat",

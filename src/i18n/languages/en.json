@@ -171,6 +171,7 @@
     "startTour": "Start tour",
     "fetchingLocation": "Fetching location...",
     "distanceLabel": "{distance} km away",
+    "coverImageDescription": "Add a cover image to make your tour more attractive. You can use free image hosting services like Unsplash to find beautiful photos.",
     "difficultyLevels": {
       "lett": "Easy",
       "moderat": "Medium",
