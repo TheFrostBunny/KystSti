@@ -78,7 +78,8 @@
 "toursLabel": "turer",
 "stopsLabel": "stopp",
 "freeLabel": "Gratis",
-"freeToUse": "å bruke"
+"freeToUse": "å bruke",
+"toUse": "Til bruk"
 },
 "howToUse": "Hvordan bruke appen",
 "steps": [
@@ -168,6 +169,8 @@
     "addFirstStop": "Legg til første stopp",
     "noStopsYet": "Ingen stopp ennå",
     "startTour": "Start tur",
+    "fetchingLocation": "Henter posisjon...",
+    "distanceLabel": "{distance} km unna",
     "difficultyLevels": {
       "lett": "Lett",
       "moderat": "Moderat",
