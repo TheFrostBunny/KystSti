@@ -7,6 +7,7 @@ import { useTranslation } from "@/context/LanguageContext";
 import { getTourById } from "@/data/tours";
 import { BottomNav } from "@/components/BottomNav";
 import Button from "@/components/ui/button";
+import { useState } from "react";
 
 type ScanStatus = "idle" | "scanning" | "success" | "error";
 
@@ -76,12 +77,18 @@ export default function ScanPage() {
   return (
     <div className="flex min-h-screen flex-col bg-black">
       {/* Header */}
-      <header className="sticky top-0 z-50 bg-black/80 backdrop-blur-md">
-        <div className="flex h-14 items-center px-4">
-          <button onClick={() => navigate(-1)} className="mr-3 text-white hover:opacity-80 transition-opacity">
+      <header className="sticky top-0 z-50 bg-black/95 backdrop-blur-md border-b border-white/10">
+        <div className="flex h-14 items-center px-4 gap-3">
+          <button 
+            onClick={() => navigate(-1)} 
+            className="flex h-10 w-10 items-center justify-center rounded-lg text-white hover:bg-white/10 transition-colors"
+          >
             <ArrowLeftIcon className="h-5 w-5" />
           </button>
-          <h1 className="font-display text-lg font-bold text-white">{t('scanner.title')}</h1>
+          <div className="flex-1">
+            <h1 className="font-display text-base font-bold text-white">{t('scanner.title')}</h1>
+            <p className="text-xs text-white/60">Rett kameraet mot QR-koden</p>
+          </div>
         </div>
       </header>
 
@@ -171,11 +178,24 @@ export default function ScanPage() {
       </div>
 
       {/* Instructions */}
-      <div className="bg-black px-6 py-4 text-center text-white">
-        <p className="text-sm opacity-80">
+      <motion.div 
+        initial={{ y: 20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ delay: 0.3 }}
+        className="bg-black/95 border-t border-white/10 px-6 py-5 text-center text-white space-y-3"
+      >
+        <p className="text-sm font-medium text-white/90">
           {t('scanner.scanInstructions')}
         </p>
-      </div>
+        <Button 
+          onClick={handleManualInput} 
+          variant="secondary"
+          size="sm"
+          className="w-full rounded-lg"
+        >
+          Skriv inn manuelt
+        </Button>
+      </motion.div>
 
       <BottomNav />
     </div>

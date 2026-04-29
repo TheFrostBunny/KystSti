@@ -1,4 +1,4 @@
-import { useParams, Link, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { MapContainer, TileLayer, Marker, Polyline, useMap } from "react-leaflet";
 import L from "leaflet";
@@ -21,9 +21,9 @@ L.Icon.Default.mergeOptions({
 function createCustomIcon(color: string, number: number) {
   return L.divIcon({
     className: "custom-marker",
-    html: `<div style="background-color: ${color}; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 14px; box-shadow: 0 2px 8px rgba(0,0,0,0.3);">${number}</div>`,
-    iconSize: [32, 32],
-    iconAnchor: [16, 16],
+    html: `<div style="background-color: ${color}; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.25); border: 2px solid white;">${number}</div>`,
+    iconSize: [40, 40],
+    iconAnchor: [20, 20],
   });
 }
 
@@ -79,12 +79,20 @@ export default function TourMapPage() {
   return (
     <div className="flex min-h-screen flex-col">
       {/* Header */}
-      <header className="sticky top-0 z-1000 border-b bg-background/95 backdrop-blur-md">
-        <div className="flex h-14 items-center px-4">
-          <button onClick={() => navigate(`/tur/${tour.id}`)} className="mr-3">
+      <header className="sticky top-0 z-30 border-b bg-background/95 backdrop-blur-md shadow-sm">
+        <div className="flex h-14 items-center px-4 gap-3">
+          <button 
+            onClick={() => navigate(`/tur/${tour.id}`)} 
+            className="flex h-10 w-10 items-center justify-center rounded-lg hover:bg-muted transition-colors"
+          >
             <ArrowLeftIcon className="h-5 w-5" />
           </button>
-          <h1 className="font-display text-lg font-bold">{tour.title?.[language] || tour.title?.no || tour.title?.en || ''} - {t("map.map")}</h1>
+          <div className="flex-1">
+            <h1 className="font-display text-base font-bold truncate">
+              {typeof tour.title === 'object' ? tour.title[language] : tour.title}
+            </h1>
+            <p className="text-xs text-muted-foreground">{t("map.map")}</p>
+          </div>
         </div>
       </header>
 
@@ -106,9 +114,9 @@ export default function TourMapPage() {
           <Polyline
             positions={visibleRouteCoordinates}
             color={mapColors.unlockedPin}
-            weight={3}
-            opacity={0.6}
-            dashArray="10, 10"
+            weight={4}
+            opacity={0.7}
+            dashArray="8, 8"
           />
 
           {/* Stop markers */}
@@ -131,18 +139,25 @@ export default function TourMapPage() {
         </MapContainer>
 
         {/* Legend */}
-        <div className="absolute bottom-20 left-4 z-1000 rounded-lg bg-white/95 backdrop-blur-sm p-3 shadow-lg">
-          <div className="flex items-center gap-2 text-xs">
-            <div className="flex items-center gap-1.5">
-              <div className="w-3 h-3 rounded-full" style={{ backgroundColor: mapColors.unlockedPin }} />
-              <span>{t("map.unlocked")}</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <div className="w-3 h-3 rounded-full" style={{ backgroundColor: mapColors.lockedPin }} />
-              <span>{t("map.locked")}</span>
+        <motion.div 
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="absolute bottom-24 left-4 z-40 rounded-2xl bg-white/95 dark:bg-card/95 backdrop-blur-md p-4 shadow-lg border"
+        >
+          <div className="space-y-2">
+            <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Forklaring</p>
+            <div className="flex flex-col gap-2">
+              <div className="flex items-center gap-2">
+                <div className="w-4 h-4 rounded-full" style={{ backgroundColor: mapColors.unlockedPin }} />
+                <span className="text-xs font-medium">{t("map.unlocked")}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-4 h-4 rounded-full" style={{ backgroundColor: mapColors.lockedPin }} />
+                <span className="text-xs font-medium">{t("map.locked")}</span>
+              </div>
             </div>
           </div>
-        </div>
+        </motion.div>
       </div>
 
       <BottomNav />
@@ -157,7 +172,7 @@ export default function TourMapPage() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setSelectedStop(null)}
-              className="fixed inset-0 z-1001 bg-black/40"
+              className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm"
             />
 
             {/* Bottom Sheet */}
@@ -166,29 +181,79 @@ export default function TourMapPage() {
               animate={{ y: 0 }}
               exit={{ y: "100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              className="fixed bottom-16 left-0 right-0 z-1002 rounded-t-2xl bg-card border-t"
+              className="fixed bottom-16 left-0 right-0 z-50 rounded-t-3xl bg-card border-t border-border shadow-2xl"
             >
-              <div className="p-4">
-                <div className="flex flex-col items-center gap-3">
-                  {/* Handle bar */}
+              <div className="max-h-96 overflow-y-auto">
+                {/* Handle bar */}
+                <div className="flex justify-center pt-3 pb-2">
                   <div className="h-1 w-12 rounded-full bg-muted" />
+                </div>
 
-                  {/* Title */}
-                  <h2 className="font-display text-lg font-bold text-center">
-                    {selectedStop.title?.[language] || selectedStop.title?.no || selectedStop.title?.en || ''}
-                  </h2>
-
-                  {/* Status chip */}
-                  <div className="inline-flex items-center gap-2 bg-muted/50 rounded-full px-3 py-2">
-                    <div className={`w-3 h-3 rounded-full ${
-                      (isStopUnlocked(selectedStop.id) || selectedStop.order === 1)
-                        ? 'bg-green-600' 
-                        : 'bg-gray-400'
-                    }`} />
-                    <span className="text-sm font-medium text-foreground">
-                      {(isStopUnlocked(selectedStop.id) || selectedStop.order === 1) ? 'Opplåst' : 'Låst'}
-                    </span>
+                <div className="px-6 pb-6 space-y-4">
+                  {/* Stop header with number and title */}
+                  <div className="flex items-start gap-4">
+                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary/10 border-2 border-primary/20 shadow-sm">
+                      <span className="font-bold text-primary text-lg">{selectedStop.order}</span>
+                    </div>
+                    <div className="flex-1 pt-1">
+                      <h2 className="font-display text-xl font-bold leading-tight">
+                        {typeof selectedStop.title === 'object' ? selectedStop.title[language] : selectedStop.title}
+                      </h2>
+                      <p className="text-xs text-muted-foreground mt-1">Stopp {selectedStop.order} av {tour.stops.length}</p>
+                    </div>
                   </div>
+
+                  {/* Status badge */}
+                  <div>
+                    {(isStopUnlocked(selectedStop.id) || selectedStop.order === 1) ? (
+                      <motion.div 
+                        initial={{ scale: 0.9, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        className="inline-flex items-center gap-2 bg-green-100 dark:bg-green-900/30 rounded-full px-4 py-2 border border-green-200 dark:border-green-800 shadow-sm"
+                      >
+                        <div className="w-2.5 h-2.5 rounded-full bg-green-600 animate-pulse" />
+                        <span className="text-sm font-semibold text-green-700 dark:text-green-400">Opplåst</span>
+                      </motion.div>
+                    ) : (
+                      <motion.div 
+                        initial={{ scale: 0.9, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        className="inline-flex items-center gap-2 bg-amber-100 dark:bg-amber-900/30 rounded-full px-4 py-2 border border-amber-200 dark:border-amber-800 shadow-sm"
+                      >
+                        <div className="w-2.5 h-2.5 rounded-full bg-amber-600" />
+                        <span className="text-sm font-semibold text-amber-700 dark:text-amber-400">Låst</span>
+                      </motion.div>
+                    )}
+                  </div>
+
+                  {/* Description */}
+                  {selectedStop.description && (
+                    <div className="pt-2">
+                      <p className="text-sm text-foreground/80 leading-relaxed">
+                        {typeof selectedStop.description === 'object' ? selectedStop.description[language] : selectedStop.description}
+                      </p>
+                    </div>
+                  )}
+
+                  {/* Action button */}
+                  {(isStopUnlocked(selectedStop.id) || selectedStop.order === 1) && (
+                    <motion.div
+                      initial={{ y: 10, opacity: 0 }}
+                      animate={{ y: 0, opacity: 1 }}
+                      transition={{ delay: 0.2 }}
+                      className="pt-2"
+                    >
+                      <Button 
+                        asChild 
+                        size="lg" 
+                        className="w-full h-12 rounded-xl font-semibold shadow-md"
+                      >
+                        <Link to={`/tur/${tour.id}/stopp/${selectedStop.id}`}>
+                          Se detaljer
+                        </Link>
+                      </Button>
+                    </motion.div>
+                  )}
                 </div>
               </div>
             </motion.div>
