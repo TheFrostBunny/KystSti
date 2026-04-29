@@ -41,6 +41,18 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
         html.classList.remove("dark");
       }
 
+      // Update theme-color meta tag for mobile browsers
+      let metaThemeColor = document.querySelector('meta[name="theme-color"]');
+      if (!metaThemeColor) {
+        metaThemeColor = document.createElement('meta');
+        metaThemeColor.setAttribute('name', 'theme-color');
+        document.head.appendChild(metaThemeColor);
+      }
+      // Match the background colors from styles.css
+      // Light: oklch(0.97 0.008 80) -> #f7f6f2 (approx)
+      // Dark: oklch(0.12 0.01 250) -> #1a1c1e (approx)
+      metaThemeColor.setAttribute('content', shouldBeDark ? '#1a1c1e' : '#f7f6f2');
+
       setIsDark(shouldBeDark);
     };
 

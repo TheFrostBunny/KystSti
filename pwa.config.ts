@@ -8,8 +8,8 @@ const pwaConfig: Partial<VitePWAOptions> = {
     short_name: "KystSti",
     start_url: "/",
     display: "standalone",
-    background_color: "#ffffff",
-    theme_color: "#1e293b",
+    background_color: "#f7f6f2",
+    theme_color: "#457b66",
     icons: [
       {
         src: "/favicon.ico",
