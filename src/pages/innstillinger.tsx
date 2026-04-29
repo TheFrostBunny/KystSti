@@ -4,23 +4,24 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { useTranslation } from "@/context/LanguageContext";
 import { useTour } from "@/context/TourContext";
+import { getAllTours } from "@/data/tours";
 import { PageTransition } from "@/components/PageTransition";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 export default function SettingsPage() {
   const { t } = useTranslation();
-  const { clearTour, getProgress, currentTour } = useTour();
+  const { getProgress, currentTour } = useTour();
   const [progressReset, setProgressReset] = useState(false);
   const [dataCleared, setDataCleared] = useState(false);
   const [confirmClear, setConfirmClear] = useState(false);
 
+  const tours = getAllTours();
+  const totalStops = tours.reduce((acc, tour) => acc + tour.stops.length, 0);
   const progress = getProgress();
 
   const handleResetProgress = () => {
-    // Clear unlocked stops from localStorage
     localStorage.removeItem("kyststi-unlocked-stops");
-    // Force page reload to reset in-memory state
     setProgressReset(true);
     setTimeout(() => {
       window.location.reload();
@@ -32,7 +33,6 @@ export default function SettingsPage() {
       setConfirmClear(true);
       return;
     }
-    // Clear all kyststi keys
     Object.keys(localStorage)
       .filter((k) => k.startsWith("kyststi"))
       .forEach((k) => localStorage.removeItem(k));
@@ -50,26 +50,85 @@ export default function SettingsPage() {
         </h1>
       </header>
 
-      <div className="mx-auto max-w-lg p-4 space-y-4">
+      <div className="mx-auto max-w-lg p-4 space-y-6">
+        {/* Appearance & Language */}
+        <div className="grid grid-cols-1 gap-4">
+          <Section
+            icon={<PaletteIcon className="w-5 h-5 text-primary" />}
+            title={t("settings.appearance")}
+          >
+            <SettingRow label={t("settings.theme")}>
+              <ThemeToggle />
+            </SettingRow>
+          </Section>
 
-        {/* Appearance */}
-        <Section
-          icon={<PaletteIcon className="w-5 h-5 text-primary" />}
-          title={t("settings.appearance")}
-        >
-          <SettingRow label={t("settings.theme")}>
-            <ThemeToggle />
-          </SettingRow>
-        </Section>
+          <Section
+            icon={<GlobeIcon className="w-5 h-5 text-primary" />}
+            title={t("settings.language")}
+          >
+            <SettingRow label={t("settings.appLanguage")}>
+              <LanguageSwitcher />
+            </SettingRow>
+          </Section>
+        </div>
 
-        {/* Language */}
+        {/* About App - Merged from om.tsx */}
         <Section
-          icon={<GlobeIcon className="w-5 h-5 text-primary" />}
-          title={t("settings.language")}
+          icon={<InfoIcon className="w-5 h-5 text-primary" />}
+          title={t("settings.about")}
         >
-          <SettingRow label={t("settings.appLanguage")}>
-            <LanguageSwitcher />
-          </SettingRow>
+          <div className="space-y-4 py-2">
+            <div className="space-y-1">
+              <h3 className="font-display text-lg font-bold text-primary">{t('about.appName')}</h3>
+              <p className="text-xs text-foreground/70 leading-relaxed italic">
+                "{t('about.intro')}"
+              </p>
+            </div>
+
+            <div className="grid grid-cols-3 gap-2 pt-1">
+              <div className="text-center p-2 rounded-xl bg-primary/5 border border-primary/10">
+                <div className="font-display text-lg font-bold text-primary">{tours.length}</div>
+                <div className="text-[8px] font-bold uppercase tracking-wider text-muted-foreground">{t('about.tours')}</div>
+              </div>
+              <div className="text-center p-2 rounded-xl bg-primary/5 border border-primary/10">
+                <div className="font-display text-lg font-bold text-primary">{totalStops}</div>
+                <div className="text-[8px] font-bold uppercase tracking-wider text-muted-foreground">{t('about.stopsTotal')}</div>
+              </div>
+              <div className="text-center p-2 rounded-xl bg-primary/5 border border-primary/10">
+                <div className="font-display text-lg font-bold text-primary">{t('about.free')}</div>
+                <div className="text-[8px] font-bold uppercase tracking-wider text-muted-foreground">{t('about.toUse')}</div>
+              </div>
+            </div>
+
+            <div className="space-y-2 pt-2">
+              <h4 className="text-xs font-bold uppercase tracking-widest text-muted-foreground">{t('about.howToUse')}</h4>
+              <div className="grid grid-cols-1 gap-2">
+                {[1, 2, 3, 4].map((i) => (
+                  <div key={i} className="flex gap-3 items-start">
+                    <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary border border-primary/20 text-[10px] font-bold">
+                      {i}
+                    </div>
+                    <p className="text-xs text-foreground/80 pt-0.5 font-medium">{t(`about.step${i}` as any)}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+          
+          <div className="mt-4 pt-4 border-t border-border/40 space-y-3">
+            <AboutRow label={t("settings.version")} value="1.0.0" />
+            <div className="flex items-center justify-between py-1 px-1">
+              <span className="text-xs text-muted-foreground">{t("settings.sourceCode")}</span>
+              <a
+                href="https://github.com/TheFrostBunny/KystSti"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs font-semibold text-primary underline underline-offset-4 decoration-primary/30 hover:decoration-primary transition-all"
+              >
+                GitHub
+              </a>
+            </div>
+          </div>
         </Section>
 
         {/* Progress */}
@@ -79,17 +138,17 @@ export default function SettingsPage() {
         >
           {currentTour && (
             <div className="flex items-center justify-between py-2 px-1">
-              <div>
-                <p className="text-sm font-medium">
+              <div className="min-w-0 flex-1 mr-4">
+                <p className="text-sm font-medium truncate">
                   {typeof currentTour.title === "object"
                     ? (currentTour.title as any)["no"] ?? (currentTour.title as any)["en"]
                     : currentTour.title}
                 </p>
-                <p className="text-xs text-muted-foreground mt-0.5">
+                <p className="text-[10px] text-muted-foreground mt-0.5">
                   {progress.unlocked} / {progress.total} {t("common.stops")} {t("common.completed")}
                 </p>
               </div>
-              <div className="w-16 h-2 rounded-full bg-muted overflow-hidden">
+              <div className="w-16 h-1.5 rounded-full bg-muted overflow-hidden shrink-0">
                 <div
                   className="h-full bg-primary rounded-full transition-all"
                   style={{
@@ -113,7 +172,7 @@ export default function SettingsPage() {
           </SettingRow>
         </Section>
 
-        {/* Data */}
+        {/* Data & Privacy */}
         <Section
           icon={<DatabaseIcon className="w-5 h-5 text-primary" />}
           title={t("settings.data")}
@@ -134,39 +193,24 @@ export default function SettingsPage() {
                 initial={{ opacity: 0, y: -4 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0 }}
-                className="text-xs text-destructive px-1 pb-1"
+                className="text-[10px] text-destructive px-1 pb-1"
               >
                 {t("settings.clearWarning")}
               </motion.p>
             )}
           </AnimatePresence>
-        </Section>
-
-        {/* About */}
-        <Section
-          icon={<InfoIcon className="w-5 h-5 text-primary" />}
-          title={t("settings.about")}
-        >
-          <AboutRow label={t("settings.appName")} value="KystSti" />
-          <AboutRow label={t("settings.version")} value="1.0.0" />
-          <div className="flex items-center justify-between py-2.5 px-1 border-b border-border/40 last:border-0">
-            <span className="text-sm text-muted-foreground">{t("settings.sourceCode")}</span>
-            <a
-              href="https://github.com/TheFrostBunny/KystSti"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-sm font-semibold text-primary underline underline-offset-4 decoration-primary/30 hover:decoration-primary transition-all"
-            >
-              GitHub
-            </a>
-          </div>
-          <div className="pt-3 text-center">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/5 border border-primary/10 text-xs font-bold text-primary uppercase tracking-widest">
-              ❤️ {t("settings.madeForCoast")}
-            </span>
+          <div className="mt-2 p-3 rounded-xl bg-muted/30 border border-dashed border-muted-foreground/20 text-center">
+            <p className="text-[10px] font-medium text-foreground/70 leading-relaxed">
+              {t('about.privacy')} {t('about.positionLocal')}
+            </p>
           </div>
         </Section>
 
+        <div className="pt-4 text-center">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/5 border border-primary/10 text-[10px] font-bold text-primary uppercase tracking-widest">
+            ❤️ {t("settings.madeForCoast")}
+          </span>
+        </div>
       </div>
       <BottomNav />
     </PageTransition>
@@ -190,9 +234,9 @@ function Section({
       animate={{ opacity: 1, y: 0 }}
       className="rounded-2xl bg-card border shadow-sm overflow-hidden"
     >
-      <div className="flex items-center gap-2.5 px-5 py-3.5 border-b bg-muted/20">
+      <div className="flex items-center gap-2.5 px-5 py-3 border-b bg-muted/10">
         {icon}
-        <h2 className="font-display text-sm font-bold uppercase tracking-wider text-foreground/80">
+        <h2 className="font-display text-[10px] font-bold uppercase tracking-wider text-foreground/60">
           {title}
         </h2>
       </div>
@@ -215,7 +259,7 @@ function SettingRow({
       <div className="min-w-0">
         <p className="text-sm font-medium leading-tight">{label}</p>
         {description && (
-          <p className="text-xs text-muted-foreground mt-0.5 leading-snug">{description}</p>
+          <p className="text-[10px] text-muted-foreground mt-0.5 leading-snug">{description}</p>
         )}
       </div>
       <div className="shrink-0">{children}</div>
@@ -225,9 +269,9 @@ function SettingRow({
 
 function AboutRow({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex items-center justify-between py-2.5 border-b border-border/40 last:border-0">
-      <span className="text-sm text-muted-foreground">{label}</span>
-      <span className="text-sm font-semibold">{value}</span>
+    <div className="flex items-center justify-between py-1.5 border-b border-border/40 last:border-0 px-1">
+      <span className="text-xs text-muted-foreground">{label}</span>
+      <span className="text-xs font-semibold">{value}</span>
     </div>
   );
 }
@@ -250,7 +294,7 @@ function ActionButton({
       onClick={onClick}
       disabled={done}
       className={cn(
-        "border-0 px-3 py-1.5 rounded-lg text-xs font-bold transition-all",
+        "border-0 px-3 py-1.5 rounded-lg text-[10px] font-bold transition-all",
         done
           ? "bg-green-500/10 text-green-600 cursor-default"
           : variant === "danger"

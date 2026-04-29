@@ -13,7 +13,7 @@ import TourStopsPage from "./pages/tur/[tourId]/stopp";
 import TourStopDetailPage from "./pages/tur/[tourId]/stopp/[stopId]";
 import TourMapPage from "./pages/tur/[tourId]/kart";
 
-import AboutPage from "./pages/om";
+
 import TourBuilderPage from "./pages/lage";
 import NotFoundPage from "./pages/not-found";
 import { OnlineStatusBanner } from "@/components/OnlineStatusBanner";
@@ -35,7 +35,6 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
                 <Route path="tur/:tourId/stopp/:stopId" element={<TourStopDetailPage />} />
                 <Route path="tur/:tourId/kart" element={<TourMapPage />} />
                 {import.meta.env.VITE_ENABLE_QR_SCANNER === "true" && <Route path="skann" element={<ScanPage />} />}
-                <Route path="om" element={<AboutPage />} />
                 <Route path="innstillinger" element={<SettingsPage />} />
                 <Route path="lage" element={<TourBuilderPage />} />
                 <Route path="*" element={<NotFoundPage />} />

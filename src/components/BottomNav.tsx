@@ -27,7 +27,6 @@ export function BottomNav() {
     { to: "/kart", label: t('nav.map'), icon: MapIcon },
     { to: "/skann", label: t('nav.scan'), icon: QrCodeIcon, highlight: true },
     { to: "/lage", label: t('nav.createTour'), icon: PlusIcon },
-    { to: "/om", label: t('nav.about'), icon: InfoIcon },
     { to: "/innstillinger", label: t('nav.settings'), icon: SettingsIcon },
   ];
 

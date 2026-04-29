@@ -27,7 +27,6 @@ export function Sidebar() {
     },
     { to: "/skann", label: t('nav.scan'), icon: QrCodeIcon },
     { to: "/lage", label: t('nav.createTour'), icon: PlusIcon },
-    { to: "/om", label: t('nav.about'), icon: InfoIcon },
     { to: "/innstillinger", label: t('nav.settings'), icon: SettingsIcon },
   ].filter(item => {
     if (item.label === t('nav.map') && item.disabled) return false;
