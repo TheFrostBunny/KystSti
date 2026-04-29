@@ -23,7 +23,7 @@ export function BottomNav() {
 
   const baseNavItems: NavItem[] = [
     { to: "/", label: t('nav.home'), icon: HomeIcon, exact: true },
-    { to: "/stopp", label: t('nav.stops'), icon: RouteIcon, matchPaths: ["/tur", "/stopp"] },
+    { to: "/stopp", label: t('nav.stops'), icon: RouteIcon },
     { to: "/kart", label: t('nav.map'), icon: MapIcon },
     { to: "/skann", label: t('nav.scan'), icon: QrCodeIcon, highlight: true },
     { to: "/lage", label: t('nav.createTour'), icon: PlusIcon },
@@ -46,37 +46,46 @@ export function BottomNav() {
     }
     return item;
   }).filter(item => {
-    if (item.label === t('nav.map') && item.disabled) return false;
     if (item.label === t('nav.scan') && import.meta.env.VITE_ENABLE_QR_SCANNER !== "true") return false;
     if (item.label === t('nav.createTour') && import.meta.env.VITE_ENABLE_TOUR_BUILDER !== "true") return false;
     return true;
   });
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 border-t bg-card/95 backdrop-blur-md safe-area-bottom md:hidden">
-      <div className="mx-auto flex h-16 max-w-lg items-center justify-around px-2">
+    <nav className="fixed bottom-0 left-0 right-0 z-50 border-t bg-card/95 backdrop-blur-md safe-area-bottom md:hidden pb-safe">
+      <div className="mx-auto flex h-20 max-w-lg items-center justify-around px-2">
         {navItems.map((item) => {
-          const active = item.exact
-            ? location.pathname === item.to
-            : item.matchPaths
-              ? item.matchPaths.some(p => location.pathname === p || location.pathname.startsWith(p + "/"))
-              : location.pathname.startsWith(item.to);
+          let active = false;
+          
+          if (item.label === t('nav.stops')) {
+            // Only active for stops, not for kart
+            active = location.pathname.includes('/stopp') && !location.pathname.includes('/kart');
+          } else if (item.label === t('nav.map')) {
+            // Only active for kart
+            active = location.pathname.includes('/kart');
+          } else if (item.exact) {
+            // Exact match for home
+            active = location.pathname === item.to;
+          } else {
+            // Default matching for other items
+            active = location.pathname.startsWith(item.to);
+          }
           
           if (item.highlight) {
             return (
               <Link
                 key={item.to}
                 to={item.to}
-                className="flex flex-col items-center gap-0.5 min-w-14"
+                className="flex flex-col items-center gap-1 min-w-[72px] active:scale-95 transition-transform"
               >
                 <div className={cn(
-                  "flex h-10 w-10 items-center justify-center rounded-full transition-colors",
-                  active ? "bg-primary text-primary-foreground" : "bg-primary/10 text-primary"
+                  "flex h-12 w-12 items-center justify-center rounded-full transition-all shadow-sm",
+                  active ? "bg-primary text-primary-foreground shadow-primary/20" : "bg-primary/10 text-primary"
                 )}>
-                  <item.icon className="h-5 w-5" />
+                  <item.icon className="h-6 w-6" />
                 </div>
                 <span className={cn(
-                  "text-xs font-medium",
+                  "text-[10px] font-bold uppercase tracking-wider",
                   active ? "text-primary" : "text-muted-foreground"
                 )}>
                   {item.label}
@@ -90,20 +99,20 @@ export function BottomNav() {
               key={item.to}
               to={item.to}
               className={cn(
-                "relative flex flex-col items-center gap-0.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-colors min-w-14",
+                "relative flex flex-col items-center gap-1 rounded-xl px-2 py-2 text-[10px] font-bold uppercase tracking-wider transition-all min-w-[64px] active:scale-95",
                 active
                   ? "text-primary"
-                  : "text-muted-foreground hover:text-foreground"
+                  : "text-muted-foreground"
               )}
             >
               <item.icon
-                className={cn("h-5 w-5 transition-transform duration-200", active && "scale-110 text-primary")}
+                className={cn("h-6 w-6 transition-all duration-200", active ? "scale-110 text-primary" : "opacity-70")}
               />
               <span className="relative z-10">{item.label}</span>
               {active && (
                 <motion.div
                   layoutId="activeTab"
-                  className="absolute inset-0 z-0 rounded-xl bg-primary/5"
+                  className="absolute inset-0 z-0 rounded-2xl bg-primary/5"
                   transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                 />
               )}

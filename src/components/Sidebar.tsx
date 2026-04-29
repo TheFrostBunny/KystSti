@@ -48,11 +48,21 @@ export function Sidebar() {
 
       <nav className="flex-1 px-4 space-y-1">
         {navItems.map((item) => {
-          const active = item.exact
-            ? location.pathname === item.to
-            : item.matchPaths
-              ? item.matchPaths.some(p => location.pathname === p || location.pathname.startsWith(p + "/"))
-              : location.pathname.startsWith(item.to);
+          let active = false;
+          
+          if (item.label === t('nav.stops')) {
+            // Only active for stops, not for kart
+            active = location.pathname.includes('/stopp') && !location.pathname.includes('/kart');
+          } else if (item.label === t('nav.map')) {
+            // Only active for kart
+            active = location.pathname.includes('/kart');
+          } else if (item.exact) {
+            // Exact match for home
+            active = location.pathname === item.to;
+          } else {
+            // Default matching for other items
+            active = location.pathname.startsWith(item.to);
+          }
 
           return (
             <Link
