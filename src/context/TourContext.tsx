@@ -20,11 +20,10 @@ const STORAGE_KEY_UNLOCKED = "kyststi-unlocked-stops";
 
 export function TourProvider({ children }: { children: ReactNode }) {
   const [currentTourId, setCurrentTourId] = useState<string | null>(() => {
-    const envTourId = import.meta.env.VITE_ACTIVE_TOUR_ID || "kristiansund-byvandring";
     if (typeof window !== "undefined") {
-      return localStorage.getItem(STORAGE_KEY_TOUR) || envTourId;
+      return localStorage.getItem(STORAGE_KEY_TOUR);
     }
-    return envTourId;
+    return null;
   });
 
   const [unlockedStops, setUnlockedStops] = useState<Set<string>>(() => {
@@ -90,7 +89,7 @@ export function TourProvider({ children }: { children: ReactNode }) {
     setCurrentTourId(null);
   };
 
-  const qrActive = import.meta.env.VITE_ENABLE_QR_SCANNER === "true"; // Hent QR-skanner status fra miljøvariabelen
+  const qrActive = import.meta.env.VITE_ENABLE_QR_SCANNER === "true";
 
   return (
     <TourContext.Provider

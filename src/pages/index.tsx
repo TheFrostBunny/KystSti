@@ -18,13 +18,12 @@ export default function HomePage() {
   const { currentTour, currentTourId, getProgress, setCurrentTour } = useTour();
   const { language } = useTranslation();
 
-  // Set active tour only on first load if not already set
+  // Set first tour as default if no tour is selected
   useEffect(() => {
-    const envTourId = import.meta.env.VITE_ACTIVE_TOUR_ID || "kristiansund-byvandring";
-    if (!currentTourId) {
-      setCurrentTour(envTourId);
+    if (!currentTourId && tours.length > 0) {
+      setCurrentTour(tours[0].id);
     }
-  }, []); // Empty dependency array means this runs only once on mount
+  }, []);
 
   const progress = getProgress();
 
