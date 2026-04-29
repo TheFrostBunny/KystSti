@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { useState, useRef, useEffect } from "react";
 import { useTranslation } from "@/context/LanguageContext";
 import { MapPreview } from "./MapPreview";
+import { getUserPosition } from "@/utils/geolocation";
 
 // Helper components
 interface TourBuilderFormProps {
@@ -88,16 +89,18 @@ export function TourBuilderForm({ tourData, onChange }: TourBuilderFormProps) {
   }, [tourData]);
 
   const setUserLocation = () => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((pos) => {
+    getUserPosition()
+      .then((position) => {
         onChange({
           mapCenter: {
-            lat: parseFloat(pos.coords.latitude.toFixed(5)),
-            lng: parseFloat(pos.coords.longitude.toFixed(5)),
+            lat: position.lat,
+            lng: position.lng,
           },
         });
+      })
+      .catch((error) => {
+        alert(`Feil ved henting av posisjon: ${error.message}`);
       });
-    }
   };
   const generateId = (title: string) => {
     return title
@@ -448,10 +451,11 @@ export function TourBuilderForm({ tourData, onChange }: TourBuilderFormProps) {
                   },
                 });
               }}
+              showAddress={true}
             />
             <div className="text-xs text-muted-foreground p-2 bg-muted/50 flex justify-between items-center">
               <span>Klikk på kartet for å flytte sentrum</span>
-              <span className="font-mono">{tourData.mapCenter.lat}, {tourData.mapCenter.lng}</span>
+              <span className="font-mono text-xs">{tourData.mapCenter.lat.toFixed(5)}, {tourData.mapCenter.lng.toFixed(5)}</span>
             </div>
           </div>
         )}

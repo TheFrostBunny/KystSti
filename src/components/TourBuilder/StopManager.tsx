@@ -4,6 +4,7 @@ import Button from "@/components/ui/button";
 import type { TourStop } from "@/data/tours";
 import { useTranslation } from "@/context/LanguageContext";
 import { MapPreview } from "./MapPreview";
+import { getUserPosition } from "@/utils/geolocation";
 
 import QRCode from "react-qr-code";
 
@@ -353,10 +354,11 @@ function StopForm({
                   lng={formData.lng} 
                   zoom={16} 
                   onSelectPosition={(lat, lng) => setFormData((prev) => ({ ...prev, lat: parseFloat(lat.toFixed(5)), lng: parseFloat(lng.toFixed(5)) }))}
+                  showAddress={true}
                 />
                 <div className="text-xs text-muted-foreground p-2 bg-muted/50 flex justify-between items-center">
                   <span>Klikk på kartet for å flytte stoppet</span>
-                  <span className="font-mono">{formData.lat}, {formData.lng}</span>
+                  <span className="font-mono text-xs">{formData.lat.toFixed(5)}, {formData.lng.toFixed(5)}</span>
                 </div>
               </div>
             )}
