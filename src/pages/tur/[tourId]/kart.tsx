@@ -5,6 +5,7 @@ import L from "leaflet";
 import { getTourById, mapColors, TourStop } from "@/data/tours";
 import { useTour } from "@/context/TourContext";
 import { useTranslation  } from "@/context/LanguageContext";
+import { useTheme } from "@/context/ThemeContext";
 import { BottomNav } from "@/components/BottomNav";
 import Button from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
@@ -40,6 +41,7 @@ export default function TourMapPage() {
   const navigate = useNavigate();
   const { isStopUnlocked } = useTour();
   const { t, language } = useTranslation();
+  const { isDark } = useTheme();
   const [selectedStop, setSelectedStop] = useState<TourStop | null>(null);
   
   const tour = tourId ? getTourById(tourId) : null;
@@ -142,7 +144,9 @@ export default function TourMapPage() {
         <motion.div 
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="absolute bottom-24 left-4 z-40 rounded-2xl bg-white/95 dark:bg-card/95 backdrop-blur-md p-4 shadow-lg border"
+          className={`absolute bottom-24 left-4 z-40 rounded-2xl backdrop-blur-md p-4 shadow-lg border ${
+            isDark ? "bg-card/95 border-border" : "bg-white/95 border-border/50"
+          }`}
         >
           <div className="space-y-2">
             <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Forklaring</p>
