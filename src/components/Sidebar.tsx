@@ -5,47 +5,29 @@ import { useTranslation } from "@/context/LanguageContext";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 
-
-type NavItem = {
-  to: string;
-  label: any;
-  icon: React.FC<{ className?: string }>;
-  exact?: boolean;
-  matchPaths?: string[];
-  highlight?: boolean;
-  disabled?: boolean;
-};
-
-export function BottomNav() {
+export function Sidebar() {
   const location = useLocation();
   const { currentTourId } = useTour();
   const { t } = useTranslation();
 
-  const baseNavItems: NavItem[] = [
+  const navItems = [
     { to: "/", label: t('nav.home'), icon: HomeIcon, exact: true },
-    { to: "/stopp", label: t('nav.stops'), icon: RouteIcon, matchPaths: ["/tur", "/stopp"] },
-    { to: "/kart", label: t('nav.map'), icon: MapIcon },
-    { to: "/skann", label: t('nav.scan'), icon: QrCodeIcon, highlight: true },
+    { 
+      to: currentTourId ? `/tur/${currentTourId}/stopp` : '/turer', 
+      label: t('nav.stops'), 
+      icon: RouteIcon,
+      matchPaths: ["/tur", "/stopp"]
+    },
+    { 
+      to: currentTourId ? `/tur/${currentTourId}/kart` : '#', 
+      label: t('nav.map'), 
+      icon: MapIcon,
+      disabled: !currentTourId
+    },
+    { to: "/skann", label: t('nav.scan'), icon: QrCodeIcon },
     { to: "/lage", label: t('nav.createTour'), icon: PlusIcon },
     { to: "/om", label: t('nav.about'), icon: InfoIcon },
-  ];
-
-  const navItems = baseNavItems.map(item => {
-    if (item.label === t('nav.stops')) {
-      return {
-        ...item,
-        to: currentTourId ? `/tur/${currentTourId}/stopp` : '/turer',
-      };
-    }
-    if (item.label === t('nav.map')) {
-      return {
-        ...item,
-        to: currentTourId ? `/tur/${currentTourId}/kart` : '#',
-        disabled: !currentTourId,
-      };
-    }
-    return item;
-  }).filter(item => {
+  ].filter(item => {
     if (item.label === t('nav.map') && item.disabled) return false;
     if (item.label === t('nav.scan') && import.meta.env.VITE_ENABLE_QR_SCANNER !== "true") return false;
     if (item.label === t('nav.createTour') && import.meta.env.VITE_ENABLE_TOUR_BUILDER !== "true") return false;
@@ -53,68 +35,68 @@ export function BottomNav() {
   });
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 border-t bg-card/95 backdrop-blur-md safe-area-bottom md:hidden">
-      <div className="mx-auto flex h-16 max-w-lg items-center justify-around px-2">
+    <aside className="hidden md:flex flex-col w-64 bg-card border-r h-screen sticky top-0 overflow-y-auto">
+      <div className="p-6">
+        <Link to="/" className="flex items-center gap-3 group">
+          <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-primary-foreground shadow-lg shadow-primary/20 group-hover:scale-105 transition-transform">
+            <MapIcon className="w-6 h-6" />
+          </div>
+          <span className="font-display text-xl font-bold tracking-tight">KystSti</span>
+        </Link>
+      </div>
+
+      <nav className="flex-1 px-4 space-y-1">
         {navItems.map((item) => {
           const active = item.exact
             ? location.pathname === item.to
             : item.matchPaths
               ? item.matchPaths.some(p => location.pathname === p || location.pathname.startsWith(p + "/"))
               : location.pathname.startsWith(item.to);
-          
-          if (item.highlight) {
-            return (
-              <Link
-                key={item.to}
-                to={item.to}
-                className="flex flex-col items-center gap-0.5 min-w-14"
-              >
-                <div className={cn(
-                  "flex h-10 w-10 items-center justify-center rounded-full transition-colors",
-                  active ? "bg-primary text-primary-foreground" : "bg-primary/10 text-primary"
-                )}>
-                  <item.icon className="h-5 w-5" />
-                </div>
-                <span className={cn(
-                  "text-xs font-medium",
-                  active ? "text-primary" : "text-muted-foreground"
-                )}>
-                  {item.label}
-                </span>
-              </Link>
-            );
-          }
-          
+
           return (
             <Link
               key={item.to}
               to={item.to}
               className={cn(
-                "relative flex flex-col items-center gap-0.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-colors min-w-14",
+                "group relative flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all",
                 active
-                  ? "text-primary"
-                  : "text-muted-foreground hover:text-foreground"
+                  ? "text-primary bg-primary/5 shadow-sm border border-primary/10"
+                  : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
               )}
             >
-              <item.icon
-                className={cn("h-5 w-5 transition-transform duration-200", active && "scale-110 text-primary")}
-              />
-              <span className="relative z-10">{item.label}</span>
+              <item.icon className={cn(
+                "w-5 h-5 transition-transform duration-200",
+                active ? "scale-110" : "group-hover:scale-110"
+              )} />
+              {item.label}
               {active && (
                 <motion.div
-                  layoutId="activeTab"
-                  className="absolute inset-0 z-0 rounded-xl bg-primary/5"
+                  layoutId="activeSidebarTab"
+                  className="absolute left-0 w-1 h-6 bg-primary rounded-r-full"
                   transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                 />
               )}
             </Link>
           );
         })}
+      </nav>
+
+      <div className="p-6 mt-auto">
+        <div className="rounded-2xl bg-muted/30 border border-dashed p-4">
+          <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-1">Status</p>
+          <div className="flex items-center gap-2">
+            <div className={cn("w-2 h-2 rounded-full", currentTourId ? "bg-green-500" : "bg-amber-500")} />
+            <span className="text-xs font-medium">
+              {currentTourId ? "Tur aktiv" : "Velg en tur"}
+            </span>
+          </div>
+        </div>
       </div>
-    </nav>
+    </aside>
   );
 }
 
+// Icons (reuse from BottomNav if possible, but here for self-containment)
 function HomeIcon({ className }: { className?: string }) {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className={className}>
