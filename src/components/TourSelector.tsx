@@ -9,9 +9,10 @@ import { ChevronDown } from "lucide-react";
 
 interface TourSelectorProps {
   onTourSelected?: () => void;
+  minimal?: boolean;
 }
 
-export function TourSelector({ onTourSelected }: TourSelectorProps) {
+export function TourSelector({ onTourSelected, minimal = false }: TourSelectorProps) {
   const { currentTourId, setCurrentTour } = useTour();
   const { language } = useTranslation();
   const { isDark } = useTheme();
@@ -58,22 +59,28 @@ export function TourSelector({ onTourSelected }: TourSelectorProps) {
   return (
     <div className="relative w-full">
       <motion.button
-        whileHover={{ scale: 1.01 }}
-        whileTap={{ scale: 0.99 }}
+        whileHover={{ scale: minimal ? 1 : 1.01 }}
+        whileTap={{ scale: minimal ? 1 : 0.99 }}
         onClick={() => setIsOpen(!isOpen)}
         className={cn(
-          "w-full flex items-center justify-between px-4 py-3 rounded-xl border transition-all",
-          isDark
-            ? "bg-card border-border hover:border-primary/50 hover:bg-card/80"
-            : "bg-background border-border hover:border-primary/50 hover:bg-muted/30"
+          "w-full flex items-center justify-between px-0 py-2.5 transition-all",
+          !minimal && "px-4 py-3 rounded-xl border",
+          !minimal && (
+            isDark
+              ? "bg-card border-border hover:border-primary/50 hover:bg-card/80"
+              : "bg-background border-border hover:border-primary/50 hover:bg-muted/30"
+          )
         )}
       >
-        <div className="flex-1 text-left">
-          <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-            {language === "no" ? "Velg tur" : "Select tour"}
-          </p>
+        <div className="flex-1 text-left min-w-0">
+          {!minimal && (
+            <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              {language === "no" ? "Velg tur" : "Select tour"}
+            </p>
+          )}
           <p className={cn(
-            "font-display font-bold mt-1 truncate",
+            "font-medium line-clamp-2 break-words",
+            minimal ? "text-sm" : "font-display font-bold mt-1 text-base sm:text-lg",
             isDark ? "text-foreground" : "text-foreground"
           )}>
             {currentTour
@@ -87,7 +94,7 @@ export function TourSelector({ onTourSelected }: TourSelectorProps) {
         </div>
         <ChevronDown
           className={cn(
-            "w-5 h-5 text-muted-foreground transition-transform shrink-0 ml-2",
+            "w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground transition-transform shrink-0 ml-2",
             isOpen && "rotate-180"
           )}
         />
@@ -139,10 +146,10 @@ export function TourSelector({ onTourSelected }: TourSelectorProps) {
                           : "hover:bg-muted/30"
                       )}
                     >
-                      <div className="flex items-start justify-between gap-3">
+                      <div className="flex items-start justify-between gap-2">
                         <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2">
-                            <p className="font-semibold truncate">
+                          <div className="flex items-center gap-2 min-w-0">
+                            <p className="font-semibold line-clamp-2 break-words text-sm">
                               {typeof tour.title === "object"
                                 ? tour.title[language as "no" | "en"]
                                 : tour.title}
@@ -151,14 +158,14 @@ export function TourSelector({ onTourSelected }: TourSelectorProps) {
                               <motion.div
                                 initial={{ scale: 0 }}
                                 animate={{ scale: 1 }}
-                                className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground"
+                                className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground flex-shrink-0"
                               >
                                 <CheckIcon className="h-3 w-3" />
                               </motion.div>
                             )}
                           </div>
                           <p className={cn(
-                            "text-xs mt-1 line-clamp-1",
+                            "text-xs mt-1 line-clamp-1 break-words",
                             isDark
                               ? "text-muted-foreground"
                               : "text-muted-foreground"
