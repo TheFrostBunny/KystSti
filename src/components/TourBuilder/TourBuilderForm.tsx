@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { useState, useRef, useEffect } from "react";
 import { useTranslation } from "@/context/LanguageContext";
 import { MapPreview } from "./MapPreview";
+import { ImageUpload } from "./ImageUpload";
 import { getUserPosition } from "@/utils/geolocation";
 
 // Helper components
@@ -343,13 +344,19 @@ export function TourBuilderForm({ tourData, onChange }: TourBuilderFormProps) {
         }
       >
         <InputField label={t('tourBuilder.coverImageUrl')} required hint={t('tourBuilder.coverImageHint')}>
-          <input
-            type="url"
-            value={tourData.coverImage || ""}
-            onChange={(e) => onChange({ coverImage: e.target.value })}
-            placeholder={t('tourBuilder.coverImagePlaceholder')}
-            className={inputClasses}
-          />
+          <div className="flex gap-2">
+            <input
+              type="url"
+              value={tourData.coverImage || ""}
+              onChange={(e) => onChange({ coverImage: e.target.value })}
+              placeholder={t('tourBuilder.coverImagePlaceholder')}
+              className={inputClasses}
+            />
+            <ImageUpload 
+              onUploadSuccess={(url) => onChange({ coverImage: url })}
+              className="shrink-0"
+            />
+          </div>
         </InputField>
         {tourData.coverImage && (
           <motion.div
