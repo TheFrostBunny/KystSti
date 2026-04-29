@@ -6,13 +6,15 @@ import { useTranslation } from "@/context/LanguageContext";
 import { BottomNav } from "@/components/BottomNav";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { LogoIconContainer } from "@/components/LogoIconContainer";
+import { StartTourButton } from "@/components/StartTourButton";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import Button from "@/components/ui/button";
 import { ChevronRight, MapPin, Clock, Route } from "lucide-react";
 
 export default function HomePage() {
   const tours = getAllTours();
-  const { setCurrentTour } = useTour();
+  const { currentTour, setCurrentTour } = useTour();
   const { language, t } = useTranslation();
 
   const difficultyColors = {
@@ -27,6 +29,8 @@ export default function HomePage() {
     krevende: { no: "Krevende", en: "Challenging" },
   };
 
+  const selectedTour = currentTour ? tours.find(t => t.id === currentTour) : null;
+
   return (
     <div className="flex min-h-screen flex-col bg-background">
       <LanguageSwitcher center className="pt-4" />
@@ -40,12 +44,65 @@ export default function HomePage() {
         >
           <LogoIconContainer />
 
-          <h1 className="mb-2 text-center text-2xl font-bold text-foreground">
-            {t("tours.title")}
-          </h1>
-          <p className="mb-6 text-center text-muted-foreground">
-            {t("tours.subtitle")}
-          </p>
+          {selectedTour ? (
+            <>
+              <h1 className="mb-2 text-center text-2xl font-bold text-foreground">
+                {typeof selectedTour.title === "object" ? selectedTour.title[language as "no" | "en"] : selectedTour.title}
+              </h1>
+              <p className="mb-6 text-center text-muted-foreground">
+                {typeof selectedTour.subtitle === "object" ? selectedTour.subtitle[language as "no" | "en"] : selectedTour.subtitle}
+              </p>
+
+              <div className="mb-8 overflow-hidden rounded-lg">
+                <img
+                  src={selectedTour.coverImage}
+                  alt={typeof selectedTour.title === "object" ? selectedTour.title[language as "no" | "en"] : selectedTour.title}
+                  className="h-64 w-full object-cover"
+                  crossOrigin="anonymous"
+                />
+              </div>
+
+              <div className="mb-6 space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-muted-foreground flex items-center gap-2">
+                    <MapPin className="h-4 w-4" />
+                    {selectedTour.stops.length} {t("tours.stops")}
+                  </span>
+                  <Badge className={difficultyColors[selectedTour.difficulty]}>
+                    {difficultyLabels[selectedTour.difficulty][language as "no" | "en"]}
+                  </Badge>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-muted-foreground flex items-center gap-2">
+                    <Route className="h-4 w-4" />
+                    {selectedTour.distance}
+                  </span>
+                  <span className="text-sm text-muted-foreground flex items-center gap-2">
+                    <Clock className="h-4 w-4" />
+                    {typeof selectedTour.estimatedTime === "object" ? selectedTour.estimatedTime[language as "no" | "en"] : selectedTour.estimatedTime}
+                  </span>
+                </div>
+              </div>
+
+              <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
+                <StartTourButton to={`/tur/${selectedTour.id}/stopp`} />
+                <Button asChild variant="outline" size="lg" className="h-12 sm:h-14 rounded-xl px-6 sm:px-8 text-base font-semibold">
+                  <button onClick={() => setCurrentTour(null)}>
+                    {language === "no" ? "Velg annen tur" : "Choose another tour"}
+                  </button>
+                </Button>
+              </div>
+            </>
+          ) : (
+            <>
+              <h1 className="mb-2 text-center text-2xl font-bold text-foreground">
+                {t("tours.title")}
+              </h1>
+              <p className="mb-6 text-center text-muted-foreground">
+                {t("tours.subtitle")}
+              </p>
+            </>
+          )}
 
           <div className="space-y-4">
             {tours.map((tour, index) => {
@@ -60,10 +117,9 @@ export default function HomePage() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.4, delay: index * 0.1 }}
                 >
-                  <Link
-                    to={`/tur/${tour.id}`}
+                  <button
                     onClick={() => setCurrentTour(tour.id)}
-                    className="block"
+                    className="block w-full text-left"
                   >
                     <Card className="overflow-hidden transition-all hover:shadow-lg hover:scale-[1.02]">
                       <div className="relative h-40 overflow-hidden">
@@ -108,7 +164,7 @@ export default function HomePage() {
                         </div>
                       </CardContent>
                     </Card>
-                  </Link>
+                  </button>
                 </motion.div>
               );
             })}
