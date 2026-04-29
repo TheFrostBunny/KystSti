@@ -12,16 +12,19 @@ import { LogoIconContainer } from "@/components/LogoIconContainer";
 import { TourStats } from "@/components/TourStats";
 import { TourProgress } from "@/components/TourProgress";
 import { TourHowItWorks } from "@/components/TourHowItWorks";
+import { useEffect } from "react";
 
 export default function HomePage() {
-  const { currentTour, getProgress, setCurrentTour } = useTour();
+  const { currentTour, currentTourId, getProgress, setCurrentTour } = useTour();
   const { language } = useTranslation();
 
-  // Set active tour if not already set
-  const envTourId = import.meta.env.VITE_ACTIVE_TOUR_ID || "kristiansund-byvandring";
-  if (currentTour?.id !== envTourId) {
-    setCurrentTour(envTourId);
-  }
+  // Set active tour only on first load if not already set
+  useEffect(() => {
+    const envTourId = import.meta.env.VITE_ACTIVE_TOUR_ID || "kristiansund-byvandring";
+    if (!currentTourId) {
+      setCurrentTour(envTourId);
+    }
+  }, []); // Empty dependency array means this runs only once on mount
 
   const progress = getProgress();
 
