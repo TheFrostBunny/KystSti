@@ -36,7 +36,7 @@ export default function TourStopsPage() {
             <ArrowLeftIcon className="h-5 w-5" />
           </Link>
           <div className="flex-1">
-            <h1 className="font-display text-lg font-bold truncate">{typeof tour.title === 'object' ? tour.title[language] : tour.title}</h1>
+            <h1 className="font-display text-lg font-bold">Stopp</h1>
           </div>
           <Button asChild variant="ghost" size="icon" className="w-10 h-10">
             <Link to={`/tur/${tour.id}/kart`}>
