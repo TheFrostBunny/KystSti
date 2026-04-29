@@ -17,7 +17,8 @@
     "map": "Map",
     "scan": "Scan",
     "about": "About",
-    "createTour": "Create Tour"
+    "createTour": "Create Tour",
+    "settings": "Settings"
   },
   "home": {
     "title": "KystSti",
@@ -253,6 +254,30 @@
       "tourId": "Tour ID",
       "stopCount": "Number of stops"
     }
+  },
+  "settings": {
+    "title": "Settings",
+    "appearance": "Appearance",
+    "theme": "Colour theme",
+    "language": "Language",
+    "appLanguage": "App language",
+    "progress": "Progress",
+    "resetProgress": "Reset progress",
+    "resetProgressDesc": "Removes all unlocked stops for the current tour",
+    "reset": "Reset",
+    "resetDone": "Reset!",
+    "data": "Data",
+    "clearData": "Clear all data",
+    "clearDataDesc": "Removes all saved settings and progress",
+    "clear": "Clear data",
+    "confirmClear": "Tap again to confirm",
+    "clearDone": "Cleared!",
+    "clearWarning": "This cannot be undone. Tap again to confirm.",
+    "about": "About",
+    "appName": "App",
+    "version": "Version",
+    "sourceCode": "Source code",
+    "madeForCoast": "Made for the coast"
   },
   "map": {
       "latitudeLabel": "Latitude",

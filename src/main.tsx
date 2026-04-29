@@ -18,6 +18,7 @@ import TourBuilderPage from "./pages/lage";
 import NotFoundPage from "./pages/not-found";
 import { OnlineStatusBanner } from "@/components/OnlineStatusBanner";
 import ScanPage from "./pages/skann";
+import SettingsPage from "./pages/innstillinger";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
@@ -35,6 +36,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
                 <Route path="tur/:tourId/kart" element={<TourMapPage />} />
                 {import.meta.env.VITE_ENABLE_QR_SCANNER === "true" && <Route path="skann" element={<ScanPage />} />}
                 <Route path="om" element={<AboutPage />} />
+                <Route path="innstillinger" element={<SettingsPage />} />
                 <Route path="lage" element={<TourBuilderPage />} />
                 <Route path="*" element={<NotFoundPage />} />
               </Route>

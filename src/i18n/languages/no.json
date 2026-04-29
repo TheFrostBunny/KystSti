@@ -17,7 +17,8 @@
     "map": "Kart",
     "scan": "Skann",
     "about": "Om",
-    "createTour": "Lag tur"
+    "createTour": "Lag tur",
+    "settings": "Innstillinger"
   },
   "home": {
     "title": "KystSti",
@@ -253,6 +254,30 @@
       "tourId": "Tur-ID",
       "stopCount": "Antall stopp"
     }
+  },
+  "settings": {
+    "title": "Innstillinger",
+    "appearance": "Utseende",
+    "theme": "Fargetema",
+    "language": "Språk",
+    "appLanguage": "Appspråk",
+    "progress": "Fremgang",
+    "resetProgress": "Nullstill fremgang",
+    "resetProgressDesc": "Fjerner alle opplåste stopp for gjeldende tur",
+    "reset": "Nullstill",
+    "resetDone": "Nullstilt!",
+    "data": "Data",
+    "clearData": "Slett alle data",
+    "clearDataDesc": "Fjerner alle lagrede innstillinger og fremgang",
+    "clear": "Slett data",
+    "confirmClear": "Trykk igjen for å bekrefte",
+    "clearDone": "Slettet!",
+    "clearWarning": "Dette kan ikke angres. Trykk igjen for å bekrefte.",
+    "about": "Om appen",
+    "appName": "App",
+    "version": "Versjon",
+    "sourceCode": "Kildekode",
+    "madeForCoast": "Laget for kysten"
   },
   "map": {
     "latitudeLabel": "Breddegrad",
