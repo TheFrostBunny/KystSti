@@ -44,10 +44,10 @@ export function Onboarding() {
   const [isOpen, setIsOpen] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
   // Hent fra context om QR-skanner er aktiv
-  const tourContext = useContext(TourContext) as {
-    qrActive?: boolean;
-  } | undefined;
+  const tourContext = useContext(TourContext);
   const qrActive = tourContext?.qrActive ?? true; // fallback true hvis ikke definert
+
+  const steps = getSteps(qrActive);
 
   useEffect(() => {
     const enableOnboarding = import.meta.env.VITE_ENABLE_ONBOARDING === "true";
@@ -99,7 +99,6 @@ export function Onboarding() {
   const enableOnboarding = import.meta.env.VITE_ENABLE_ONBOARDING === "true";
   if (!enableOnboarding || !isOpen || !qrActive) return debugReset;
 
-  const steps = getSteps(qrActive);
   const step = steps[currentStep];
   const isLastStep = currentStep === steps.length - 1;
 
