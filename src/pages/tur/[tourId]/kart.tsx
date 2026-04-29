@@ -6,7 +6,6 @@ import { getTourById, mapColors, TourStop } from "@/data/tours";
 import { useTour } from "@/context/TourContext";
 import { useTranslation  } from "@/context/LanguageContext";
 import { useTheme } from "@/context/ThemeContext";
-import { BottomNav } from "@/components/BottomNav";
 import Button from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import "leaflet/dist/leaflet.css";
@@ -164,7 +163,6 @@ export default function TourMapPage() {
         </motion.div>
       </div>
 
-      <BottomNav />
 
       {/* Bottom Sheet Modal for Stop Details */}
       <AnimatePresence>

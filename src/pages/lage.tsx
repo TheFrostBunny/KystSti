@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { BottomNav } from "@/components/BottomNav";
 import { TourBuilderForm } from "@/components/TourBuilder/TourBuilderForm";
 import { StopManager } from "@/components/TourBuilder/StopManager";
 import { ExportPanel } from "@/components/TourBuilder/ExportPanel";
@@ -233,7 +232,6 @@ export default function TourBuilderPage() {
       </div>
 
 
-      <BottomNav />
     </div>
   );
 }

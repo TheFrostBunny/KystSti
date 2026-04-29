@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { BottomNav } from "@/components/BottomNav";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { TourSelector } from "@/components/TourSelector";
@@ -223,7 +222,6 @@ export default function SettingsPage() {
           </span>
         </div>
       </div>
-      <BottomNav />
     </PageTransition>
   );
 }

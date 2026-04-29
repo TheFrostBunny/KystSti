@@ -3,7 +3,6 @@ import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import { getTourById, getStopById, uiText } from "@/data/tours";
 import { useTour } from "@/context/TourContext";
-import { BottomNav } from "@/components/BottomNav";
 import Button from "@/components/ui/button";
 import { AudioPlayer } from "@/components/AudioPlayer";
 import { cn } from "@/lib/utils";
@@ -252,7 +251,6 @@ export default function StopDetailPage() {
         </div>
       </main>
 
-      <BottomNav />
     </div>
   );
 }

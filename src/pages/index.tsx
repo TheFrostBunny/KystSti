@@ -6,7 +6,6 @@ import { motion } from "framer-motion";
 import { tours, getTourById } from "@/data/tours";
 import { useTour } from "@/context/TourContext";
 import { useTranslation } from "@/context/LanguageContext";
-import { BottomNav } from "@/components/BottomNav";
 
 import  Button  from "@/components/ui/button";
 import { LogoIconContainer } from "@/components/LogoIconContainer";
@@ -85,7 +84,6 @@ export default function HomePage() {
           </div>
         </div>
       </div>
-      <BottomNav />
     </PageTransition>
   );
 }

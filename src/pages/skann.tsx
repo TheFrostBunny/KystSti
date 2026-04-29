@@ -5,7 +5,6 @@ import QrScanner from "react-qr-scanner";
 import { useTour } from "@/context/TourContext";
 import { useTranslation } from "@/context/LanguageContext";
 import { getTourById } from "@/data/tours";
-import { BottomNav } from "@/components/BottomNav";
 import Button from "@/components/ui/button";
 import { useState } from "react";
 
@@ -197,7 +196,6 @@ export default function ScanPage() {
         </Button>
       </motion.div>
 
-      <BottomNav />
     </div>
   );
 }

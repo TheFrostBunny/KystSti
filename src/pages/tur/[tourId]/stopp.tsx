@@ -3,7 +3,6 @@ import { motion } from "framer-motion";
 import { getTourById, uiText } from "@/data/tours";
 import { useTour } from "@/context/TourContext";
 import { useTranslation } from "@/context/LanguageContext";
-import { BottomNav } from "@/components/BottomNav";
 import Button from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Progress } from "@/components/ui/progress";
@@ -124,7 +123,6 @@ export default function TourStopsPage() {
         </div>
       </main>
 
-      <BottomNav />
     </div>
   );
 }

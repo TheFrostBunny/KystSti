@@ -3,7 +3,6 @@ import { motion } from "framer-motion";
 import { getTourById, uiText } from "@/data/tours";
 import { useTranslation } from "@/context/LanguageContext";
 import { useTour } from "@/context/TourContext";
-import { BottomNav } from "@/components/BottomNav";
 import Button from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { PageTransition } from "@/components/PageTransition";
@@ -149,7 +148,6 @@ export default function TourDetailPage() {
         </div>
       </main>
 
-      <BottomNav />
     </PageTransition>
   );
 }
