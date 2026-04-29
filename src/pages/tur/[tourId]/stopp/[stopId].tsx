@@ -99,19 +99,21 @@ export default function StopDetailPage() {
             {/* Image Section - Left (2/3 width on desktop) */}
             <div className="lg:col-span-2 space-y-4">
               {/* Main Image */}
-              <motion.div
-                key={currentImageIndex}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="relative overflow-hidden rounded-2xl bg-muted aspect-video lg:aspect-auto lg:h-125"
-              >
-                <img
-                  src={stop.images[currentImageIndex]}
-                  alt={typeof stop.title === 'object' ? stop.title[language as 'no' | 'en'] : stop.title}
-                  className="w-full h-full object-cover"
-                  crossOrigin="anonymous"
-                />
-              </motion.div>
+              {stop.images && stop.images.length > 0 && (
+                <motion.div
+                  key={currentImageIndex}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="relative overflow-hidden rounded-2xl bg-muted aspect-video lg:aspect-auto lg:h-125"
+                >
+                  <img
+                    src={stop.images[currentImageIndex]}
+                    alt={typeof stop.title === 'object' ? stop.title[language as 'no' | 'en'] : stop.title}
+                    className="w-full h-full object-cover"
+                    crossOrigin="anonymous"
+                  />
+                </motion.div>
+              )}
 
               {/* Image Gallery Thumbnails */}
               {stop.images.length > 1 && (

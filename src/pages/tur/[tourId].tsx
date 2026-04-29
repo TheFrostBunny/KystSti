@@ -40,25 +40,27 @@ export default function TourDetailPage() {
   return (
     <PageTransition className="flex min-h-screen flex-col pb-24">
       {/* Hero Image */}
-      <div className="relative h-64 overflow-hidden">
-        <img
-          src={tour.coverImage}
-          alt={typeof tour.title === 'object' ? tour.title[language] : tour.title}
-          className="w-full h-full object-cover"
-          crossOrigin="anonymous"
-        />
-        <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent" />
+      {tour.coverImage && (
+        <div className="relative h-64 overflow-hidden">
+          <img
+            src={tour.coverImage}
+            alt={typeof tour.title === 'object' ? tour.title[language] : tour.title}
+            className="w-full h-full object-cover"
+            crossOrigin="anonymous"
+          />
+          <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent" />
         <button
           onClick={() => navigate("/")}
           className="absolute top-4 left-4 flex h-10 w-10 items-center justify-center rounded-full bg-black/20 backdrop-blur-md text-white border border-white/20 transition-colors hover:bg-black/40"
         >
           <ArrowLeftIcon className="h-5 w-5" />
         </button>
-        <div className="absolute bottom-6 left-6 right-6">
-          <h1 className="font-display text-3xl font-bold text-white text-balance">{typeof tour.title === 'object' ? tour.title[language] : tour.title}</h1>
-          <p className="text-white/80 mt-1 text-lg">{typeof tour.subtitle === 'object' ? tour.subtitle[language] : tour.subtitle}</p>
+          <div className="absolute bottom-6 left-6 right-6">
+            <h1 className="font-display text-3xl font-bold text-white text-balance">{typeof tour.title === 'object' ? tour.title[language] : tour.title}</h1>
+            <p className="text-white/80 mt-1 text-lg">{typeof tour.subtitle === 'object' ? tour.subtitle[language] : tour.subtitle}</p>
+          </div>
         </div>
-      </div>
+      )}
 
       <main className="flex-1 px-4 py-8 max-w-5xl mx-auto w-full">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
