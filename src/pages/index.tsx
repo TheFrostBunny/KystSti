@@ -1,7 +1,6 @@
 import { TourHeader } from "@/components/TourHeader";
 import { StartTourButton } from "@/components/StartTourButton";
 import { motion } from "framer-motion";
-import { tours, getTourById } from "@/data/tours";
 import { useTour } from "@/context/TourContext";
 import { useTranslation } from "@/context/LanguageContext";
 import { BottomNav } from "@/components/BottomNav";
@@ -11,10 +10,12 @@ import { LogoIconContainer } from "@/components/LogoIconContainer";
 import { TourStats } from "@/components/TourStats";
 import { TourProgress } from "@/components/TourProgress";
 import { TourHowItWorks } from "@/components/TourHowItWorks";
+import { Link } from "react-router-dom";
+import { MapPin } from "lucide-react";
 
 export default function HomePage() {
   const { currentTour, getProgress, setCurrentTour } = useTour();
-  const { language } = useTranslation();
+  const { language, t } = useTranslation();
 
   // Set active tour if not already set
   const envTourId = import.meta.env.VITE_ACTIVE_TOUR_ID || "kristiansund-byvandring";
@@ -71,6 +72,12 @@ export default function HomePage() {
 
           <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
             <StartTourButton to={currentTour ? `/tur/${currentTour.id}/stopp` : '/turer'} />
+            <Button asChild variant="outline" size="lg" className="h-12 sm:h-14 rounded-xl px-6 sm:px-8 text-base font-semibold">
+              <Link to="/turer" className="flex items-center gap-2">
+                <MapPin className="h-5 w-5" />
+                {t("tours.chooseTour")}
+              </Link>
+            </Button>
           </div>
         </motion.div>
       </div>

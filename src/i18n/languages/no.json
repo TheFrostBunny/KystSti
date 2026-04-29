@@ -13,6 +13,7 @@
   },
   "nav": {
     "home": "Hjem",
+    "tours": "Turer",
     "stops": "Stopp",
     "map": "Kart",
     "scan": "Skann",
@@ -262,5 +263,12 @@
     "unlocked": "Låst opp",
     "locked": "Låst",
     "map": "Kart"
+  },
+  "tours": {
+    "title": "Velg en tur",
+    "subtitle": "Utforsk Kristiansund og omegn med interaktive turer",
+    "stops": "stopp",
+    "viewTour": "Se tur",
+    "chooseTour": "Velg tur"
   }
 }

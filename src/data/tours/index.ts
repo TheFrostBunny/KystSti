@@ -13,12 +13,14 @@ import type { Tour, TourStop } from "./types";
 import kristiansundByvandring from "./kristiansund-byvandring";
 import kyststiNordlandet from "./kyststi-nordlandet";
 import atlanterhavsvegen from "./atlanterhavsvegen";
+import historicalWalkKristiansund from "./historical-walk-kristiansund";
 
 // --- LEGG TIL NYE TURER I DENNE LISTEN ---
 const tourModules: Tour[] = [
   kristiansundByvandring,
   kyststiNordlandet,
-  atlanterhavsvegen
+  atlanterhavsvegen,
+  historicalWalkKristiansund
 ];
 
 // --- EKSPORTER ALLE TURER ---

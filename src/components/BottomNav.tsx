@@ -22,6 +22,7 @@ export function BottomNav() {
 
   const baseNavItems: NavItem[] = [
     { to: "/", label: t('nav.home'), icon: HomeIcon, exact: true },
+    { to: "/turer", label: t('nav.tours'), icon: CompassIcon },
     { to: "/stopp", label: t('nav.stops'), icon: RouteIcon, matchPaths: ["/tur", "/stopp"] },
     { to: "/kart", label: t('nav.map'), icon: MapIcon },
     { to: "/skann", label: t('nav.scan'), icon: QrCodeIcon, highlight: true },
@@ -151,6 +152,14 @@ function InfoIcon({ className }: { className?: string }) {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className={className}>
       <circle cx="12" cy="12" r="10" /><line x1="12" y1="16" x2="12" y2="12" /><line x1="12" y1="8" x2="12.01" y2="8" />
+    </svg>
+  );
+}
+
+function CompassIcon({ className }: { className?: string }) {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <circle cx="12" cy="12" r="10" /><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" />
     </svg>
   );
 }

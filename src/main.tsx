@@ -15,6 +15,7 @@ import TourMapPage from "./pages/tur/[tourId]/kart";
 import AboutPage from "./pages/om";
 import TourBuilderPage from "./pages/lage";
 import NotFoundPage from "./pages/not-found";
+import ToursPage from "./pages/turer";
 import { OnlineStatusBanner } from "@/components/OnlineStatusBanner";
 import ScanPage from "./pages/skann";
 
@@ -27,6 +28,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
           <Routes>
             <Route element={<App />}>
               <Route index element={<HomePage />} />
+              <Route path="turer" element={<ToursPage />} />
               <Route path="tur/:tourId" element={<TourDetailPage />} />
               <Route path="tur/:tourId/stopp" element={<TourStopsPage />} />
               <Route path="tur/:tourId/stopp/:stopId" element={<TourStopDetailPage />} />

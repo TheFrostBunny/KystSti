@@ -13,6 +13,7 @@
   },
   "nav": {
     "home": "Home",
+    "tours": "Tours",
     "stops": "Stops",
     "map": "Map",
     "scan": "Scan",
@@ -262,5 +263,12 @@
       "unlocked": "Unlocked",
       "locked": "Locked",
       "map":"Map"
-       }
+       },
+  "tours": {
+    "title": "Choose a tour",
+    "subtitle": "Explore Kristiansund and the surrounding area with interactive tours",
+    "stops": "stops",
+    "viewTour": "View tour",
+    "chooseTour": "Choose tour"
+  }
 }
