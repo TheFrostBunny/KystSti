@@ -4,7 +4,6 @@ import Button from "@/components/ui/button";
 import type { TourStop } from "@/data/tours";
 import { useTranslation } from "@/context/LanguageContext";
 import { MapPreview } from "./MapPreview";
-import { ImageUpload } from "./ImageUpload";
 import { getUserPosition } from "@/utils/geolocation";
 
 import QRCode from "react-qr-code";
@@ -367,36 +366,20 @@ function StopForm({
 
           <div>
             <label className="block text-sm font-medium mb-1.5">{t("tourBuilder.form.imagesLabel")}</label>
-            <div className="flex flex-col gap-2">
-              <div className="flex gap-2">
-                <input
-                  type="url"
-                  value={imageInput}
-                  onChange={(e) => setImageInput(e.target.value)}
-                  placeholder="https://..."
-                  className="flex-1 px-3 py-2 rounded-lg border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
-                  onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), addImage())}
-                />
-                <Button type="button" size="sm" variant="secondary" onClick={addImage}>
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4">
-                    <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
-                  </svg>
-                </Button>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="h-px flex-1 bg-border" />
-                <span className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">eller</span>
-                <div className="h-px flex-1 bg-border" />
-              </div>
-              <ImageUpload 
-                onUploadSuccess={(url) => {
-                  setFormData((prev) => ({
-                    ...prev,
-                    images: [...(prev.images || []), url],
-                  }));
-                }}
-                className="w-full"
+            <div className="flex gap-2">
+              <input
+                type="url"
+                value={imageInput}
+                onChange={(e) => setImageInput(e.target.value)}
+                placeholder="https://..."
+                className="flex-1 px-3 py-2 rounded-lg border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+                onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), addImage())}
               />
+              <Button type="button" size="sm" variant="secondary" onClick={addImage}>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4">
+                  <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
+                </svg>
+              </Button>
             </div>
             {formData.images && formData.images.length > 0 && (
               <div className="flex flex-wrap gap-2 mt-2">

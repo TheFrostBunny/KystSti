@@ -169,9 +169,7 @@
     "addStop": "Legg til stopp",
     "addFirstStopHelper": "Ingen stopp lagt til ennå. Klikk på knappen over for å legge til det første stoppet.",
     "addFirstStop": "Legg til første stopp",
-    "uploadImage": "Last opp bilde",
-    "uploading": "Laster opp...",
-    "uploadError": "Kunne ikke laste opp bildet. Sjekk konfigurasjonen.",
+
     "noStopsYet": "Ingen stopp ennå",
     "startTour": "Start tur",
     "fetchingLocation": "Henter posisjon...",
