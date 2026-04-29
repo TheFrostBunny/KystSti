@@ -27,6 +27,15 @@ export default function HomePage() {
 
   const progress = getProgress();
 
+  // Show a loading state if no tour is selected yet
+  if (!currentTour && tours.length > 0) {
+    return (
+      <div className="flex min-h-screen flex-col items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex min-h-screen flex-col">
       <LanguageSwitcher center className="pt-4" />
@@ -57,7 +66,7 @@ export default function HomePage() {
 
           {currentTour && (
             <TourStats
-              stops={currentTour.stops.length}
+              stops={currentTour.stops?.length || 0}
               estimatedTime={
                 typeof currentTour.estimatedTime === 'object'
                   ? currentTour.estimatedTime[language as 'no' | 'en']
