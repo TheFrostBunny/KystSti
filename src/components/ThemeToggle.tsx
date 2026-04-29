@@ -33,7 +33,7 @@ export function ThemeToggle({ className }: { className?: string }) {
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           className={cn(
-            "relative flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-semibold transition-all",
+            "relative flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-semibold transition-all border-0",
             theme === t.value
               ? "bg-primary text-primary-foreground shadow-sm"
               : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
