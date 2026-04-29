@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { useState, useRef, useEffect } from "react";
 import { useTranslation } from "@/context/LanguageContext";
+import { MapPreview } from "./MapPreview";
 
 // Helper components
 interface TourBuilderFormProps {
@@ -432,39 +433,26 @@ export function TourBuilderForm({ tourData, onChange }: TourBuilderFormProps) {
             Bruk min posisjon
           </button>
         </div>
-        {/* Kartforhåndsvisning med OpenStreetMap static map */}
+        {/* Kartforhåndsvisning med interaktivt kart */}
         {tourData.mapCenter?.lat && tourData.mapCenter?.lng && (
-          <div className="mt-4 rounded-xl overflow-hidden border">
-            {(() => {
-              // Beregn bbox ut fra zoom-nivå
-              const zoom = tourData.mapZoom || 15;
-              // Mindre bbox gir mer zoom. Ca. 0.01 på zoom 15, 0.0001 på zoom 20, 0.5 på zoom 1
-              const base = 0.5; // ca. bbox for zoom 1
-              const factor = Math.pow(2, 15 - zoom); // eksponentiell skalering
-              const lat = tourData.mapCenter.lat;
-              const lng = tourData.mapCenter.lng;
-              const bboxWidth = base * factor;
-              const bboxHeight = (base * factor) / 2;
-              const bbox = [
-                lng - bboxWidth,
-                lat - bboxHeight,
-                lng + bboxWidth,
-                lat + bboxHeight,
-              ].join(",");
-              return (
-                <iframe
-                  ref={mapRef}
-                  title="Kartforhåndsvisning"
-                  width="100%"
-                  height="220"
-                  style={{ border: 0 }}
-                  loading="lazy"
-                  src={`https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${lat},${lng}`}
-                  allowFullScreen
-                />
-              );
-            })()}
-            <div className="text-xs text-muted-foreground p-2 bg-muted/50">Forhåndsvisning fra OpenStreetMap</div>
+          <div className="mt-4 border rounded-xl overflow-hidden shadow-sm">
+            <MapPreview 
+              lat={tourData.mapCenter.lat} 
+              lng={tourData.mapCenter.lng} 
+              zoom={tourData.mapZoom || 15}
+              onSelectPosition={(lat, lng) => {
+                onChange({
+                  mapCenter: {
+                    lat: parseFloat(lat.toFixed(5)),
+                    lng: parseFloat(lng.toFixed(5)),
+                  },
+                });
+              }}
+            />
+            <div className="text-xs text-muted-foreground p-2 bg-muted/50 flex justify-between items-center">
+              <span>Klikk på kartet for å flytte sentrum</span>
+              <span className="font-mono">{tourData.mapCenter.lat}, {tourData.mapCenter.lng}</span>
+            </div>
           </div>
         )}
 

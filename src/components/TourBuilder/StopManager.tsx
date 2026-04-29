@@ -3,6 +3,7 @@ import { motion, AnimatePresence, Reorder } from "framer-motion";
 import Button from "@/components/ui/button";
 import type { TourStop } from "@/data/tours";
 import { useTranslation } from "@/context/LanguageContext";
+import { MapPreview } from "./MapPreview";
 
 import QRCode from "react-qr-code";
 
@@ -346,17 +347,17 @@ function StopForm({
             </div>
             {/* Kartforhåndsvisning for valgt posisjon */}
             {formData.lat && formData.lng && (
-              <div className="mt-3 rounded-xl overflow-hidden border">
-                <iframe
-                  title="Kartforhåndsvisning for stopp"
-                  width="100%"
-                  height="180"
-                  style={{ border: 0 }}
-                  loading="lazy"
-                  src={`https://www.openstreetmap.org/export/embed.html?mlat=${formData.lat}&mlon=${formData.lng}&zoom=16&marker=${formData.lat},${formData.lng}`}
-                  allowFullScreen
+              <div className="mt-3 rounded-xl overflow-hidden border shadow-sm">
+                <MapPreview 
+                  lat={formData.lat} 
+                  lng={formData.lng} 
+                  zoom={16} 
+                  onSelectPosition={(lat, lng) => setFormData((prev) => ({ ...prev, lat: parseFloat(lat.toFixed(5)), lng: parseFloat(lng.toFixed(5)) }))}
                 />
-                <div className="text-xs text-muted-foreground p-2 bg-muted/50">Forhåndsvisning fra OpenStreetMap</div>
+                <div className="text-xs text-muted-foreground p-2 bg-muted/50 flex justify-between items-center">
+                  <span>Klikk på kartet for å flytte stoppet</span>
+                  <span className="font-mono">{formData.lat}, {formData.lng}</span>
+                </div>
               </div>
             )}
           </div>

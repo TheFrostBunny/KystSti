@@ -233,15 +233,15 @@
       "download": "Export tour",
       "copy": "Copy code",
       "status": {
-        "ready": "Tour is ready to export",
-        "incomplete": "Fill in all required fields and add at least one stop",
-        "titleRequired": "Title",
-        "stopsRequired": "Stops"
+        "ready": "Tour is ready to export!",
+        "incomplete": "Tour is not quite ready yet. Check the list below:",
+        "titleRequired": "Title (missing)",
+        "stopsRequired": "Stops (need at least one)"
       },
       "instructions": "How to use exported code:",
       "step1": "Copy the code or download the file below",
-      "step2": "Open src/data/tours.ts",
-      "step3": "Add the tour to the tours array",
+      "step2": "Save the file in src/data/tours/",
+      "step3": "Import and register the tour in src/data/tours/index.ts",
       "step4": "Make sure all image URLs are accessible",
       "step5": "Test the tour on your site!",
       "codeLabel": "Generated code:",

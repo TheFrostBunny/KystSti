@@ -233,15 +233,15 @@
       "download": "Eksporter tur",
       "copy": "Kopier kode",
       "status": {
-        "ready": "Turen er klar for eksport",
-        "incomplete": "Fyll ut alle påkrevde felt og legg til minst ett stopp",
-        "titleRequired": "Tittel",
-        "stopsRequired": "Stopp"
+        "ready": "Turen er klar for eksport!",
+        "incomplete": "Turen er ikke helt klar ennå. Sjekk listen under:",
+        "titleRequired": "Tittel (mangler)",
+        "stopsRequired": "Stopp (trenger minst ett)"
       },
       "instructions": "Slik bruker du eksportert kode:",
       "step1": "Kopier koden eller last ned filen under",
-      "step2": "Åpne src/data/tours.ts",
-      "step3": "Legg til turen i tours-arrayet",
+      "step2": "Lagre filen i src/data/tours/",
+      "step3": "Importer og registrer turen i src/data/tours/index.ts",
       "step4": "Sørg for at alle bilde-URL-er er tilgjengelige",
       "step5": "Test turen på siden din!",
       "codeLabel": "Generert kode:",
