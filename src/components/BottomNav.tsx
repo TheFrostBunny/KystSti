@@ -110,10 +110,8 @@ export function BottomNav() {
               />
               <span className="relative z-10">{item.label}</span>
               {active && (
-                <motion.div
-                  layoutId="activeTab"
+                <div
                   className="absolute inset-0 z-0 rounded-2xl bg-primary/5"
-                  transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                 />
               )}
             </Link>

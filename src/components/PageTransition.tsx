@@ -8,36 +8,26 @@ interface PageTransitionProps {
 
 const pageVariants = {
   initial: {
-    opacity: 0,
-    y: 10,
+    opacity: 1,
   },
   animate: {
     opacity: 1,
-    y: 0,
     transition: {
-      duration: 0.4,
-      ease: [0.22, 1, 0.36, 1],
+      duration: 0,
     },
   },
   exit: {
-    opacity: 0,
-    y: -10,
+    opacity: 1,
     transition: {
-      duration: 0.3,
+      duration: 0,
     },
   },
 };
 
 export function PageTransition({ children, className }: PageTransitionProps) {
   return (
-    <motion.div
-      initial="initial"
-      animate="animate"
-      exit="exit"
-      variants={pageVariants}
-      className={className}
-    >
+    <div className={className}>
       {children}
-    </motion.div>
+    </div>
   );
 }
