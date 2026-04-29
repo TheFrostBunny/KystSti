@@ -243,15 +243,15 @@ function Section({
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className="rounded-2xl bg-card border shadow-sm overflow-hidden"
+      className="rounded-2xl bg-card border shadow-sm"
     >
-      <div className="flex items-center gap-2.5 px-5 py-3 border-b bg-muted/10">
+      <div className="flex items-center gap-2.5 px-5 py-3 border-b bg-muted/10 rounded-t-2xl">
         {icon}
         <h2 className="font-display text-[10px] font-bold uppercase tracking-wider text-foreground/60">
           {title}
         </h2>
       </div>
-      <div className="px-5 py-3 space-y-1">{children}</div>
+      <div className="px-5 py-3 space-y-1 rounded-b-2xl">{children}</div>
     </motion.div>
   );
 }
