@@ -1,7 +1,8 @@
 import { useState, useEffect, useContext } from "react";
 import { TourContext } from "@/context/TourContext";
 import { motion, AnimatePresence } from "framer-motion";
-import { MapPin, QrCode, Volume2, ChevronRight, X } from "lucide-react";
+import { MapPin, QrCode, Volume2, ChevronRight, X, Settings } from "lucide-react";
+import { useTranslation } from "@/context/LanguageContext";
 import Button  from "@/components/ui/button";
 
 const ONBOARDING_KEY = "kyststi-onboarding-complete";
@@ -13,27 +14,29 @@ interface OnboardingStep {
 }
 
 
-function getSteps(qrActive: boolean): OnboardingStep[] {
+function getSteps(qrActive: boolean, t: (key: string) => string): OnboardingStep[] {
   const baseSteps: OnboardingStep[] = [
     {
       icon: <MapPin className="h-12 w-12" />,
-      title: "Utforsk turer",
-      description:
-        "Velg mellom flere turer i Kristiansund-området. Hver tur har unike stopp med historier og informasjon.",
+      title: t("onboarding.exploreTours"),
+      description: t("onboarding.exploreTourDesc"),
     },
     {
       icon: <Volume2 className="h-12 w-12" />,
-      title: "Lytt til historiene",
-      description:
-        "Mange stopp har lydguider som forteller deg mer om stedet. Bare trykk play og lytt mens du utforsker.",
+      title: t("onboarding.listenStories"),
+      description: t("onboarding.listenStoriesDesc"),
+    },
+    {
+      icon: <Settings className="h-12 w-12" />,
+      title: t("onboarding.settings"),
+      description: t("onboarding.settingsDesc"),
     },
   ];
   if (qrActive) {
     baseSteps.splice(1, 0, {
       icon: <QrCode className="h-12 w-12" />,
-      title: "Skann QR-koder",
-      description:
-        "Ved hvert stopp finner du en QR-kode. Skann den for å låse opp innhold og registrere fremgangen din.",
+      title: t("onboarding.scanQr"),
+      description: t("onboarding.scanQrDesc"),
     });
   }
   return baseSteps;
@@ -43,11 +46,12 @@ function getSteps(qrActive: boolean): OnboardingStep[] {
 export function Onboarding() {
   const [isOpen, setIsOpen] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
+  const { t } = useTranslation();
   // Hent fra context om QR-skanner er aktiv
   const tourContext = useContext(TourContext);
   const qrActive = tourContext?.qrActive ?? true; // fallback true hvis ikke definert
 
-  const steps = getSteps(qrActive);
+  const steps = getSteps(qrActive, t);
 
   useEffect(() => {
     const enableOnboarding = import.meta.env.VITE_ENABLE_ONBOARDING === "true";
@@ -173,7 +177,7 @@ export function Onboarding() {
                 className="w-full gap-2"
                 size="lg"
               >
-                {isLastStep ? "Kom i gang" : "Neste"}
+                {isLastStep ? t("onboarding.getStarted") : t("onboarding.next")}
                 {!isLastStep && <ChevronRight className="h-4 w-4" />}
               </Button>
             </div>

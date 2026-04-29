@@ -112,7 +112,9 @@
     "listenStoriesDesc": "Mange stopp har lydguider som forteller mer om stedet. Trykk på play og lytt mens du utforsker.",
     "skip": "Hopp over",
     "next": "Neste",
-    "getStarted": "Kom i gang"
+    "getStarted": "Kom i gang",
+    "settings": "Alt på ett sted",
+    "settingsDesc": "Bytt tur, endre språk eller nullstill fremgangen din under Innstillinger."
   },
   "tourBuilder": {
     "title": "Lag en tur",

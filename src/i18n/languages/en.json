@@ -112,7 +112,9 @@
     "listenStoriesDesc": "Many stops have audio guides that tell you more about the place. Just press play and listen as you explore.",
     "skip": "Skip",
     "next": "Next",
-    "getStarted": "Get Started"
+    "getStarted": "Get Started",
+    "settings": "Everything in one place",
+    "settingsDesc": "Switch tours, change language, or reset your progress under Settings."
   },
   "tourBuilder": {
     "title": "Create a Tour",
