@@ -82,18 +82,18 @@ export default function TourMapPage() {
     <div className="flex min-h-screen flex-col">
       {/* Header */}
       <header className="sticky top-0 z-30 border-b bg-background/95 backdrop-blur-md shadow-sm">
-        <div className="flex h-14 items-center px-4 gap-3">
+        <div className="flex h-12 sm:h-14 items-center px-3 sm:px-4 gap-2 sm:gap-3">
           <button 
             onClick={() => navigate(`/tur/${tour.id}`)} 
-            className="flex h-10 w-10 items-center justify-center rounded-lg hover:bg-muted transition-colors"
+            className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-lg hover:bg-muted transition-colors shrink-0"
           >
             <ArrowLeftIcon className="h-5 w-5" />
           </button>
-          <div className="flex-1">
-            <h1 className="font-display text-base font-bold truncate">
+          <div className="flex-1 min-w-0">
+            <h1 className="font-display text-sm sm:text-base font-bold truncate">
               {typeof tour.title === 'object' ? tour.title[language] : tour.title}
             </h1>
-            <p className="text-xs text-muted-foreground">{t("map.map")}</p>
+            <p className="text-xs text-muted-foreground hidden sm:block">{t("map.map")}</p>
           </div>
         </div>
       </header>
@@ -104,7 +104,7 @@ export default function TourMapPage() {
           center={[tour.mapCenter.lat, tour.mapCenter.lng]}
           zoom={tour.mapZoom}
           className="h-full w-full"
-          style={{ height: "calc(100vh - 56px - 64px)" }}
+          style={{ height: "calc(100vh - 48px - 64px)" }}
         >
           <MapController center={[tour.mapCenter.lat, tour.mapCenter.lng]} zoom={tour.mapZoom} />
           <TileLayer
@@ -144,7 +144,7 @@ export default function TourMapPage() {
         <motion.div 
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          className={`absolute bottom-24 left-4 z-40 rounded-2xl backdrop-blur-md p-4 shadow-lg border ${
+          className={`absolute bottom-20 sm:bottom-24 left-3 sm:left-4 right-3 sm:right-auto z-40 rounded-2xl backdrop-blur-md p-3 sm:p-4 shadow-lg border max-w-xs ${
             isDark ? "bg-card/95 border-border" : "bg-white/95 border-border/50"
           }`}
         >
@@ -152,11 +152,11 @@ export default function TourMapPage() {
             <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Forklaring</p>
             <div className="flex flex-col gap-2">
               <div className="flex items-center gap-2">
-                <div className="w-4 h-4 rounded-full" style={{ backgroundColor: mapColors.unlockedPin }} />
+                <div className="w-3 h-3 sm:w-4 sm:h-4 rounded-full" style={{ backgroundColor: mapColors.unlockedPin }} />
                 <span className="text-xs font-medium">{t("map.unlocked")}</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="w-4 h-4 rounded-full" style={{ backgroundColor: mapColors.lockedPin }} />
+                <div className="w-3 h-3 sm:w-4 sm:h-4 rounded-full" style={{ backgroundColor: mapColors.lockedPin }} />
                 <span className="text-xs font-medium">{t("map.locked")}</span>
               </div>
             </div>
@@ -185,22 +185,22 @@ export default function TourMapPage() {
               animate={{ y: 0 }}
               exit={{ y: "100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              className="fixed bottom-16 left-0 right-0 z-50 rounded-t-3xl bg-card border-t border-border shadow-2xl"
+              className="fixed bottom-16 left-0 right-0 z-50 rounded-t-3xl bg-card border-t border-border shadow-2xl max-h-[60vh] sm:max-h-96"
             >
-              <div className="max-h-96 overflow-y-auto">
+              <div className="overflow-y-auto max-h-[calc(60vh-64px)] sm:max-h-96">
                 {/* Handle bar */}
                 <div className="flex justify-center pt-3 pb-2">
                   <div className="h-1 w-12 rounded-full bg-muted" />
                 </div>
 
-                <div className="px-6 pb-6 space-y-4">
+                <div className="px-4 sm:px-6 pb-6 space-y-4">
                   {/* Stop header with number and title */}
-                  <div className="flex items-start gap-4">
-                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary/10 border-2 border-primary/20 shadow-sm">
-                      <span className="font-bold text-primary text-lg">{selectedStop.order}</span>
+                  <div className="flex items-start gap-3">
+                    <div className="flex h-10 w-10 sm:h-12 sm:w-12 shrink-0 items-center justify-center rounded-full bg-primary/10 border-2 border-primary/20 shadow-sm">
+                      <span className="font-bold text-primary text-base sm:text-lg">{selectedStop.order}</span>
                     </div>
                     <div className="flex-1 pt-1">
-                      <h2 className="font-display text-xl font-bold leading-tight">
+                      <h2 className="font-display text-lg sm:text-xl font-bold leading-tight">
                         {typeof selectedStop.title === 'object' ? selectedStop.title[language] : selectedStop.title}
                       </h2>
                       <p className="text-xs text-muted-foreground mt-1">Stopp {selectedStop.order} av {tour.stops.length}</p>
@@ -233,7 +233,7 @@ export default function TourMapPage() {
                   {/* Description */}
                   {selectedStop.description && (
                     <div className="pt-2">
-                      <p className="text-sm text-foreground/80 leading-relaxed">
+                      <p className="text-xs sm:text-sm text-foreground/80 leading-relaxed">
                         {typeof selectedStop.description === 'object' ? selectedStop.description[language] : selectedStop.description}
                       </p>
                     </div>
@@ -250,7 +250,7 @@ export default function TourMapPage() {
                       <Button 
                         asChild 
                         size="lg" 
-                        className="w-full h-12 rounded-xl font-semibold shadow-md"
+                        className="w-full h-10 sm:h-12 rounded-xl font-semibold shadow-md text-sm"
                       >
                         <Link to={`/tur/${tour.id}/stopp/${selectedStop.id}`}>
                           Se detaljer
