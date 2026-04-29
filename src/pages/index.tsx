@@ -1,5 +1,6 @@
 import { TourHeader } from "@/components/TourHeader";
 import { StartTourButton } from "@/components/StartTourButton";
+import { TourSelector } from "@/components/TourSelector";
 import { motion } from "framer-motion";
 import { tours, getTourById } from "@/data/tours";
 import { useTour } from "@/context/TourContext";
@@ -39,6 +40,12 @@ export default function HomePage() {
           className="relative z-10 w-full max-w-2xl"
         >
           <LogoIconContainer />
+
+          {tours.length > 1 && (
+            <div className="mb-6">
+              <TourSelector />
+            </div>
+          )}
 
           <TourHeader
             title={typeof currentTour?.title === 'object' ? currentTour.title[language as 'no' | 'en'] : (currentTour?.title || "KystSti")}
