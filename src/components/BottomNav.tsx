@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { useTour } from "@/context/TourContext";
 import { useTranslation } from "@/context/LanguageContext";
 import { cn } from "@/lib/utils";
+import { motion } from "framer-motion";
 
 
 type NavItem = {
@@ -89,16 +90,23 @@ export function BottomNav() {
               key={item.to}
               to={item.to}
               className={cn(
-                "flex flex-col items-center gap-0.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-colors min-w-14",
+                "relative flex flex-col items-center gap-0.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-colors min-w-14",
                 active
                   ? "text-primary"
                   : "text-muted-foreground hover:text-foreground"
               )}
             >
               <item.icon
-                className={cn("h-5 w-5", active && "text-primary")}
+                className={cn("h-5 w-5 transition-transform duration-200", active && "scale-110 text-primary")}
               />
-              {item.label}
+              <span className="relative z-10">{item.label}</span>
+              {active && (
+                <motion.div
+                  layoutId="activeTab"
+                  className="absolute inset-0 z-0 rounded-xl bg-primary/5"
+                  transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                />
+              )}
             </Link>
           );
         })}
