@@ -1,86 +1,121 @@
-import { TourHeader } from "@/components/TourHeader";
-import { StartTourButton } from "@/components/StartTourButton";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
+import { getAllTours } from "@/data/tours";
 import { useTour } from "@/context/TourContext";
 import { useTranslation } from "@/context/LanguageContext";
 import { BottomNav } from "@/components/BottomNav";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
-import  Button  from "@/components/ui/button";
 import { LogoIconContainer } from "@/components/LogoIconContainer";
-import { TourStats } from "@/components/TourStats";
-import { TourProgress } from "@/components/TourProgress";
-import { TourHowItWorks } from "@/components/TourHowItWorks";
-import { Link } from "react-router-dom";
-import { MapPin } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { ChevronRight, MapPin, Clock, Route } from "lucide-react";
 
 export default function HomePage() {
-  const { currentTour, getProgress, setCurrentTour } = useTour();
+  const tours = getAllTours();
+  const { setCurrentTour } = useTour();
   const { language, t } = useTranslation();
 
-  // Set active tour if not already set
-  const envTourId = import.meta.env.VITE_ACTIVE_TOUR_ID || "kristiansund-byvandring";
-  if (currentTour?.id !== envTourId) {
-    setCurrentTour(envTourId);
-  }
+  const difficultyColors = {
+    lett: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200",
+    moderat: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200",
+    krevende: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200",
+  };
 
-  const progress = getProgress();
+  const difficultyLabels = {
+    lett: { no: "Lett", en: "Easy" },
+    moderat: { no: "Moderat", en: "Moderate" },
+    krevende: { no: "Krevende", en: "Challenging" },
+  };
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex min-h-screen flex-col bg-background">
       <LanguageSwitcher center className="pt-4" />
-      <div className="relative flex flex-1 flex-col items-center justify-center px-4 sm:px-6 py-16 text-center">
-        <div className="pointer-events-none absolute inset-0 opacity-[0.03]" style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-        }} />
 
+      <div className="flex-1 px-4 pb-24 pt-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="relative z-10 w-full max-w-2xl"
+          transition={{ duration: 0.4 }}
+          className="mx-auto max-w-2xl"
         >
           <LogoIconContainer />
 
-          <TourHeader
-            title={typeof currentTour?.title === 'object' ? currentTour.title[language as 'no' | 'en'] : (currentTour?.title || "KystSti")}
-            subtitle={typeof currentTour?.subtitle === 'object' ? currentTour.subtitle[language as 'no' | 'en'] : (currentTour?.subtitle || "Opplev kysten på en ny måte")}
-            description={typeof currentTour?.description === 'object' ? currentTour.description[language as 'no' | 'en'] : (currentTour?.description || "Utforsk vakre kyststier med interaktive turer, QR-koder og lydguider.")}
-          />
+          <h1 className="mb-2 text-center text-2xl font-bold text-foreground">
+            {t("tours.title")}
+          </h1>
+          <p className="mb-6 text-center text-muted-foreground">
+            {t("tours.subtitle")}
+          </p>
 
-          {currentTour && (
-            <TourStats
-              stops={currentTour.stops.length}
-              estimatedTime={
-                typeof currentTour.estimatedTime === 'object'
-                  ? currentTour.estimatedTime[language as 'no' | 'en']
-                  : currentTour.estimatedTime
-              }
-            />
-          )}
+          <div className="space-y-4">
+            {tours.map((tour, index) => {
+              const title = typeof tour.title === "object" ? tour.title[language as "no" | "en"] : tour.title;
+              const subtitle = typeof tour.subtitle === "object" ? tour.subtitle[language as "no" | "en"] : tour.subtitle;
+              const estimatedTime = typeof tour.estimatedTime === "object" ? tour.estimatedTime[language as "no" | "en"] : tour.estimatedTime;
 
-          {currentTour && (
-            <TourProgress
-              unlocked={progress.unlocked}
-              total={progress.total}
-              link={`/tur/${currentTour.id}/stopp`}
-            />
-          )}
-
-          <TourHowItWorks
-            description={typeof currentTour?.howItWorks === 'object' ? currentTour.howItWorks[language as 'no' | 'en'] : (currentTour?.howItWorks || "Finn QR-kodene ved hvert stopp for å låse opp historier, bilder og lydguider!")}
-          />
-
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
-            <StartTourButton to={currentTour ? `/tur/${currentTour.id}/stopp` : '/turer'} />
-            <Button asChild variant="outline" size="lg" className="h-12 sm:h-14 rounded-xl px-6 sm:px-8 text-base font-semibold">
-              <Link to="/turer" className="flex items-center gap-2">
-                <MapPin className="h-5 w-5" />
-                {t("tours.chooseTour")}
-              </Link>
-            </Button>
+              return (
+                <motion.div
+                  key={tour.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.4, delay: index * 0.1 }}
+                >
+                  <Link
+                    to={`/tur/${tour.id}`}
+                    onClick={() => setCurrentTour(tour.id)}
+                    className="block"
+                  >
+                    <Card className="overflow-hidden transition-all hover:shadow-lg hover:scale-[1.02]">
+                      <div className="relative h-40 overflow-hidden">
+                        <img
+                          src={tour.coverImage}
+                          alt={title}
+                          className="h-full w-full object-cover"
+                          crossOrigin="anonymous"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                        <div className="absolute bottom-3 left-3 right-3">
+                          <h2 className="text-lg font-semibold text-white line-clamp-1">
+                            {title}
+                          </h2>
+                        </div>
+                        <Badge
+                          className={`absolute right-3 top-3 ${difficultyColors[tour.difficulty]}`}
+                        >
+                          {difficultyLabels[tour.difficulty][language as "no" | "en"]}
+                        </Badge>
+                      </div>
+                      <CardContent className="p-4">
+                        <p className="mb-3 text-sm text-muted-foreground line-clamp-2">
+                          {subtitle}
+                        </p>
+                        <div className="flex items-center justify-between">
+                          <div className="flex flex-wrap gap-3 text-xs text-muted-foreground">
+                            <span className="flex items-center gap-1">
+                              <MapPin className="h-3.5 w-3.5" />
+                              {tour.stops.length} {t("tours.stops")}
+                            </span>
+                            <span className="flex items-center gap-1">
+                              <Route className="h-3.5 w-3.5" />
+                              {tour.distance}
+                            </span>
+                            <span className="flex items-center gap-1">
+                              <Clock className="h-3.5 w-3.5" />
+                              {estimatedTime}
+                            </span>
+                          </div>
+                          <ChevronRight className="h-5 w-5 text-muted-foreground" />
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </Link>
+                </motion.div>
+              );
+            })}
           </div>
         </motion.div>
       </div>
+
       <BottomNav />
     </div>
   );
