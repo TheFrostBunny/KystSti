@@ -256,6 +256,7 @@
   },
   "settings": {
     "title": "Innstillinger",
+    "tourSelection": "Velg tur",
     "appearance": "Utseende",
     "theme": "Fargetema",
     "language": "Språk",

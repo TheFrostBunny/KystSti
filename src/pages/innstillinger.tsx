@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { BottomNav } from "@/components/BottomNav";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { TourSelector } from "@/components/TourSelector";
 import { useTranslation } from "@/context/LanguageContext";
 import { useTour } from "@/context/TourContext";
 import { getAllTours } from "@/data/tours";
@@ -51,6 +52,16 @@ export default function SettingsPage() {
       </header>
 
       <div className="mx-auto max-w-lg p-4 space-y-6">
+        {/* Tour Selection */}
+        <Section
+          icon={<MapIcon className="w-5 h-5 text-primary" />}
+          title={t("settings.tourSelection")}
+        >
+          <div className="py-2">
+            <TourSelector />
+          </div>
+        </Section>
+
         {/* Appearance & Language */}
         <div className="grid grid-cols-1 gap-4">
           <Section
@@ -337,6 +348,14 @@ function DatabaseIcon({ className }: { className?: string }) {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className={className}>
       <ellipse cx="12" cy="5" rx="9" ry="3" /><path d="M3 5V19A9 3 0 0 0 21 19V5" /><path d="M3 12A9 3 0 0 0 21 12" />
+    </svg>
+  );
+}
+
+function MapIcon({ className }: { className?: string }) {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" /><circle cx="12" cy="10" r="3" />
     </svg>
   );
 }

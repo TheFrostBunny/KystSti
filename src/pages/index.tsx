@@ -1,6 +1,6 @@
 import { TourHeader } from "@/components/TourHeader";
 import { StartTourButton } from "@/components/StartTourButton";
-import { TourSelector } from "@/components/TourSelector";
+
 
 import { motion } from "framer-motion";
 import { tours, getTourById } from "@/data/tours";
@@ -49,11 +49,7 @@ export default function HomePage() {
         <div className="relative z-10 w-full max-w-3xl mx-auto">
           <LogoIconContainer />
 
-          {tours.length > 1 && (
-            <div className="mb-6">
-              <TourSelector />
-            </div>
-          )}
+
 
           <TourHeader
             title={typeof currentTour?.title === 'object' ? currentTour.title[language as 'no' | 'en'] : (currentTour?.title || "KystSti")}

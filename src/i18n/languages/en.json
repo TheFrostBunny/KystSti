@@ -256,6 +256,7 @@
   },
   "settings": {
     "title": "Settings",
+    "tourSelection": "Select Tour",
     "appearance": "Appearance",
     "theme": "Colour theme",
     "language": "Language",
