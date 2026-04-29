@@ -140,11 +140,11 @@ export default function TourMapPage() {
           })}
         </MapContainer>
 
-        {/* Legend */}
+        {/* Legend - Overlay on map */}
         <motion.div 
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          className={`absolute bottom-20 sm:bottom-24 left-3 sm:left-4 right-3 sm:right-auto z-40 rounded-2xl backdrop-blur-md p-3 sm:p-4 shadow-lg border max-w-xs ${
+          className={`absolute bottom-20 sm:bottom-24 left-3 sm:left-4 z-[999] rounded-2xl backdrop-blur-md p-3 sm:p-4 shadow-lg border max-w-xs ${
             isDark ? "bg-card/95 border-border" : "bg-white/95 border-border/50"
           }`}
         >
