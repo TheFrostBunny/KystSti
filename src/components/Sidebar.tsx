@@ -2,7 +2,7 @@ import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useTour } from "@/context/TourContext";
 import { useTranslation } from "@/context/LanguageContext";
-import { ThemeToggle } from "./ThemeToggle";
+
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 
@@ -82,18 +82,7 @@ export function Sidebar() {
         })}
       </nav>
 
-      <div className="p-6 mt-auto space-y-4">
-        <ThemeToggle className="w-full justify-between" />
-        <div className="rounded-2xl bg-muted/30 border border-dashed p-4">
-          <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-1">Status</p>
-          <div className="flex items-center gap-2">
-            <div className={cn("w-2 h-2 rounded-full", currentTourId ? "bg-green-500" : "bg-amber-500")} />
-            <span className="text-xs font-medium">
-              {currentTourId ? "Tur aktiv" : "Velg en tur"}
-            </span>
-          </div>
-        </div>
-      </div>
+
     </aside>
   );
 }
