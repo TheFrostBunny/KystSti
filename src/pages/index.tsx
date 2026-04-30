@@ -14,14 +14,10 @@ import { TourProgress } from "@/components/TourProgress";
 import { TourHowItWorks } from "@/components/TourHowItWorks";
 import { useEffect } from "react";
 import { PageTransition } from "@/components/PageTransition";
-import { useAuth } from "@/context/AuthContext";
-import { signOut } from "firebase/auth";
-import { auth } from "@/lib/firebase";
 
 export default function HomePage() {
   const { currentTour, currentTourId, getProgress, setCurrentTour } = useTour();
   const { language } = useTranslation();
-  const { user } = useAuth();
 
   // Set first tour as default if no tour is selected
   useEffect(() => {
@@ -41,27 +37,8 @@ export default function HomePage() {
     );
   }
 
-  const handleLogout = async () => {
-    try {
-      await signOut(auth);
-    } catch (error) {
-      console.error("Error logging out:", error);
-    }
-  };
-
   return (
     <PageTransition className="flex min-h-screen flex-col">
-      {user && (
-        <div className="flex items-center justify-between px-4 py-3 bg-card/50 border-b">
-          <span className="text-sm text-muted-foreground">Logget inn som: {user.email}</span>
-          <button
-            onClick={handleLogout}
-            className="text-xs px-3 py-1 rounded bg-destructive/10 text-destructive hover:bg-destructive/20"
-          >
-            Logg ut
-          </button>
-        </div>
-      )}
       <div className="relative flex flex-1 flex-col items-center justify-center px-4 sm:px-6 py-12 md:py-20 pb-24 text-center">
         <div className="pointer-events-none absolute inset-0 opacity-[0.03]" style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,

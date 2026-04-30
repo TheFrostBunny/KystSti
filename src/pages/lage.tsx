@@ -6,14 +6,10 @@ import { ExportPanel } from "@/components/TourBuilder/ExportPanel";
 import { useTranslation } from "@/context/LanguageContext";
 import type { Tour, TourStop } from "@/data/tours";
 import { TourNavButtons } from "@/components/TourBuilder/TourNavButtons";
-import { useAuth } from "@/context/AuthContext";
-import { useTour } from "@/context/TourContext";
 
 export default function TourBuilderPage() {
   const [activeTab, setActiveTab] = useState<"tour" | "stops" | "export">("tour");
   const { t } = useTranslation();
-  const { user } = useAuth();
-  const { saveTour } = useTour();
 
 
   const tabs = [
@@ -99,54 +95,34 @@ export default function TourBuilderPage() {
     }));
   };
 
-  const handleSaveTour = async () => {
+  const handleSaveTour = () => {
     try {
       if (!tourData.title || !tourData.id) {
         alert("Vennligst fyll ut tittel og ID for turen");
         return;
       }
       
-      // Ensure proper formatting for Firebase
-      const tour: Tour = {
-        id: tourData.id || "",
-        title: tourData.title || "",
-        subtitle: tourData.subtitle || "",
-        description: tourData.description || "",
-        difficulty: (tourData.difficulty as any) || "lett",
-        distance: tourData.distance || "",
-        estimatedTime: tourData.estimatedTime || "",
-        coverImage: tourData.coverImage || "",
-        mapCenter: tourData.mapCenter || { lat: 63.111, lng: 7.729 },
-        mapZoom: tourData.mapZoom || 15,
-        stops: tourData.stops || [],
-      };
+      // Save tour to localStorage
+      const existingTours = JSON.parse(localStorage.getItem("kyststi-tours") || "[]");
+      const updatedTours = [...existingTours, tourData];
+      localStorage.setItem("kyststi-tours", JSON.stringify(updatedTours));
+      alert("Tur lagret!");
       
-      if (user) {
-        // Save to Firebase if user is logged in
-        await saveTour(tour);
-        alert("Tur lagret til Firebase!");
-        // Clear form after successful save
-        setTourData({
-          id: "",
-          title: "",
-          subtitle: "",
-          description: "",
-          howItWorks: "",
-          estimatedTime: "",
-          distance: "",
-          difficulty: "lett",
-          coverImage: "",
-          mapCenter: { lat: 63.111, lng: 7.729 },
-          mapZoom: 15,
-          stops: [],
-        });
-      } else {
-        // Fallback to localStorage
-        const existingTours = JSON.parse(localStorage.getItem("kyststi-tours") || "[]");
-        const updatedTours = [...existingTours, tour];
-        localStorage.setItem("kyststi-tours", JSON.stringify(updatedTours));
-        alert("Tur lagret lokalt!");
-      }
+      // Clear form after successful save
+      setTourData({
+        id: "",
+        title: "",
+        subtitle: "",
+        description: "",
+        howItWorks: "",
+        estimatedTime: "",
+        distance: "",
+        difficulty: "lett",
+        coverImage: "",
+        mapCenter: { lat: 63.111, lng: 7.729 },
+        mapZoom: 15,
+        stops: [],
+      });
     } catch (error) {
       console.error("Error saving tour:", error);
       alert("Feil ved lagring av tur");
@@ -286,7 +262,7 @@ export default function TourBuilderPage() {
                     onClick={handleSaveTour}
                     className="w-full px-4 py-3 rounded-lg bg-primary text-primary-foreground font-semibold hover:bg-primary/90 transition-colors"
                   >
-                    {user ? "Lagre tur til Firebase" : "Lagre tur lokalt"}
+                    Lagre tur
                   </button>
                 </div>
               )}

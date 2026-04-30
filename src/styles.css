@@ -157,3 +157,100 @@
     text-wrap: balance;
   }
 }
+
+/* Enhanced Typography & Components */
+@layer utilities {
+  /* Display typography */
+  .text-display-lg {
+    font-family: var(--font-display);
+    font-size: 2.5rem;
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
+  
+  .text-display-md {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+  }
+  
+  .text-display-sm {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1.3;
+  }
+  
+  .text-subtitle {
+    font-size: 1.125rem;
+    font-weight: 500;
+    line-height: 1.5;
+    color: var(--color-muted-foreground);
+  }
+  
+  /* Card utilities */
+  .card-premium {
+    background-color: var(--color-card);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--color-border);
+    padding: 1.5rem;
+    transition: all 0.2s ease;
+  }
+  
+  .card-premium:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-color: var(--color-primary);
+  }
+  
+  /* Button utilities */
+  .btn-lg {
+    padding: 0.875rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+  }
+  
+  .btn-md {
+    padding: 0.625rem 1.25rem;
+    font-size: 0.95rem;
+    font-weight: 500;
+  }
+  
+  .btn-sm {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+  
+  /* Spacing utilities */
+  .space-tight {
+    gap: 0.5rem;
+  }
+  
+  .space-normal {
+    gap: 1rem;
+  }
+  
+  .space-loose {
+    gap: 1.5rem;
+  }
+  
+  /* Responsive utilities */
+  @media (max-width: 640px) {
+    .mobile-full {
+      width: 100%;
+    }
+    
+    .mobile-px {
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+    
+    .mobile-py {
+      padding-top: 0.75rem;
+      padding-bottom: 0.75rem;
+    }
+  }
+}
