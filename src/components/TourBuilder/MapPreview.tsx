@@ -27,7 +27,7 @@ function ZoomControl() {
       position: "absolute",
       bottom: "10px",
       right: "10px",
-      zIndex: 400,
+      zIndex: 20,
       display: "flex",
       flexDirection: "column",
       gap: "4px",
@@ -113,7 +113,7 @@ export function MapPreview({ lat, lng, zoom, onSelectPosition, showAddress = fal
           fontWeight: "500",
           boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
           maxWidth: "80%",
-          zIndex: 401,
+          zIndex: 21,
         }}>
           {loading ? "Henter adresse..." : address}
         </div>

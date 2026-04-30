@@ -137,7 +137,7 @@ export default function TourBuilderPage() {
   ].filter(Boolean).length;
 
   return (
-    <div className="flex min-h-screen flex-col pb-20">
+    <div className="flex flex-col flex-1">
       {/* Header with gradient */}
       <header className="relative overflow-hidden border-b bg-linear-to-br from-primary/5 via-background to-accent/5">
         <div className="pointer-events-none absolute inset-0 opacity-[0.03]" style={{

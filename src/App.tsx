@@ -11,7 +11,7 @@ export default function App() {
     <div className="relative h-screen w-screen bg-background font-body antialiased flex flex-col md:flex-row overflow-hidden">
       <Onboarding />
       <Sidebar />
-      <div className="flex-1 flex flex-col min-w-0 overflow-y-auto">
+      <div className="flex-1 flex flex-col min-w-0 overflow-y-auto z-10">
         <AnimatePresence mode="wait">
           <Outlet key={location.pathname} />
         </AnimatePresence>

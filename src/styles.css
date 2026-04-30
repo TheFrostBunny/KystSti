@@ -150,7 +150,7 @@
     width: 100%;
     margin: 0;
     padding: 0;
-    overflow: hidden; /* Prevent html scrolling */
+    /* Let App.tsx manage overflow */
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
@@ -162,17 +162,14 @@
     margin: 0;
     padding: 0;
     width: 100%;
-    height: 100vh;
-    overflow: hidden; /* Ensure body itself does not scroll */
+    height: 100vh; /* Keep 100vh for full height */
+    /* Let App.tsx manage overflow and positioning */
   }
   
   #root {
     width: 100%;
     height: 100%;
-    position: relative;
-    /* The overflow-y: auto is now handled by the content div in App.tsx */
-    overflow-x: hidden;
-    -webkit-overflow-scrolling: touch;
+    /* App.tsx will handle positioning and overflow */
   }
   
   h1, h2, h3 {

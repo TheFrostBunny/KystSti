@@ -36,7 +36,7 @@ export function Sidebar() {
   });
 
   return (
-    <aside className="hidden md:flex flex-col w-64 bg-card border-r h-screen sticky top-0 overflow-y-auto">
+    <aside className="hidden md:flex flex-col w-64 bg-card border-r h-screen sticky top-0 overflow-y-auto z-40">
       <div className="p-6">
         <Link to="/" className="flex items-center gap-3 group">
           <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-primary-foreground shadow-lg shadow-primary/20 group-hover:scale-105 transition-transform">
