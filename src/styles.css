@@ -142,11 +142,19 @@
   * {
     border-color: var(--color-border);
   }
-  body {
+  
+  html, body {
     background-color: var(--color-background);
     color: var(--color-foreground);
-    font-family: var(--font-body);
   }
+  
+  body {
+    font-family: var(--font-body);
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+  }
+  
   h1, h2, h3 {
     font-family: var(--font-display);
   }
