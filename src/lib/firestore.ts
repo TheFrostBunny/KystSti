@@ -19,12 +19,26 @@ const TOURS_COLLECTION = "tours";
 export async function saveTourToFirestore(userId: string, tour: Tour) {
   try {
     const tourRef = doc(db, TOURS_COLLECTION, `${userId}_${tour.id}`);
-    await setDoc(tourRef, {
-      ...tour,
+    
+    // Ensure proper data formatting
+    const tourData = {
+      id: tour.id,
       userId,
+      title: tour.title,
+      subtitle: tour.subtitle,
+      description: tour.description,
+      difficulty: tour.difficulty,
+      distance: tour.distance,
+      estimatedTime: tour.estimatedTime,
+      coverImage: tour.coverImage,
+      mapCenter: tour.mapCenter || { lat: 63.111, lng: 7.729 },
+      mapZoom: tour.mapZoom || 15,
+      stops: tour.stops || [],
       createdAt: tour.createdAt || new Date(),
       updatedAt: new Date(),
-    });
+    };
+    
+    await setDoc(tourRef, tourData);
     return true;
   } catch (error) {
     console.error("Error saving tour:", error);
@@ -80,10 +94,23 @@ export async function deleteTourFromFirestore(userId: string, tourId: string) {
 export async function updateTourInFirestore(userId: string, tour: Tour) {
   try {
     const tourRef = doc(db, TOURS_COLLECTION, `${userId}_${tour.id}`);
-    await updateDoc(tourRef, {
-      ...tour,
+    
+    // Ensure proper data formatting
+    const tourData = {
+      title: tour.title,
+      subtitle: tour.subtitle,
+      description: tour.description,
+      difficulty: tour.difficulty,
+      distance: tour.distance,
+      estimatedTime: tour.estimatedTime,
+      coverImage: tour.coverImage,
+      mapCenter: tour.mapCenter || { lat: 63.111, lng: 7.729 },
+      mapZoom: tour.mapZoom || 15,
+      stops: tour.stops || [],
       updatedAt: new Date(),
-    });
+    };
+    
+    await updateDoc(tourRef, tourData);
     return true;
   } catch (error) {
     console.error("Error updating tour:", error);

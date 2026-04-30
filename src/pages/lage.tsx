@@ -106,12 +106,40 @@ export default function TourBuilderPage() {
         return;
       }
       
-      const tour = tourData as Tour;
+      // Ensure proper formatting for Firebase
+      const tour: Tour = {
+        id: tourData.id || "",
+        title: tourData.title || "",
+        subtitle: tourData.subtitle || "",
+        description: tourData.description || "",
+        difficulty: (tourData.difficulty as any) || "lett",
+        distance: tourData.distance || "",
+        estimatedTime: tourData.estimatedTime || "",
+        coverImage: tourData.coverImage || "",
+        mapCenter: tourData.mapCenter || { lat: 63.111, lng: 7.729 },
+        mapZoom: tourData.mapZoom || 15,
+        stops: tourData.stops || [],
+      };
       
       if (user) {
         // Save to Firebase if user is logged in
         await saveTour(tour);
         alert("Tur lagret til Firebase!");
+        // Clear form after successful save
+        setTourData({
+          id: "",
+          title: "",
+          subtitle: "",
+          description: "",
+          howItWorks: "",
+          estimatedTime: "",
+          distance: "",
+          difficulty: "lett",
+          coverImage: "",
+          mapCenter: { lat: 63.111, lng: 7.729 },
+          mapZoom: 15,
+          stops: [],
+        });
       } else {
         // Fallback to localStorage
         const existingTours = JSON.parse(localStorage.getItem("kyststi-tours") || "[]");
