@@ -1,15 +1,21 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { Tour, TourStop, getTourById } from "@/data/tours";
+import { useAuth } from "./AuthContext";
+import { saveTourToFirestore, getUserTours, getTourById as getTourFromFirestore, deleteTourFromFirestore, updateTourInFirestore } from "@/lib/firestore";
 
 export interface TourContextType {
   currentTourId: string | null;
   currentTour: Tour | null;
   unlockedStops: Set<string>;
+  userTours: Tour[];
   setCurrentTour: (tourId: string) => void;
   unlockStop: (stopId: string) => void;
   isStopUnlocked: (stopId: string) => boolean;
   getProgress: () => { unlocked: number; total: number };
   clearTour: () => void;
+  saveTour: (tour: Tour) => Promise<void>;
+  deleteTour: (tourId: string) => Promise<void>;
+  loadUserTours: () => Promise<void>;
   qrActive?: boolean;
 }
 
@@ -19,6 +25,7 @@ const STORAGE_KEY_TOUR = "kyststi-current-tour";
 const STORAGE_KEY_UNLOCKED = "kyststi-unlocked-stops";
 
 export function TourProvider({ children }: { children: ReactNode }) {
+  const { user } = useAuth();
   const [currentTourId, setCurrentTourId] = useState<string | null>(() => {
     if (typeof window !== "undefined") {
       return localStorage.getItem(STORAGE_KEY_TOUR);
@@ -39,6 +46,18 @@ export function TourProvider({ children }: { children: ReactNode }) {
     }
     return new Set();
   });
+
+  const [userTours, setUserTours] = useState<Tour[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  // Load user tours from Firebase when user logs in
+  useEffect(() => {
+    if (user) {
+      loadUserTours();
+    } else {
+      setUserTours([]);
+    }
+  }, [user]);
 
   const currentTour = currentTourId ? getTourById(currentTourId) || null : null;
 
@@ -63,12 +82,20 @@ export function TourProvider({ children }: { children: ReactNode }) {
     const stop = currentTour.stops.find((s) => s.id === stopId);
     if (!stop) return;
 
-    // Legg til stoppet i listen over opplåste stopp
     setUnlockedStops((prev) => {
       const next = new Set(prev);
       next.add(stopId);
       return next;
     });
+
+    // Save progress to Firebase if user is logged in
+    if (user && currentTour) {
+      const updatedTour = {
+        ...currentTour,
+        unlockedStops: Array.from(new Set([...unlockedStops, stopId])),
+      };
+      updateTourInFirestore(user.uid, updatedTour).catch(console.error);
+    }
   };
 
   const isStopUnlocked = (stopId: string) => {
@@ -86,6 +113,45 @@ export function TourProvider({ children }: { children: ReactNode }) {
     setCurrentTourId(null);
   };
 
+  const saveTour = async (tour: Tour) => {
+    if (!user) {
+      throw new Error("Du må være logget inn for å lagre turer");
+    }
+    try {
+      await saveTourToFirestore(user.uid, tour);
+      setUserTours((prev) => [...prev, tour]);
+    } catch (error) {
+      console.error("Error saving tour:", error);
+      throw error;
+    }
+  };
+
+  const deleteTour = async (tourId: string) => {
+    if (!user) {
+      throw new Error("Du må være logget inn for å slette turer");
+    }
+    try {
+      await deleteTourFromFirestore(user.uid, tourId);
+      setUserTours((prev) => prev.filter((t) => t.id !== tourId));
+    } catch (error) {
+      console.error("Error deleting tour:", error);
+      throw error;
+    }
+  };
+
+  const loadUserTours = async () => {
+    if (!user) return;
+    setLoading(true);
+    try {
+      const tours = await getUserTours(user.uid);
+      setUserTours(tours);
+    } catch (error) {
+      console.error("Error loading user tours:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const qrActive = import.meta.env.VITE_ENABLE_QR_SCANNER === "true";
 
   return (
@@ -94,11 +160,15 @@ export function TourProvider({ children }: { children: ReactNode }) {
         currentTourId,
         currentTour,
         unlockedStops,
+        userTours,
         setCurrentTour,
         unlockStop,
         isStopUnlocked,
         getProgress,
         clearTour,
+        saveTour,
+        deleteTour,
+        loadUserTours,
         qrActive,
       }}
     >

@@ -6,6 +6,7 @@ import "./styles.css";
 import { TourProvider } from "@/context/TourContext";
 import { LanguageProvider } from "@/context/LanguageContext";
 import { ThemeProvider } from "@/context/ThemeContext";
+import { AuthProvider } from "@/context/AuthContext";
 import App from "./App";
 import HomePage from "./pages/index";
 import TourDetailPage from "./pages/tur/[tourId]";
@@ -19,13 +20,17 @@ import NotFoundPage from "./pages/not-found";
 import { OnlineStatusBanner } from "@/components/OnlineStatusBanner";
 import ScanPage from "./pages/skann";
 import SettingsPage from "./pages/innstillinger";
+import LoginPage from "./pages/logg-inn";
+import SignupPage from "./pages/registrer";
+import { ProtectedRoute } from "@/components/ProtectedRoute";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <ThemeProvider>
       <LanguageProvider>
-        <TourProvider>
-          <BrowserRouter>
+        <AuthProvider>
+          <TourProvider>
+            <BrowserRouter>
             <OnlineStatusBanner />
             <Routes>
               <Route element={<App />}>
@@ -36,13 +41,16 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
                 <Route path="tur/:tourId/kart" element={<TourMapPage />} />
                 {import.meta.env.VITE_ENABLE_QR_SCANNER === "true" && <Route path="skann" element={<ScanPage />} />}
                 <Route path="innstillinger" element={<SettingsPage />} />
-                <Route path="lage" element={<TourBuilderPage />} />
+                <Route path="lage" element={<ProtectedRoute><TourBuilderPage /></ProtectedRoute>} />
+                <Route path="logg-inn" element={<LoginPage />} />
+                <Route path="registrer" element={<SignupPage />} />
                 <Route path="*" element={<NotFoundPage />} />
               </Route>
             </Routes>
-          </BrowserRouter>
-        </TourProvider>
-      </LanguageProvider>
-    </ThemeProvider>
-  </React.StrictMode>
+            </BrowserRouter>
+            </TourProvider>
+          </AuthProvider>
+        </LanguageProvider>
+      </ThemeProvider>
+    </React.StrictMode>
 );

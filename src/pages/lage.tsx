@@ -6,10 +6,14 @@ import { ExportPanel } from "@/components/TourBuilder/ExportPanel";
 import { useTranslation } from "@/context/LanguageContext";
 import type { Tour, TourStop } from "@/data/tours";
 import { TourNavButtons } from "@/components/TourBuilder/TourNavButtons";
+import { useAuth } from "@/context/AuthContext";
+import { useTour } from "@/context/TourContext";
 
 export default function TourBuilderPage() {
   const [activeTab, setActiveTab] = useState<"tour" | "stops" | "export">("tour");
   const { t } = useTranslation();
+  const { user } = useAuth();
+  const { saveTour } = useTour();
 
 
   const tabs = [
@@ -93,6 +97,32 @@ export default function TourBuilderPage() {
       ...prev,
       stops: prev.stops?.filter((_, i) => i !== index) || [],
     }));
+  };
+
+  const handleSaveTour = async () => {
+    try {
+      if (!tourData.title || !tourData.id) {
+        alert("Vennligst fyll ut tittel og ID for turen");
+        return;
+      }
+      
+      const tour = tourData as Tour;
+      
+      if (user) {
+        // Save to Firebase if user is logged in
+        await saveTour(tour);
+        alert("Tur lagret til Firebase!");
+      } else {
+        // Fallback to localStorage
+        const existingTours = JSON.parse(localStorage.getItem("kyststi-tours") || "[]");
+        const updatedTours = [...existingTours, tour];
+        localStorage.setItem("kyststi-tours", JSON.stringify(updatedTours));
+        alert("Tur lagret lokalt!");
+      }
+    } catch (error) {
+      console.error("Error saving tour:", error);
+      alert("Feil ved lagring av tur");
+    }
   };
 
   const completedSteps = [
@@ -212,7 +242,26 @@ export default function TourBuilderPage() {
                   onDelete={handleDeleteStop}
                 />
               )}
-              {activeTab === "export" && <ExportPanel tourData={tourData as Tour} />}
+              {activeTab === "export" && (
+                <div className="space-y-6">
+                  <div className="flex items-center gap-3 pb-2">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10">
+                      {tabs[2].icon}
+                    </div>
+                    <div>
+                      <h2 className="font-display text-xl font-semibold">{t('tourBuilder.tabs.export')}</h2>
+                      <p className="text-sm text-muted-foreground">Eksporter eller lagre turen din</p>
+                    </div>
+                  </div>
+                  <ExportPanel tourData={tourData as Tour} />
+                  <button
+                    onClick={handleSaveTour}
+                    className="w-full px-4 py-3 rounded-lg bg-primary text-primary-foreground font-semibold hover:bg-primary/90 transition-colors"
+                  >
+                    {user ? "Lagre tur til Firebase" : "Lagre tur lokalt"}
+                  </button>
+                </div>
+              )}
             </motion.div>
           </AnimatePresence>
         </div>
