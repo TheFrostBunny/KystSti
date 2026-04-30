@@ -1,8 +1,3 @@
-// ============================================
-// KYSTSTI — TUR TYPER
-// Definisjoner for turer og stopp
-// ============================================
-
 export interface TourStop {
   id: string;
   order: number;

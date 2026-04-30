@@ -23,9 +23,7 @@ export default function SettingsPage() {
   const handleResetProgress = () => {
     localStorage.removeItem("kyststi-unlocked-stops");
     setProgressReset(true);
-    setTimeout(() => {
-      window.location.reload();
-    }, 1200);
+    setTimeout(() => window.location.reload(), 1200);
   };
 
   const handleClearAllData = () => {
@@ -34,12 +32,10 @@ export default function SettingsPage() {
       return;
     }
     Object.keys(localStorage)
-      .filter((k) => k.startsWith("kyststi"))
-      .forEach((k) => localStorage.removeItem(k));
+      .filter(k => k.startsWith("kyststi"))
+      .forEach(k => localStorage.removeItem(k));
     setDataCleared(true);
-    setTimeout(() => {
-      window.location.reload();
-    }, 1200);
+    setTimeout(() => window.location.reload(), 1200);
   };
 
   return (
@@ -51,7 +47,7 @@ export default function SettingsPage() {
       </header>
 
       <div className="mx-auto max-w-lg p-4 space-y-6">
-        {/* Tour Selection */}
+        {/* ── Tour Selection Section ──────────────────────────────── */}
         <Section
           icon={<MapIcon className="w-5 h-5 text-primary" />}
           title={t("settings.tourSelection")}
@@ -61,7 +57,7 @@ export default function SettingsPage() {
           </div>
         </Section>
 
-        {/* Appearance & Language */}
+        {/* ── Appearance & Language Settings ──────────────────────── */}
         <div className="grid grid-cols-1 gap-4">
           <Section
             icon={<PaletteIcon className="w-5 h-5 text-primary" />}
@@ -141,7 +137,7 @@ export default function SettingsPage() {
           </div>
         </Section>
 
-        {/* Progress */}
+        {/* ── User Progress & Tour Stats ───────────────────────────── */}
         <Section
           icon={<TrophyIcon className="w-5 h-5 text-primary" />}
           title={t("settings.progress")}
@@ -151,8 +147,8 @@ export default function SettingsPage() {
               <div className="min-w-0 flex-1 mr-4">
                 <p className="text-sm font-medium truncate">
                   {typeof currentTour.title === "object"
-                    ? (currentTour.title as any)["no"] ?? (currentTour.title as any)["en"]
-                    : currentTour.title}
+                    ? currentTour.title?.no ?? currentTour.title?.en ?? "Tour"
+                    : currentTour.title ?? "Tour"}
                 </p>
                 <p className="text-[10px] text-muted-foreground mt-0.5">
                   {progress.unlocked} / {progress.total} {t("common.stops")} {t("common.completed")}
@@ -162,9 +158,7 @@ export default function SettingsPage() {
                 <div
                   className="h-full bg-primary rounded-full transition-all"
                   style={{
-                    width: progress.total > 0
-                      ? `${Math.round((progress.unlocked / progress.total) * 100)}%`
-                      : "0%",
+                    width: `${progress.total > 0 ? Math.round((progress.unlocked / progress.total) * 100) : 0}%`,
                   }}
                 />
               </div>
@@ -182,7 +176,7 @@ export default function SettingsPage() {
           </SettingRow>
         </Section>
 
-        {/* Data & Privacy */}
+        {/* ── Data Management & Privacy ─────────────────────────────── */}
         <Section
           icon={<DatabaseIcon className="w-5 h-5 text-primary" />}
           title={t("settings.data")}

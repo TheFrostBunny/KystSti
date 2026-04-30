@@ -1,6 +1,3 @@
-// ============================================
-// TUR: Historisk vandring i Kristiansund
-// ============================================
 import type { Tour } from "./types";
 
 const tour: Tour = {

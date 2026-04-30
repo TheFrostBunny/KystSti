@@ -5,8 +5,6 @@ import { BottomNav } from "@/components/BottomNav";
 import { AnimatePresence } from "framer-motion";
 
 export default function App() {
-  const location = useLocation(); // Keep for potential future use
-  
   return (
     <div className="relative h-screen w-screen bg-background font-body antialiased flex flex-col md:flex-row overflow-hidden">
       <Onboarding />

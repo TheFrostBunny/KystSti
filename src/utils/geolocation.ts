@@ -1,7 +1,3 @@
-/**
- * Geolocation and geocoding utilities
- */
-
 export interface GeocodeResult {
   address: string;
   lat: number;
@@ -14,9 +10,6 @@ export interface ReverseGeocodeResult {
   country?: string;
 }
 
-/**
- * Get user's current position with error handling
- */
 export const getUserPosition = (): Promise<{ lat: number; lng: number }> => {
   return new Promise((resolve, reject) => {
     if (!navigator.geolocation) {
@@ -32,23 +25,24 @@ export const getUserPosition = (): Promise<{ lat: number; lng: number }> => {
         });
       },
       (error) => {
-        let message = "Could not get your location";
-        if (error.code === error.PERMISSION_DENIED) {
-          message = "Location permission denied. Please enable it in your browser settings.";
-        } else if (error.code === error.POSITION_UNAVAILABLE) {
-          message = "Location information is unavailable.";
-        } else if (error.code === error.TIMEOUT) {
-          message = "Location request timed out.";
-        }
-        reject(new Error(message));
+        const getMessage = (code: number) => {
+          switch (code) {
+            case error.PERMISSION_DENIED:
+              return "Location permission denied. Please enable it in your browser settings.";
+            case error.POSITION_UNAVAILABLE:
+              return "Location information is unavailable.";
+            case error.TIMEOUT:
+              return "Location request timed out.";
+            default:
+              return "Could not get your location";
+          }
+        };
+        reject(new Error(getMessage(error.code)));
       }
     );
   });
 };
 
-/**
- * Reverse geocode coordinates to get address using Nominatim
- */
 export const reverseGeocode = async (
   lat: number,
   lng: number
@@ -61,14 +55,17 @@ export const reverseGeocode = async (
       }
     );
 
-    if (!response.ok) {
-      throw new Error("Reverse geocoding failed");
-    }
+    if (!response.ok) throw new Error("Reverse geocoding failed");
 
     const data = await response.json();
-    const address = data.address?.road || data.address?.village || data.address?.town || data.address?.city || data.display_name?.split(",")[0] || "Unknown location";
-    const city = data.address?.city || data.address?.town || data.address?.village || undefined;
-    const country = data.address?.country || undefined;
+    const address = data.address?.road ?? 
+      data.address?.village ?? 
+      data.address?.town ?? 
+      data.address?.city ?? 
+      data.display_name?.split(",")[0] ?? 
+      "Unknown location";
+    const city = data.address?.city ?? data.address?.town ?? data.address?.village;
+    const country = data.address?.country;
 
     return {
       address: address.trim(),
@@ -83,31 +80,23 @@ export const reverseGeocode = async (
   }
 };
 
-/**
- * Format coordinates for display
- */
-export const formatCoordinates = (lat: number, lng: number): string => {
-  return `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
-};
+export const formatCoordinates = (lat: number, lng: number): string => 
+  `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
 
-/**
- * Calculate distance between two coordinates (in km) using Haversine formula
- */
 export const calculateDistance = (
   lat1: number,
   lng1: number,
   lat2: number,
   lng2: number
 ): number => {
-  const R = 6371; // Earth's radius in km
+  const R = 6371;
   const dLat = ((lat2 - lat1) * Math.PI) / 180;
   const dLng = ((lng2 - lng1) * Math.PI) / 180;
   const a =
-    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.sin(dLat / 2) ** 2 +
     Math.cos((lat1 * Math.PI) / 180) *
       Math.cos((lat2 * Math.PI) / 180) *
-      Math.sin(dLng / 2) *
-      Math.sin(dLng / 2);
+      Math.sin(dLng / 2) ** 2;
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   return R * c;
 };

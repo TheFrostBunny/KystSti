@@ -15,16 +15,12 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const savedLanguage = localStorage.getItem("kyststi-language") as Language | null;
-    if (savedLanguage && (savedLanguage === "en" || savedLanguage === "no")) {
-      setLanguageState(savedLanguage);
-    } else {
-      const browserLang = navigator.language.split("-")[0];
-      if (browserLang === "en") {
-        setLanguageState("en");
-      } else {
-        setLanguageState("no");
-      }
-    }
+    const validLanguage = ["en", "no"].includes(savedLanguage!) ? savedLanguage : null;
+    
+    const detectedLanguage = validLanguage ?? 
+      (navigator.language.split("-")[0] === "en" ? "en" : "no");
+    
+    setLanguageState(detectedLanguage);
     setIsInitialized(true);
   }, []);
 
@@ -38,38 +34,29 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     let value: any = translations[language];
 
     for (const key of keys) {
-      if (value && typeof value === "object" && key in value) {
-        value = value[key];
-      } else {
+      value = value?.[key];
+      if (value === undefined) {
         console.warn(`Translation key not found: ${path}`);
         return path;
       }
     }
 
-    if (typeof value === "function") {
-      return value(vars);
-    }
-
-    if (typeof value === "string" && vars && Object.keys(vars).length > 0) {
-      return value.replace(/\{(\w+)\}/g, (_, k) =>
-        vars[k] !== undefined ? vars[k] : `{${k}}`
-      );
-    }
-
-    return value;
+    return typeof value === "function" 
+      ? value(vars)
+      : typeof value === "string" && vars && Object.keys(vars).length > 0
+      ? value.replace(/\{(\w+)\}/g, (_, k) => vars[k] ?? `{${k}}`)
+      : value;
   };
 
   return (
     <LanguageContext.Provider value={{ language, setLanguage, t }}>
-      {!isInitialized ? null : children}
+      {isInitialized ? children : null}
     </LanguageContext.Provider>
   );
 }
 
 export function useTranslation() {
   const context = useContext(LanguageContext);
-  if (context === undefined) {
-    throw new Error("useTranslation must be used within LanguageProvider");
-  }
+  if (!context) throw new Error("useTranslation must be used within LanguageProvider");
   return context;
 }

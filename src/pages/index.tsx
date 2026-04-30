@@ -19,7 +19,6 @@ export default function HomePage() {
   const { currentTour, currentTourId, getProgress, setCurrentTour } = useTour();
   const { language } = useTranslation();
 
-  // Set first tour as default if no tour is selected
   useEffect(() => {
     if (!currentTourId && tours.length > 0) {
       setCurrentTour(tours[0].id);
@@ -28,7 +27,6 @@ export default function HomePage() {
 
   const progress = getProgress();
 
-  // Show a loading state if no tour is selected yet
   if (!currentTour && tours.length > 0) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center">
