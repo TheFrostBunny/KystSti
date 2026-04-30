@@ -5,7 +5,7 @@ import { StopManager } from "@/components/TourBuilder/StopManager";
 import { ExportPanel } from "@/components/TourBuilder/ExportPanel";
 import { useTranslation } from "@/context/LanguageContext";
 import type { Tour, TourStop } from "@/data/tours";
-import { TourNavButtons } from "@/components/TourBuilder/TourNavButtons";
+
 
 export default function TourBuilderPage() {
   const [activeTab, setActiveTab] = useState<"tour" | "stops" | "export">("tour");
@@ -271,18 +271,7 @@ export default function TourBuilderPage() {
         </div>
       </main>
 
-      <div className="fixed bottom-20 left-0 right-0 px-4 pb-4 pointer-events-none sm:hidden">
-        <div className="mx-auto max-w-4xl">
-          <div className="flex justify-between pointer-events-auto">
-            <TourNavButtons
-              activeTab={activeTab}
-              setActiveTab={setActiveTab}
-              prevLabel={t('common.previous')}
-              nextLabel={t('common.next')}
-            />
-          </div>
-        </div>
-      </div>
+
 
 
     </div>
