@@ -10,11 +10,14 @@
 import type { Tour, TourStop } from "./types";
 
 // --- IMPORTER ALLE TURER HER ---
+
 import historicalWalkThroughKristiansund from "./historical-walk-through-kristiansund";
+import aWalkThroughTheWartimeHistoryOfKristiansund from "./a-walk-through-the-wartime-history-of-kristiansund";
 
 // --- LEGG TIL NYE TURER I DENNE LISTEN ---
 const tourModules: Tour[] = [
-  historicalWalkThroughKristiansund
+  historicalWalkThroughKristiansund,
+  aWalkThroughTheWartimeHistoryOfKristiansund
 ];
 
 // --- EKSPORTER ALLE TURER ---
