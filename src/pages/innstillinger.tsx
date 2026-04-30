@@ -78,7 +78,7 @@ export default function SettingsPage() {
           </Section>
         </div>
 
-        {/* About App - Merged from om.tsx */}
+        {/* ── About App Information ────────────────────────────── */}
         <Section
           icon={<InfoIcon className="w-5 h-5 text-primary" />}
           title={t("settings.about")}
