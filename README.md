@@ -57,7 +57,7 @@ Pull requests and suggestions are welcome! See issues or open a discussion for f
 
 ## License
 
-This project is licensed under the GNU General Public License (GPL). See the LICENSE file for details.
+This project is licensed under the GNU General Public License (GPL). See the [License](/LICENSE) file for details.
 
 ---
 
