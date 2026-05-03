@@ -16,7 +16,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     if (stored === "light" || stored === "dark" || stored === "system") {
       return stored;
     }
-    return "system";
+    return "light";
   });
 
   const [isDark, setIsDark] = useState(false);
