@@ -39,7 +39,7 @@ pnpm preview
 
 ## Adding a New Tour
 See the guides:
-- [Hvordan legge inn en ny tur (norsk)](doc/Hvordan-legge-inn-tur.md)
+- [Hvordan legge inn en ny tur (Norsk)](doc/Hvordan-legge-inn-tur.md)
 - [How to add a new tour (English)](doc/How-to-add-a-tour.md)
 
 ## Folder Structure
