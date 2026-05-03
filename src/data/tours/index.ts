@@ -1,14 +1,9 @@
 import type { Tour, TourStop } from "./types";
 
-import historicalWalkThroughKristiansund from "./historical-walk-through-kristiansund";
-import aWalkThroughTheWartimeHistoryOfKristiansund from "./a-walk-through-the-wartime-history-of-kristiansund";
 
-const tourModules: Tour[] = [
-  historicalWalkThroughKristiansund,
-  aWalkThroughTheWartimeHistoryOfKristiansund
-];
-
-
+const tourModules = Object.values(
+  import.meta.glob('./tours/*.ts', { eager: true })
+).map((mod: any) => mod.default).filter(Boolean) as Tour[];
 
 export const tours: Tour[] = tourModules;
 
