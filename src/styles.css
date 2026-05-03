@@ -63,8 +63,45 @@
   --font-display: 'Merriweather', Georgia, serif;
   --font-body: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
 
-  /* Light mode - Warm
-
+  /* Light mode - Warm */
+  --color-background: #f9f9f9;
+  --color-foreground: #2d2d2d;
+  --color-card: #ffffff;
+  --color-card-foreground: #2d2d2d;
+  --color-popover: #ffffff;
+  --color-popover-foreground: #2d2d2d;
+  --color-primary: #0066cc;
+  --color-primary-foreground: #ffffff;
+  --color-secondary: #f4f4f4;
+  --color-secondary-foreground: #2d2d2d;
+  --color-muted: #eaeaea;
+  --color-muted-foreground: #2d2d2d;
+  --color-accent: #f4f4f4;
+  --color-accent-foreground: #2d2d2d;
+  --color-destructive: #f4f4f4;
+  --color-destructive-foreground: #2d2d2d;
+  --color-border: #eaeaea;
+  --color-input: #eaeaea;
+  --color-ring: #f4f4f4;
+  --color-ring-offset-background: #f9f9f9;
+  --color-chart-1: #f4f4f4;
+  --color-chart-2: #f4f4f4;
+  --color-chart-3: #f4f4f4;
+  --color-chart-4: #f4f4f4;
+  --color-chart-5: #f4f4f4;
+  --color-sidebar: #f4f4f4;
+  --color-sidebar-foreground: #2d2d2d;
+  --color-sidebar-primary: #f4f4f4;
+  --color-sidebar-primary-foreground: #2d2d2d;
+  --color-sidebar-accent: #f4f4f4;
+  --color-sidebar-accent-foreground: #2d2d2d;
+  --color-sidebar-border: #eaeaea;
+  --color-sidebar-ring: #f4f4f4;
+  --color-warm: #f4f4f4;
+  --color-warm-foreground: #2d2d2d;
+  --font-display: var(--font-display);
+  --font-body: var(--font-body);
+}
 
 @layer base {
   * {
