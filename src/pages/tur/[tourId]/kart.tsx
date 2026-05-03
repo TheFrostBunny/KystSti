@@ -139,22 +139,28 @@ export default function TourMapPage() {
           })}
         </MapContainer>
 
-        {/* Forklaring/legend sticky i toppen på mobil */}
-        <div className="absolute top-3 left-1/2 -translate-x-1/2 z-999 w-[95vw] max-w-md">
-          <div className={`rounded-2xl backdrop-blur-md p-3 shadow-lg border flex flex-col gap-2 items-center ${isDark ? "bg-card/95 border-border" : "bg-white/95 border-border/50"}`}>
-            <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">{t("map.explanation") || "Forklaring"}</span>
-            <div className="flex gap-4 w-full justify-center">
+        {/* Legend - Overlay on map */}
+        <motion.div 
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className={`absolute bottom-20 sm:bottom-24 left-3 sm:left-4 z-[999] rounded-2xl backdrop-blur-md p-3 sm:p-4 shadow-lg border max-w-xs ${
+            isDark ? "bg-card/95 border-border" : "bg-white/95 border-border/50"
+          }`}
+        >
+          <div className="space-y-2">
+            <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Forklaring</p>
+            <div className="flex flex-col gap-2">
               <div className="flex items-center gap-2">
-                <div className="w-4 h-4 rounded-full" style={{ backgroundColor: mapColors.unlockedPin }} />
+                <div className="w-3 h-3 sm:w-4 sm:h-4 rounded-full" style={{ backgroundColor: mapColors.unlockedPin }} />
                 <span className="text-xs font-medium">{t("map.unlocked")}</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="w-4 h-4 rounded-full" style={{ backgroundColor: mapColors.lockedPin }} />
+                <div className="w-3 h-3 sm:w-4 sm:h-4 rounded-full" style={{ backgroundColor: mapColors.lockedPin }} />
                 <span className="text-xs font-medium">{t("map.locked")}</span>
               </div>
             </div>
           </div>
-        </div>
+        </motion.div>
       </div>
 
 
