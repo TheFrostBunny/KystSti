@@ -6,7 +6,7 @@ import { useTour } from "@/context/TourContext";
 import { useTranslation } from "@/context/LanguageContext";
 import { getTourById } from "@/data/tours";
 import Button from "@/components/ui/button";
-import { useState } from "react";
+
 
 type ScanStatus = "idle" | "scanning" | "success" | "error";
 
@@ -33,9 +33,7 @@ export default function ScanPage() {
   };
 
   const handleQRCode = (data: string) => {
-    if (status === "success") return; // Already handling a success
-
-    // Expected format: kyststi://tour/{tourId}/stop/{stopId} or simpler: {tourId}/{stopId}
+    if (status === "success") return; 
     const match = data.match(/(?:kyststi:\/\/tour\/)?([^\/]+)\/(?:stop\/)?([^\/]+)/);
     
     if (match) {
@@ -60,7 +58,6 @@ export default function ScanPage() {
       }
     }
 
-    // Invalid QR code
     setStatus("error");
     setErrorMessage(t('scanner.scanning'));
     setTimeout(() => setStatus("scanning"), 2000);

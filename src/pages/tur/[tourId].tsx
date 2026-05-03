@@ -1,6 +1,6 @@
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { getTourById, uiText } from "@/data/tours";
+import { getTourById } from "@/data/tours";
 import { useTranslation } from "@/context/LanguageContext";
 import { useTour } from "@/context/TourContext";
 import Button from "@/components/ui/button";
@@ -63,7 +63,6 @@ export default function TourDetailPage() {
 
       <main className="flex-1 px-4 py-8 max-w-5xl mx-auto w-full">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
-          {/* Left Column: Info & Description */}
           <div className="space-y-8">
             <motion.div
               initial={{ opacity: 0, x: -20 }}
