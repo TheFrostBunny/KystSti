@@ -2,8 +2,11 @@ import type { Tour, TourStop } from "./types";
 
 
 const tourModules = Object.values(
-  import.meta.glob('./tours/*.ts', { eager: true })
-).map((mod: any) => mod.default).filter(Boolean) as Tour[];
+  import.meta.glob('./*.ts', { eager: true })
+)
+  .filter((mod: any) => !(mod && mod.default && mod.default.id === undefined))
+  .map((mod: any) => mod.default)
+  .filter(Boolean) as Tour[];
 
 export const tours: Tour[] = tourModules;
 
