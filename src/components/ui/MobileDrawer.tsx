@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useTranslation } from "@/context/LanguageContext";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { Button } from "@/components/ui/button";
+import Button from "@/components/ui/button";
 import { useMediaQuery } from "@/hooks/use-media-query";
 
 interface MobileDrawerProps {
