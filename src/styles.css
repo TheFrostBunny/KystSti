@@ -102,7 +102,7 @@
 
 /* Dark mode */
 .dark {
-  --background: oklch(0.08 0.02 280);
+  --background: oklch(0.2245 0.0193 314.41);
   --foreground: oklch(0.95 0.01 280);
 
   --card: oklch(0.14 0.02 280);
@@ -113,7 +113,7 @@
 
   /* Litt mer levende grønn */
   --primary: oklch(0.55 0.14 160);
-  --primary-foreground: oklch(0.08 0.02 280);
+  --primary-foreground: oklch(0.2245 0.0193 314.41)
 
   --secondary: oklch(0.20 0.02 280);
   --secondary-foreground: oklch(0.92 0.01 280);
@@ -123,17 +123,17 @@
 
   /* Litt varmere og mer synlig */
   --accent: oklch(0.55 0.12 75);
-  --accent-foreground: oklch(0.08 0.02 280);
+  --accent-foreground: oklch(0.2245 0.0193 314.41)
 
   --warm: oklch(0.60 0.14 50);
-  --warm-foreground: oklch(0.08 0.02 280);
+  --warm-foreground: oklch(0.2245 0.0193 314.41)
 
   /* Mer tydelig error */
   --destructive: oklch(0.55 0.20 25);
-  --destructive-foreground: oklch(0.08 0.02 280);
+  --destructive-foreground: oklch(0.2245 0.0193 314.41);
 
-  --border: oklch(0.22 0.02 280);
-  --input: oklch(0.14 0.02 280);
+  --border: oklch(0.2245 0.0193 314.41);
+  --input: oklch(0.2245 0.0193 314.41);
   --ring: oklch(0.60 0.15 160);
 
   /* Charts med bedre separasjon */
