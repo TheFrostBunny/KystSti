@@ -2,7 +2,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTour } from "@/context/TourContext";
 import { useTranslation } from "@/context/LanguageContext";
-import { useTheme } from "@/context/ThemeContext";
+
 import { tours } from "@/data/tours";
 import { cn } from "@/lib/utils";
 import { ChevronDown } from "lucide-react";
@@ -15,7 +15,7 @@ interface TourSelectorProps {
 export function TourSelector({ onTourSelected, minimal = false }: TourSelectorProps) {
   const { currentTourId, setCurrentTour } = useTour();
   const { language } = useTranslation();
-  const { isDark } = useTheme();
+
   const [isOpen, setIsOpen] = useState(false);
 
   const currentTour = tours.find((t) => t.id === currentTourId);
@@ -29,21 +29,13 @@ export function TourSelector({ onTourSelected, minimal = false }: TourSelectorPr
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
       case "lett":
-        return isDark
-          ? "bg-green-900/30 text-green-400 border border-green-800"
-          : "bg-green-100 text-green-700 border border-green-200";
+        return "bg-green-100 text-green-700 border border-green-200";
       case "moderat":
-        return isDark
-          ? "bg-amber-900/30 text-amber-400 border border-amber-800"
-          : "bg-amber-100 text-amber-700 border border-amber-200";
+        return "bg-amber-100 text-amber-700 border border-amber-200";
       case "krevende":
-        return isDark
-          ? "bg-red-900/30 text-red-400 border border-red-800"
-          : "bg-red-100 text-red-700 border border-red-200";
+        return "bg-red-100 text-red-700 border border-red-200";
       default:
-        return isDark
-          ? "bg-muted text-muted-foreground border border-border"
-          : "bg-gray-100 text-gray-700 border border-gray-200";
+        return "bg-gray-100 text-gray-700 border border-gray-200";
     }
   };
 
@@ -66,9 +58,7 @@ export function TourSelector({ onTourSelected, minimal = false }: TourSelectorPr
           "w-full flex items-center justify-between px-0 py-2.5 transition-all",
           !minimal && "px-4 py-3 rounded-xl border",
           !minimal && (
-            isDark
-              ? "bg-card border-border hover:border-primary/50 hover:bg-card/80"
-              : "bg-background border-border hover:border-primary/50 hover:bg-muted/30"
+            "bg-background border-border hover:border-primary/50 hover:bg-muted/30"
           )
         )}
       >
@@ -81,7 +71,7 @@ export function TourSelector({ onTourSelected, minimal = false }: TourSelectorPr
           <p className={cn(
             "font-medium line-clamp-2 break-words",
             minimal ? "text-sm" : "font-display font-bold mt-1 text-base sm:text-lg",
-            isDark ? "text-foreground" : "text-foreground"
+            "text-foreground"
           )}>
             {currentTour
               ? typeof currentTour.title === "object"
@@ -120,9 +110,7 @@ export function TourSelector({ onTourSelected, minimal = false }: TourSelectorPr
               transition={{ duration: 0.15 }}
               className={cn(
                 "absolute top-full left-0 right-0 mt-2 rounded-xl border shadow-xl z-50 max-h-96 overflow-y-auto",
-                isDark
-                  ? "bg-card border-border/80"
-                  : "bg-background border-border/80"
+                "bg-background border-border/80"
               )}
             >
               <div className="divide-y divide-border/50">
@@ -138,11 +126,7 @@ export function TourSelector({ onTourSelected, minimal = false }: TourSelectorPr
                       className={cn(
                         "w-full px-4 py-3.5 text-left transition-all",
                         isSelected
-                          ? isDark
-                            ? "bg-primary/10 hover:bg-primary/15"
-                            : "bg-primary/5 hover:bg-primary/10"
-                          : isDark
-                          ? "hover:bg-muted/50"
+                          ? "bg-primary/5 hover:bg-primary/10"
                           : "hover:bg-muted/30"
                       )}
                     >
@@ -166,9 +150,7 @@ export function TourSelector({ onTourSelected, minimal = false }: TourSelectorPr
                           </div>
                           <p className={cn(
                             "text-xs mt-1 line-clamp-1 break-words",
-                            isDark
-                              ? "text-muted-foreground"
-                              : "text-muted-foreground"
+                            "text-muted-foreground"
                           )}>
                             {typeof tour.subtitle === "object"
                               ? tour.subtitle[language as "no" | "en"]

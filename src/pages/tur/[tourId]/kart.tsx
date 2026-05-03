@@ -5,7 +5,7 @@ import L from "leaflet";
 import { getTourById, mapColors, TourStop } from "@/data/tours";
 import { useTour } from "@/context/TourContext";
 import { useTranslation  } from "@/context/LanguageContext";
-import { useTheme } from "@/context/ThemeContext";
+
 import Button from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import "leaflet/dist/leaflet.css";
@@ -40,7 +40,7 @@ export default function TourMapPage() {
   const navigate = useNavigate();
   const { isStopUnlocked } = useTour();
   const { t, language } = useTranslation();
-  const { isDark } = useTheme();
+
   const [selectedStop, setSelectedStop] = useState<TourStop | null>(null);
   
   const tour = tourId ? getTourById(tourId) : null;
@@ -144,7 +144,7 @@ export default function TourMapPage() {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           className={`absolute bottom-20 sm:bottom-24 left-3 sm:left-4 z-[999] rounded-2xl backdrop-blur-md p-3 sm:p-4 shadow-lg border max-w-xs ${
-            isDark ? "bg-card/95 border-border" : "bg-white/95 border-border/50"
+            "bg-white/95 border-border/50"
           }`}
         >
           <div className="space-y-2">
@@ -211,19 +211,19 @@ export default function TourMapPage() {
                       <motion.div 
                         initial={{ scale: 0.9, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
-                        className="inline-flex items-center gap-2 bg-green-100 dark:bg-green-900/30 rounded-full px-4 py-2 border border-green-200 dark:border-green-800 shadow-sm"
+                        className="inline-flex items-center gap-2 bg-green-100 rounded-full px-4 py-2 border border-green-200 shadow-sm"
                       >
                         <div className="w-2.5 h-2.5 rounded-full bg-green-600 animate-pulse" />
-                        <span className="text-sm font-semibold text-green-700 dark:text-green-400">Opplåst</span>
+                        <span className="text-sm font-semibold text-green-700">Opplåst</span>
                       </motion.div>
                     ) : (
                       <motion.div 
                         initial={{ scale: 0.9, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
-                        className="inline-flex items-center gap-2 bg-amber-100 dark:bg-amber-900/30 rounded-full px-4 py-2 border border-amber-200 dark:border-amber-800 shadow-sm"
+                        className="inline-flex items-center gap-2 bg-amber-100 rounded-full px-4 py-2 border border-amber-200 shadow-sm"
                       >
                         <div className="w-2.5 h-2.5 rounded-full bg-amber-600" />
-                        <span className="text-sm font-semibold text-amber-700 dark:text-amber-400">Låst</span>
+                        <span className="text-sm font-semibold text-amber-700">Låst</span>
                       </motion.div>
                     )}
                   </div>

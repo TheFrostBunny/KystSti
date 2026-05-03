@@ -5,7 +5,7 @@ import "./styles.css";
 
 import { TourProvider } from "@/context/TourContext";
 import { LanguageProvider } from "@/context/LanguageContext";
-import { ThemeProvider } from "@/context/ThemeContext";
+
 import App from "./App";
 import HomePage from "./pages/index";
 import TourDetailPage from "./pages/tur/[tourId]";
@@ -22,27 +22,25 @@ import SettingsPage from "./pages/innstillinger";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <ThemeProvider>
-      <LanguageProvider>
-        <TourProvider>
-          <BrowserRouter>
-            <OnlineStatusBanner />
-            <Routes>
-              <Route element={<App />}>
-                <Route index element={<HomePage />} />
-                <Route path="tur/:tourId" element={<TourDetailPage />} />
-                <Route path="tur/:tourId/stopp" element={<TourStopsPage />} />
-                <Route path="tur/:tourId/stopp/:stopId" element={<TourStopDetailPage />} />
-                <Route path="tur/:tourId/kart" element={<TourMapPage />} />
-                {import.meta.env.VITE_ENABLE_QR_SCANNER === "true" && <Route path="skann" element={<ScanPage />} />}
-                <Route path="innstillinger" element={<SettingsPage />} />
-                <Route path="lage" element={<TourBuilderPage />} />
-                <Route path="*" element={<NotFoundPage />} />
-              </Route>
-            </Routes>
-            </BrowserRouter>
-          </TourProvider>
-        </LanguageProvider>
-      </ThemeProvider>
+    <LanguageProvider>
+      <TourProvider>
+        <BrowserRouter>
+          <OnlineStatusBanner />
+          <Routes>
+            <Route element={<App />}>
+              <Route index element={<HomePage />} />
+              <Route path="tur/:tourId" element={<TourDetailPage />} />
+              <Route path="tur/:tourId/stopp" element={<TourStopsPage />} />
+              <Route path="tur/:tourId/stopp/:stopId" element={<TourStopDetailPage />} />
+              <Route path="tur/:tourId/kart" element={<TourMapPage />} />
+              {import.meta.env.VITE_ENABLE_QR_SCANNER === "true" && <Route path="skann" element={<ScanPage />} />}
+              <Route path="innstillinger" element={<SettingsPage />} />
+              <Route path="lage" element={<TourBuilderPage />} />
+              <Route path="*" element={<NotFoundPage />} />
+            </Route>
+          </Routes>
+          </BrowserRouter>
+        </TourProvider>
+      </LanguageProvider>
     </React.StrictMode>
 );
