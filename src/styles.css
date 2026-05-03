@@ -102,40 +102,58 @@
 
 /* Dark mode */
 .dark {
-  --background: oklch(0.10 0.01 280);
-  --foreground: oklch(0.92 0.01 280);
-  --card: oklch(0.13 0.01 280);
-  --card-foreground: oklch(0.92 0.01 280);
-  --popover: oklch(0.13 0.01 280);
-  --popover-foreground: oklch(0.92 0.01 280);
-  --primary: oklch(0.45 0.10 160);
-  --primary-foreground: oklch(0.10 0.01 280);
-  --secondary: oklch(0.18 0.01 280);
+  --background: oklch(0.08 0.02 280);
+  --foreground: oklch(0.95 0.01 280);
+
+  --card: oklch(0.14 0.02 280);
+  --card-foreground: oklch(0.95 0.01 280);
+
+  --popover: oklch(0.14 0.02 280);
+  --popover-foreground: oklch(0.95 0.01 280);
+
+  /* Litt mer levende grønn */
+  --primary: oklch(0.55 0.14 160);
+  --primary-foreground: oklch(0.08 0.02 280);
+
+  --secondary: oklch(0.20 0.02 280);
   --secondary-foreground: oklch(0.92 0.01 280);
-  --muted: oklch(0.18 0.01 280);
-  --muted-foreground: oklch(0.60 0.01 280);
-  --accent: oklch(0.40 0.08 75);
-  --accent-foreground: oklch(0.10 0.01 280);
-  --warm: oklch(0.40 0.08 50);
-  --warm-foreground: oklch(0.10 0.01 280);
-  --destructive: oklch(0.35 0.15 27);
-  --destructive-foreground: oklch(0.10 0.01 280);
-  --border: oklch(0.16 0.01 280);
-  --input: oklch(0.13 0.01 280);
-  --ring: oklch(0.45 0.10 160);
-  --chart-1: oklch(0.45 0.10 160);
-  --chart-2: oklch(0.40 0.08 50);
-  --chart-3: oklch(0.40 0.08 75);
-  --chart-4: oklch(0.30 0.06 220);
-  --chart-5: oklch(0.35 0.08 340);
-  --sidebar: oklch(0.11 0.01 280);
-  --sidebar-foreground: oklch(0.92 0.01 280);
-  --sidebar-primary: oklch(0.45 0.10 160);
-  --sidebar-primary-foreground: oklch(0.10 0.01 280);
-  --sidebar-accent: oklch(0.18 0.01 280);
+
+  --muted: oklch(0.20 0.015 280);
+  --muted-foreground: oklch(0.65 0.02 280);
+
+  /* Litt varmere og mer synlig */
+  --accent: oklch(0.55 0.12 75);
+  --accent-foreground: oklch(0.08 0.02 280);
+
+  --warm: oklch(0.60 0.14 50);
+  --warm-foreground: oklch(0.08 0.02 280);
+
+  /* Mer tydelig error */
+  --destructive: oklch(0.55 0.20 25);
+  --destructive-foreground: oklch(0.08 0.02 280);
+
+  --border: oklch(0.22 0.02 280);
+  --input: oklch(0.14 0.02 280);
+  --ring: oklch(0.60 0.15 160);
+
+  /* Charts med bedre separasjon */
+  --chart-1: oklch(0.55 0.14 160);
+  --chart-2: oklch(0.60 0.14 50);
+  --chart-3: oklch(0.60 0.12 75);
+  --chart-4: oklch(0.50 0.10 220);
+  --chart-5: oklch(0.55 0.12 340);
+
+  --sidebar: oklch(0.10 0.02 280);
+  --sidebar-foreground: oklch(0.95 0.01 280);
+
+  --sidebar-primary: oklch(0.55 0.14 160);
+  --sidebar-primary-foreground: oklch(0.08 0.02 280);
+
+  --sidebar-accent: oklch(0.20 0.02 280);
   --sidebar-accent-foreground: oklch(0.92 0.01 280);
-  --sidebar-border: oklch(0.16 0.01 280);
-  --sidebar-ring: oklch(0.45 0.10 160);
+
+  --sidebar-border: oklch(0.22 0.02 280);
+  --sidebar-ring: oklch(0.60 0.15 160);
 }
 
 @layer base {
