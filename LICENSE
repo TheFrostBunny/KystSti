@@ -1,0 +1,28 @@
+GNU GENERAL PUBLIC LICENSE
+Version 3, 29 June 2007
+
+Copyright (C) 2007 Free Software Foundation, Inc. <https://fsf.org/>
+Everyone is permitted to copy and distribute verbatim copies of this license document, but changing it is not allowed.
+
+---
+
+## Terms and Conditions
+
+0. **Definitions.**
+   This License refers to version 3 of the GNU General Public License.
+
+1. **Source Code.**
+   The "source code" for a work means the preferred form of the work for making modifications to it.
+
+2. **Basic Permissions.**
+   You may copy, distribute, and modify the software as long as you track changes/dates in source files. Any modifications to or software including (via compiler) GPL-licensed code must also be made available under the GPL along with build & install instructions.
+
+3. **No Warranty.**
+   This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+4. **Full License Text.**
+   The full text of the GNU General Public License v3 is available at: https://www.gnu.org/licenses/gpl-3.0.html
+
+---
+
+A copy of the full license text should be included with any distribution of this software.
